@@ -1,0 +1,4 @@
+CREATE USER samkenga WITH PASSWORD 'hfXmsd7Sk8w3sady623p@-$£' CREATEDB;
+CREATE DATABASE timelydb WITH OWNER samkenga;  
+ALTER USER postgres WITH PASSWORD 'hfXmsd7Sk8w3sady623p@-$£';
+

@@ -1,0 +1,148 @@
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+     font-family: 'Lato', sans-serif;
+    font-weight: 200;
+}
+
+.row h1{
+
+   
+}
+
+
+
+
+
+
+.page-header{
+	background-image: url('../images/header3.png');
+	background-size: cover;
+	background-color: transparent;
+	height:205px;
+  margin-bottom: 0px;
+  margin-top: 10px;
+}
+
+
+
+
+
+.navbar-default{
+	
+	color:#FFF;
+	margin-top: 0px;
+	padding-top: 0px;
+	background-color:#FFF;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px 1px;
+}
+
+.navbar-default .navbar-nav >li>a{
+	
+	color:blue;
+	background-color: #e6e6e6;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+color:#FFF;
+text-transform: scale(1.25);
+}
+.navbar-default .navbar-nav > li:hover {
+background-color: #0c3191;
+
+border-bottom:#a7cf3;
+
+}
+#myform{
+
+	background-color: #e6e6e6;
+	padding-top: 10px;
+	padding-bottom: 10px;
+  border-style: solid;
+  border-radius: 10px;
+  border-color: #FFF;
+}
+
+
+.footer-below{
+	background-color: blue;
+	margin-top: 30px;
+}
+
+.navbar .divider-vertical {
+height: 50px;
+margin: 0 0px;
+border-right: 1px solid #ffffff;
+border-left: 1px solid #f2f2f2;
+}
+
+.navbar-inverse .divider-vertical {
+border-right-color: #222222;
+border-left-color: #111111;
+}
+
+@media (max-width: 767px) {
+.navbar-collapse .nav > .divider-vertical {
+    display: none;
+  }
+}
+
+footer .footer-below {
+    padding: 25px 0;
+    background-image: url('../images/footer.png');
+    background-size: cover;
+    color:#FFF;
+    height:200px;
+}
+
+.btn-primary{
+	background-color: #0c3191;
+}
+.btn-primary:hover{
+	background-color:green;
+	color:#FFF;
+}
+
+.btn{
+  display:inline-block; 
+  margin-bottom:0; 
+  font-weight:normal;
+  text-align:center; 
+  vertical-align:middle; 
+  cursor:pointer;
+   background-image:none; 
+   border:2px solid transparent; 
+   white-space:nowrap; 
+   padding:14px 24px; 
+   font-size:17px; 
+   text-shadow:none; 
+   text-transform:uppercase; 
+   line-height:1.42857143; 
+   color:#fff; 
+    
+   -webkit-transition:all 0.2s ease-in-out; 
+   transition:all 0.2s ease-in-out; 
+   border-color:#fff; 
+   -webkit-user-select:none; 
+   -moz-user-select:none;
+    -ms-user-select:none;
+     user-select:none
+
+   }
+
+   #mainbody{
+    padding-top: 20px;
+   }
+
+   #mytable img:hover{
+    transform:scale(2.0);
+
+    ;

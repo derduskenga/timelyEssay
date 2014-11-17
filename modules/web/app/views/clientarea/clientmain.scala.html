@@ -1,0 +1,88 @@
+@(title: String)(content: Html)
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@title</title>
+    <!-- css -->
+	<link href="@routes.Assets.at("bootstrap/css/bootstrap.min.css")" rel="stylesheet" media="screen">
+	<link href="@routes.Assets.at("css/mycss.css")" rel="stylesheet" media="screen">
+	<link href="@routes.Assets.at("css/admin.css")" rel="stylesheet" media="screen">
+	<link href="@routes.Assets.at("css/tablecloth.css")" rel="stylesheet" media="screen">
+	<link href="@routes.Assets.at("fontawesome/css/font-awesome.min.css")" rel="stylesheet" media="screen">
+    <!-- fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    </head>
+  <body>
+   <div class="container"><!-- header container  -->
+   <div class="page-header"><!-- start of header -->
+</div><!-- end of header -->		
+</div><!-- end of topnavigation container -->
+<div class="container">
+<div class="row"><!-- start of main body row -->
+<div class="col-md-3" id="navigation"><!-- start of navigation column -->
+<div class="list-group">
+        <a href="#" class="list-group-item active">
+            <span class=""></span> Dashboard</a>
+        <a href="#" class="list-group-item">
+            <span class=""></span> My preferred writers </a>
+        <a href="#" class="list-group-item">
+            <span class=""></span>My Profile </a>
+        <a href="#" class="list-group-item">
+            <span class=""></span>My discounts </a>
+            <a href="#" class="list-group-item">
+            <span class=""></span>Identity Verification </a>
+            <a href="#" class="list-group-item">
+            <span class=""></span>My Store Credit </a>
+            <a href="#" class="list-group-item">
+            <span class=""></span>Affiliate Programs </a>
+    </div>
+<a class="btn btn-primary">Place New Order</a>
+</div><!-- end of navigation column  -->
+	<div class="col-md-9" id="mainbody"><!-- start of main body -->
+			@content
+	</div><!-- end of main body column -->
+</div><!-- end of main body row -->
+</div>
+<div class="container">
+<footer class="text-center">
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                    <h3>Social media</h3>
+                    <ul class="list-inline intro-social-buttons">
+                            <li>
+                                <a href="https://twitter.com" ><i class="fa fa-twitter fa-fw"></i> <span class="network-name"></span></a>
+                            </li>
+                            <li>
+                                <a href="https://facebook.com"><i class="fa fa-facebook fa-fw"></i> <span class="network-name"></span></a>
+                            </li>
+                            <li>
+                                <a href="https://facebook.com"><i class="fa  fa-google-plus fa-fw"></i> <span class="network-name"></span></a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/"><i class="fa  fa-linkedin fa-fw"></i> <span class="network-name"></span></a>
+                            </li>
+                        </ul>
+                        Copyright &copy;Timely Essays 2014
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+<div class="row">
+</div>
+</div>
+</body>
+<!--Scripts -->
+<script src="@routes.Assets.at("js/jquery/jquery.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("bootstrap/js/bootstrap-hover-dropdown.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("js/tablecloth.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("angular/angular.min.js")" type="text/javascript"></script>
+<!--Scripts -->
+  </body>
+</html>
