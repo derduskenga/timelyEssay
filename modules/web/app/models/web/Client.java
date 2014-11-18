@@ -14,8 +14,8 @@ public class Client extends Model{
 	public String l_name;
 	public String email;
 	
-	//Entityrelationship mapping
+	//Entity relationship mapping
 	@OneToMany(mappedBy="client")
-	List <Order> project;
+	List <Orders> project;
 	
 } 

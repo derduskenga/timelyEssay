@@ -6,7 +6,7 @@ import javax.persistence.*;
 import play.db.ebean.Model;
 
 @Entity
-public class Order extends Model{
+public class Orders extends Model{
 	@Id
 	public Long id;
 	public String first_name;
