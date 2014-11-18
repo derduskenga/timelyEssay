@@ -1,4 +1,4 @@
-package models.web;
+package models;
 import java.util.List;
 import java.util.ArrayList;
 import play.data.validation.Constraints;
