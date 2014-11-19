@@ -17,6 +17,11 @@ create table order_currency (
   constraint pk_order_currency primary key (order_currency_id))
 ;
 
+create table order_subject (
+  id                        bigint not null,
+  constraint pk_order_subject primary key (id))
+;
+
 create table orders (
   id                        bigint not null,
   first_name                varchar(255),
@@ -29,6 +34,8 @@ create table orders (
 create sequence client_seq;
 
 create sequence order_currency_seq;
+
+create sequence order_subject_seq;
 
 create sequence orders_seq;
 
@@ -43,11 +50,15 @@ drop table if exists client cascade;
 
 drop table if exists order_currency cascade;
 
+drop table if exists order_subject cascade;
+
 drop table if exists orders cascade;
 
 drop sequence if exists client_seq;
 
 drop sequence if exists order_currency_seq;
+
+drop sequence if exists order_subject_seq;
 
 drop sequence if exists orders_seq;
 
