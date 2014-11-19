@@ -37,6 +37,10 @@ public class Client extends Model{
 			this.email = email;
 	}
 	
+	public static Client getClient(String email){
+				return finder.where().eq("emal", email).findUnique();
+		}
+	
 	public static Client authenticate(String email, String password) {
 			return finder.where().eq("email", email).eq("password", password).findUnique();
 	}
