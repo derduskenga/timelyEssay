@@ -6,7 +6,7 @@ import play.db.ebean.Model;
 import play.*;
 import play.mvc.*;
 import views.html.home;
-import models.Client;
+import models.client.Client;
 import play.data.validation.Constraints;
 
 import static play.data.Form.form;

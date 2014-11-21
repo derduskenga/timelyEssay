@@ -1,9 +1,11 @@
-package models;
+package models.client;
 import java.util.List;
 import java.util.ArrayList;
 import play.data.validation.Constraints;
 import javax.persistence.*;
 import play.db.ebean.Model;
+import models.orders.Orders;
+import models.orders.OrderMessages;
 
 @Entity
 public class Client extends Model{
@@ -22,9 +24,15 @@ public class Client extends Model{
 	@Constraints.Required(message="Password is required.")
 	public String password;
 	
-	//Entity relationship mapping
+	//relationship fields
 	@OneToMany(mappedBy="client")
-	List <Orders> project;
+	List <Orders> orders;
+	
+	@OneToOne
+	public Countries countries;
+	
+	@OneToMany(mappedBy="client")
+	public List<OrderMessages> orderMessages;
 	
 	public static Finder<Long, Client> finder = new Finder<Long, Client>(Long.class, Client.class);
 	
@@ -33,16 +41,16 @@ public class Client extends Model{
 	}
 	
 	public Client(String email, String password){
-			this.password = password;
-			this.email = email;
+	  this.password = password;
+	  this.email = email;
 	}
 	
 	public static Client getClient(String email){
-				return finder.where().eq("emal", email).findUnique();
-		}
+	  return finder.where().eq("emal", email).findUnique();
+	}
 	
 	public static Client authenticate(String email, String password) {
-			return finder.where().eq("email", email).eq("password", password).findUnique();
+	    return finder.where().eq("email", email).eq("password", password).findUnique();
 	}
 		
 } 

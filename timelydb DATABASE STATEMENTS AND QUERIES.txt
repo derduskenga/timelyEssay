@@ -6,14 +6,14 @@ ALTER USER postgres WITH PASSWORD 'hfXmsd7Sk8w3sady623p@-$£';
 --Create and populate countrys sada
 
 CREATE TABLE IF NOT EXISTS countries(
-id SERIAL NOT NULL,
-iso char(2) NOT NULL,
-name varchar(80) NOT NULL,
-nicename varchar(80) NOT NULL,
-iso3 char(3) DEFAULT NULL,
-numcode smallint DEFAULT NULL,
-phonecode int NOT NULL,
-PRIMARY KEY (id)
+      id SERIAL NOT NULL,
+      iso char(2) NOT NULL,
+      name varchar(80) NOT NULL,
+      nicename varchar(80) NOT NULL,
+      iso3 char(3) DEFAULT NULL,
+      numcode smallint DEFAULT NULL,
+      phonecode int NOT NULL,
+      PRIMARY KEY (id)
 );
 
 
@@ -258,3 +258,67 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (238, 'ZM', 'ZAMBIA', 'Zambia', 'ZMB', 894, 260),
 (239, 'ZW', 'ZIMBABWE', 'Zimbabwe', 'ZWE', 716, 263);
 
+
+-------populating the DATABASE-------
+---order currence
+insert into order_currence values
+(1,'US Dollar', 'USD',1.0),(2,'Euro','EUR',0.8),(3,'British pound sterling','GBP',0.64),(4,'Australian dollar','AUD',1.16);
+
+---level of writing 
+insert into order_level_of_writing (id,order_level,additional_price,description) values 
+(1,'Undergraduate',0.0,'Undergraduate writer'),
+(2,'Master',1.5,'For master level writers'),
+(3,'PhD',3.3,'For PhD level writing');
+
+----deadlines
+insert into order_deadlines(id,deadline_value,deadline_unit,seconds_elapsing_to_deadline) values
+(1,10,'days',864000),(2,20,'days',1728000),(3,7,'days',604800),(4,1,'day',86400),(5,12,'hours',43200),(6,6,'hours',21600),(7,3,'hours',10800);(8,2,'months',51840000)
+
+---deadline categories
+insert into order_deadline_category (id,order_deadline_category_name,order_deadline_category_description) values
+(1,'normal','deadline range for most common document types'),
+(2,'dissertation','deadline range for long documents ranging from 12 hrs to 2 month'),
+(3,'programming','deadline ramges for programming assignments');
+
+----cpp mode
+insert into order_cpp_mode(id,order_cpp_mode_name,cpp_mode_description)
+values
+(1,'perpage','order is paid per page'),
+(2,'perassignment','order is given as assignments. So it is paid per assignment'),
+(3,'perquestion','order is paid per question');
+
+----order_deadlines_order_deadline_c
+insert into order_deadlines_order_deadline_c (order_deadlines_id,order_deadline_category_id) values
+(1,1),(3,1),(4,1),(5,1),(6,1),(7,1),(1,2),(3,2),(4,2),(5,2),(8,2),(1,3),(2,3),(4,3);
+
+----order_subject_category table 
+INSERT INTO order_subject_category(id, subject_category_name, additional_price, description) VALUES 
+(1, 'technical',10.9,'nn'),
+(2, 'academic',0.00,'nn');
+
+----order_document_type
+insert into order_document_type(id,document_type_name,base_price,order_deadline_category_id,order_cpp_mode_id)values
+(1,'Term Paper',19.50,1,1),
+(2,'Research Paper',19.50,1,1),
+(3,'Dissertation',19.50,2,1),
+(4,'Dissertation Chapter - Literature Review',19.50,2,1),
+(5,'Dissertation Chapter - Literature Review',19.50,2,1),
+(6,'Math/Physics/Economics/Statistics Problems',19.50,1,3),
+(7,'Multiple Choice Questions (Non-time-framed)',1.20,1,3),
+(8,'Programming',98.50,3,2),
+(9,'Formatting',2.99,1,1),
+(10,'Research summary',20.50,1,1);
+
+----order Subject
+insert into order_subject(id,subject_name,order_subject_category_id) values
+(1,'Architecture',2),
+(2,'Chemistry',2),
+(3,'Technology',1),
+(4,'IT Management',1),
+(5,'Engineering',1);
+
+----
+insert into order_subject_order_document_typ (order_subject_id,order_document_type_id) values
+(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,9),(1,10),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),(2,7),(2,9),(2,10),(3,1),(3,2),(3,3),
+(3,4),(3,5),(3,6),(3,7),(3,9),(3,10),(4,1),(4,2),(4,3),(4,4),(4,5),(4,6),(4,7),(4,9),(4,10),(5,1),(5,2),(5,3),(5,4),(5,5),(5,6),
+(5,7),(5,9),(5,10);
