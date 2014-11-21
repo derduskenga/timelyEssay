@@ -9,5 +9,10 @@ public class ClientActions extends Controller{
 	public static Result index(){
 			return ok(clienthome.render());
 	}
+	
+	//path to messages
+	public static Result messages(){
+			return ok(clientmessages.render());
+	}
 
 }
