@@ -1,35 +1,69 @@
 @clientmain("My Orders"){
-<h2>Orders</h2>
-    <table class="table table-hover" id="mytable">
+<h3>Active</h3>
+<hr/>
+<div class="order-row-listing">
+		 <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Code</th>
+                <th>#</th>
+                <th>Topic</th>
+                <th>status</th>
+                <th>Deadline</th>
+                <th>Messages</th>
+                <th>Payment Status</th>
+            </tr>
+        </thead>
+        <tbody>
+				<tr>
+					<td>81285520 </td>
+					<td>transfer to word </td>
+					<td>Not Paid</td>
+					<td>28.10.14    05:17</td>
+					<td>0</td>
+					<td>Complete Payment here</td>
+                </tr>
+                <tr>
+					<td>81221520 </td>
+					<td>When Music Was Music</td>
+					<td>Awaiting Writers</td>
+					<td>28.10.14   05:17</td>
+					<td>0</td>
+					<td>Completely Paid</td>
+                </tr>
+        </tbody>
+        </table>
+		<hr/>
+	</div>
+
+	<h3>Completed</h3>
+	<hr/>
+	<div class="order-row-listing">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
                 <th>Topic</th>
                 <th>Deadline</th>
-                <th>Status</th>
                 <th>Messages</th>
-                <th>Payment</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>81285520 </td>
-                <td>transfer to word </td>
-                <td>28.10.14    05:17</td>
-                <td>Order is NOT Paid </td>
-                <td>0</td>
-               <td><a href="payment.html" ><img  src="images/paypal.png" class="img-responsive"></a><a href="payment.html"><img src="images/visa.png" class="img-responsive"></a><a href="payment.html"></a><a href="payment.html"><img src="images/mastercard.png" class="img-responsive"></a></td>
+                <td>81285520</td>
+                <td>Write Synopsis</td>
+                <td>28.10.14  05:17</td>
+                <td>2</td>
+                <td>Download AskForRev</td>
             </tr>
             <tr>
                 <td>81285519 </td>
                 <td>transfer to word </td>
                 <td>28.10.14   05:14</td>
-                <td>Order is NOT Paid </td>
-                <td>0</td>
-                <td><img src="images/paypal.png" class="img-responsive"><img src="images/visa.png" class="img-responsive"><img src="images/mastercard.png" class="img-responsive"></td>
+                <td> 0 </td>
+                <td> Complete Payment</td>
             </tr>
             <tr>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -38,4 +72,5 @@
             </tr>
         </tbody>
     </table>
+    </div>
 }

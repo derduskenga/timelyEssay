@@ -1,0 +1,65 @@
+.bubble
+{
+position: relative;
+width: 730px;
+height: 195px;
+padding: 4px;
+background: #E5F1F4;
+-webkit-border-radius: 21px;
+-moz-border-radius: 21px;
+border-radius: 21px;
+}
+
+.bubble:after
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 0 11px 24px;
+border-color: #E5F1F4 transparent;
+display: block;
+width: 0;
+z-index: 1;
+top: -20px;
+left: 91px;
+}
+
+.bubble2
+{
+clear:right;
+position: relative;
+width: 730px;
+height: 195px;
+padding: 4px;
+background: #EBEAEB;
+-webkit-border-radius: 21px;
+-moz-border-radius: 21px;
+border-radius: 21px;
+}
+
+.bubble2:after
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 0 11px 24px;
+border-color: #EBEAEB transparent;
+display: block;
+width: 0;
+z-index: 1;
+top: -20px;
+left: 624px;
+}
+
+.from-client-msg, .to-client-msg{
+	margin-bottom: 30px;
+}
+
+.to-client-msg-details{
+	margin-left: 112px;
+}
+
+.from-client-msg-details{
+    float:right;
+	margin-right:224px;
+}
