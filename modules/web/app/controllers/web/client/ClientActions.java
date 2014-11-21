@@ -10,6 +10,7 @@ public class ClientActions extends Controller{
 			return ok(clienthome.render());
 	}
 	
+	//path to messages
 	public static Result messages(){
 			return ok(clientmessages.render());
 	}
