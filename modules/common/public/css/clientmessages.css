@@ -2,12 +2,12 @@
 {
 position: relative;
 width: 730px;
-height: 195px;
+min-height: 40px;
 padding: 4px;
 background: #E5F1F4;
--webkit-border-radius: 21px;
--moz-border-radius: 21px;
-border-radius: 21px;
+-webkit-border-radius: 9px;
+-moz-border-radius: 9px;
+border-radius: 9px;
 }
 
 .bubble:after
@@ -29,12 +29,12 @@ left: 91px;
 clear:right;
 position: relative;
 width: 730px;
-height: 195px;
+min-height: 40px;
 padding: 4px;
 background: #EBEAEB;
--webkit-border-radius: 21px;
--moz-border-radius: 21px;
-border-radius: 21px;
+-webkit-border-radius: 9px;
+-moz-border-radius: 9px;
+border-radius: 9px;
 }
 
 .bubble2:after
@@ -62,4 +62,34 @@ left: 624px;
 .from-client-msg-details{
     float:right;
 	margin-right:224px;
+}
+
+.new-msg-btn{
+	float:right;
+	margin-right: 0px;
+}
+
+.new-msg-div{
+	width:730px;
+	padding-left: 29px;
+}
+
+.messages-action{
+	margin-bottom: 15px;
+	width:730px;
+}
+
+pre{
+	font-family: inherit;
+	border:none;
+	font-size: 1em;
+	background-color: inherit;
+	border-radius: inherit;
+}
+
+.no-order-messages{
+	width:730px;
+	padding: 10px;
+	margin-bottom: 8px;
+	background: #F7F7F9;
 }

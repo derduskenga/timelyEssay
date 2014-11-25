@@ -89,10 +89,14 @@ create table order_level_of_writing (
 
 create table order_messages (
   id                        bigint not null,
+  msg_to                    integer,
+  msg_from                  integer,
+  status                    boolean default TRUE,
   orders_id                 bigint,
-  client_id                 bigint,
-  freelance_writer_id       bigint,
-  writer_support_id         bigint,
+  sent_on                   timestamp not null,
+  message                   varchar(255),
+  constraint ck_order_messages_msg_to check (msg_to in (0,1,2)),
+  constraint ck_order_messages_msg_from check (msg_from in (0,1,2)),
   constraint pk_order_messages primary key (id))
 ;
 
@@ -178,22 +182,16 @@ alter table order_document_type add constraint fk_order_document_type_orderCp_5 
 create index ix_order_document_type_orderCp_5 on order_document_type (order_cpp_mode_id);
 alter table order_messages add constraint fk_order_messages_orders_6 foreign key (orders_id) references orders (id);
 create index ix_order_messages_orders_6 on order_messages (orders_id);
-alter table order_messages add constraint fk_order_messages_client_7 foreign key (client_id) references client (id);
-create index ix_order_messages_client_7 on order_messages (client_id);
-alter table order_messages add constraint fk_order_messages_freelanceWri_8 foreign key (freelance_writer_id) references freelance_writer (id);
-create index ix_order_messages_freelanceWri_8 on order_messages (freelance_writer_id);
-alter table order_messages add constraint fk_order_messages_writerSuppor_9 foreign key (writer_support_id) references writer_support (id);
-create index ix_order_messages_writerSuppor_9 on order_messages (writer_support_id);
-alter table order_subject add constraint fk_order_subject_orderSubject_10 foreign key (order_subject_category_id) references order_subject_category (id);
-create index ix_order_subject_orderSubject_10 on order_subject (order_subject_category_id);
-alter table orders add constraint fk_orders_client_11 foreign key (client_id) references client (id);
-create index ix_orders_client_11 on orders (client_id);
-alter table orders add constraint fk_orders_orderLevelOfWriting_12 foreign key (order_level_of_writing_id) references order_level_of_writing (id);
-create index ix_orders_orderLevelOfWriting_12 on orders (order_level_of_writing_id);
-alter table orders add constraint fk_orders_orderDocumentType_13 foreign key (order_document_type_id) references order_document_type (id);
-create index ix_orders_orderDocumentType_13 on orders (order_document_type_id);
-alter table orders add constraint fk_orders_orderCurrence_14 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
-create index ix_orders_orderCurrence_14 on orders (order_currence_order_currency_id);
+alter table order_subject add constraint fk_order_subject_orderSubjectC_7 foreign key (order_subject_category_id) references order_subject_category (id);
+create index ix_order_subject_orderSubjectC_7 on order_subject (order_subject_category_id);
+alter table orders add constraint fk_orders_client_8 foreign key (client_id) references client (id);
+create index ix_orders_client_8 on orders (client_id);
+alter table orders add constraint fk_orders_orderLevelOfWriting_9 foreign key (order_level_of_writing_id) references order_level_of_writing (id);
+create index ix_orders_orderLevelOfWriting_9 on orders (order_level_of_writing_id);
+alter table orders add constraint fk_orders_orderDocumentType_10 foreign key (order_document_type_id) references order_document_type (id);
+create index ix_orders_orderDocumentType_10 on orders (order_document_type_id);
+alter table orders add constraint fk_orders_orderCurrence_11 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
+create index ix_orders_orderCurrence_11 on orders (order_currence_order_currency_id);
 
 
 

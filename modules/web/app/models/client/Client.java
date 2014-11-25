@@ -12,9 +12,9 @@ public class Client extends Model{
 	@Id
 	public Long id;
 	//fields
-	@Constraints.Required(message="First name is required")
+	@Constraints.Required(message="First name is required.")
 	public String f_name;
-	@Constraints.Required(message="Last name is required")
+	@Constraints.Required(message="Last name is required.")
 	public String l_name;
 	
 	@Constraints.Required(message="Email is required.")
@@ -30,9 +30,6 @@ public class Client extends Model{
 	
 	@OneToOne
 	public Countries countries;
-	
-	@OneToMany(mappedBy="client")
-	public List<OrderMessages> orderMessages;
 	
 	public static Finder<Long, Client> finder = new Finder<Long, Client>(Long.class, Client.class);
 	

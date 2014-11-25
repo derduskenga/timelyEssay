@@ -16,8 +16,6 @@ public class WriterSupport extends Model{
     public Long id;
     public String f_name;
     
-    //relationship fields
-    @OneToMany(mappedBy="writerSupport")
-     public List<OrderMessages> orderMessages;
+    
     
 }

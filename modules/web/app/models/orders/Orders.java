@@ -26,5 +26,4 @@ public class Orders extends Model{
 	@OneToMany(mappedBy="orders")
 	public List<OrderMessages> OrderMessages;
 	
-	
 } 

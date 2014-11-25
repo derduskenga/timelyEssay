@@ -1,16 +1,53 @@
+@import fieldtemplates._
+@import helper._
+
+@( newMessageForm: Form[models.orders.OrderMessages])(messageReceipients:Map[String,Boolean])(orderMessages: List[models.orders.OrderMessages])
 @clientmain("Timely Essay | Messages"){		
+	
 	<div class="" style="margin-top:20px">
-		<div class="to-client-msg">
-			<div class="to-client-msg-details">Quality Assurance Team on 15/11/2014 @@ 8:30am</div>
-			<div class="bubble"></div>
+		@if(orderMessages isEmpty){
+			<div class="no-order-messages">No messages for this order.</div>
+		}
+		@for(message <- orderMessages){
+				@if(message.msg_from != models.orders.MessageParticipants.CLIENT){
+						<div class="to-client-msg">
+							<div class="to-client-msg-details">@message.msg_from.toString().toLowerCase().capitalize <small>on</small>  @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
+							<div class="bubble"><pre>@message.message</pre></div>
+						</div>
+				}else{
+						<div class="from-client-msg">
+							<div class="from-client-msg-details">Me <small>on</small> @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
+							<div class="bubble2"><pre>@message.message</pre></div>
+						</div>
+				}
+		}
+	</div>
+	<div class="messages-action row">
+		<div>
+			<button class="btn new-msg-btn" onClick="alternateNewMessageView('msg-form')">New Message</button>
 		</div>
-		<div class="from-client-msg">
-			<div class="from-client-msg-details">Writers on 15/11/2014 @@ 7:48am</div>
-			<div class="bubble2"></div>
-		</div>
-		<div class="to-client-msg">
-			<div class="to-client-msg-details">Support on 15/11/2014 @@ 8:30am</div>
-			<div class="bubble"></div>
-		</div>
+	</div>
+	<div class="new-msg-div row" lang="en">
+		@helper.form(action=controllers.web.client.routes.ClientActions.saveClientMessage(), 
+																	'class->"form-horizontal", 'id-> "client-messages-form"){
+				
+				@fieldtemplates.select1(newMessageForm("msg_to"),
+									label = "",
+									messageReceipients,
+									isMultiple = false,
+									help="",
+									default="Select Receipient")
+									
+				@fieldtemplates.textarea1(newMessageForm("message"),
+									rows = "5",
+									label = "",
+									placeholder="Type Your Message Here")
+									
+				<div class="form-group" style="float:right">
+									<input type="submit" class="btn btn-primary" value="Send">
+									<input type="button" onClick="alternateNewMessageView('msg_action')" class="btn btn-default" value="Cancel">
+				</div>
+				
+		}	
 	</div>
 }
