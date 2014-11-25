@@ -49,7 +49,7 @@ public class ClientActions extends Controller{
 	
 	public static List<OrderMessages> getOrderMessages(){
 			List<OrderMessages> orderMessages = new ArrayList<OrderMessages>();
-			orderMessages = OrderMessages.getOrderMessages();
+			orderMessages = OrderMessages.getClientOrderMessages();
 			return orderMessages;
 	}
 	

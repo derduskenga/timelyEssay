@@ -16,6 +16,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import java.util.Date;
 import java.util.List;
+import com.avaje.ebean.Expr;
 
 @Entity
 public class OrderMessages extends Model{
@@ -60,7 +61,9 @@ public class OrderMessages extends Model{
 		public static Finder<Long, OrderMessages> orderMessagesFinder = 
 									new Finder<Long, OrderMessages>(Long.class, OrderMessages.class);
 		
-		public static List<OrderMessages> getOrderMessages(){
-					return  orderMessagesFinder.orderBy("sent_on").findList();
+		public static List<OrderMessages> getClientOrderMessages(){
+					return  orderMessagesFinder.where()
+										.or(Expr.eq("msg_to", MessageParticipants.CLIENT),Expr.eq("msg_from", MessageParticipants.CLIENT))
+										.orderBy("sent_on").findList();
 		}
 }
