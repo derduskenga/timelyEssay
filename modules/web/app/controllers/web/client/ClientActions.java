@@ -11,6 +11,7 @@ import models.common.mailing.Mailing;
 import java.util.List;
 import java.util.ArrayList;
 import play.data.validation.Constraints;
+import controllers.web.Secured;
 
 import play.libs.Json;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import static play.data.Form.form;
-
+@Security.Authenticated(Secured.class)
 public class ClientActions extends Controller{
 	static Form<OrderMessages> newMessageForm = form(OrderMessages.class);
 	public static Result index(){

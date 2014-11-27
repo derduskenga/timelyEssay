@@ -13,6 +13,10 @@ GET	   						/mydashboard/messages							controllers.web.client.ClientActions.me
 POST						/mydashboard/savemessage						controllers.web.client.ClientActions.saveClientMessage()
 GET							/mydashboard/affiliateprogram					controllers.web.client.ClientActions.affiliateProgram()
 POST						/mydashboard/sendinvitationmail				controllers.web.client.ClientActions.sendInvitationEmail()
+#placing a new order 
+GET							/neworder				controllers.web.Application.newOrder()	
+#save client and order
+POST							/submit-order				controllers.web.Application.saveClientOrder()
 
 
 # Map static resources from the /public folder to the /assets URL path
