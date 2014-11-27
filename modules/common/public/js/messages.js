@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$('.new-msg-div').hide();
+	
 	$('#client-messages-form').bootstrapValidator({
 		message: 'This value is not valid',
         live: 'disabled',
@@ -25,6 +25,7 @@ $(document).ready(function(){
             }	
 		}
 	});
+
 });
 
 function alternateNewMessageView(panel){

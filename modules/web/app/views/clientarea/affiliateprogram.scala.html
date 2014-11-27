@@ -1,0 +1,61 @@
+@(newMailForm: Form[web.client.ClientActions.NewEmail])
+
+@clientmain("Affiliate Program"){
+			<div class="affiliate-program-div">
+				<h2>How It Works</h2>
+				<hr/>
+				<p>With our affiliate program, you become partner. Earn $20 for every successful referral.
+				Your friend also gets a $10 discount when he/she places his/her first order.</p>
+				<p>Request a coupon code</p>
+				<div class="referal-balance-div">
+					<hr/>
+						<h3>Your Balance: $0.00</h3>
+					<hr/>
+				</div>
+				<div class="referal-div">
+					<h2>Invite Friends</h2>
+					<hr/>
+					<p>There are two ways of inviting your friends to try out our service. </p>
+					<p>The first is by sending them an invitation email. We will send them a unique link which is only associated with you. When they place their first order through that link, you earn $20.</p>
+					
+					<div class="email-invitation-div" @if(flash.containsKey("show_form")){style="display:none;"}>
+							<button class="btn invite-friends-btn" onClick="alternateInvationMailView('btn_action')">Invite friends via Email</button>
+					</div>
+					<div class="client-friend-mail-invitation-div" @if(!flash.containsKey("show_form")){style="display:none;"}><!--Start Client Mail Invitation Div-->
+						@if(flash.containsKey("client_mail_invitation_success")){
+							<div class="alert alert-success">
+								@flash.get("client_mail_invitation_success")
+							</div>
+						}
+					
+						@if(flash.containsKey("client_mail_invitation_error")){
+							<div class="alert alert-danger">
+								@flash.get("client_mail_invitation_error")
+							</div>
+						}
+						<div class="new-send-mail-div row">
+							@helper.form(action=controllers.web.client.routes.ClientActions.sendInvitationEmail(), 
+																			'class->"form-horizontal", 'id-> "email-invitation-form"){								
+									
+									@fieldtemplates.text2(newMailForm("email"),
+														label = "Email: ",
+														placeholder="Email")
+														
+									@fieldtemplates.textarea1(newMailForm("message"),
+														rows = "5",
+														label = "Message",
+														placeholder="")
+														
+									<div class="form-group" style="float:right">
+														<input type="submit" class="btn btn-primary" value="Send Mail">
+														<input type="button" onClick="alternateInvationMailView('msg_action')" class="btn btn-default" value="Cancel">
+									</div>
+									
+							 }	
+						</div>
+					</div><!--Close Client Mail Invitation Div-->
+					<p>The second is by giving them your unique coupon code. When they use it when placing an order, you earn $20.</p>
+					
+				</div>
+			</div>
+}

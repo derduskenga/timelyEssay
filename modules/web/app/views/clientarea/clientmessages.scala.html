@@ -5,7 +5,7 @@
 @clientmain("Timely Essay | Messages"){		
 	
 	<div class="" style="margin-top:20px">
-		@if(orderMessages isEmpty){
+		@if(orderMessages.isEmpty){
 			<div class="no-order-messages">No messages for this order.</div>
 		}
 		@for(message <- orderMessages){
@@ -22,12 +22,12 @@
 				}
 		}
 	</div>
-	<div class="messages-action row">
+	<div class="messages-action row"  @if(flash.containsKey("show_form")){style="display:none;"}>
 		<div>
 			<button class="btn new-msg-btn" onClick="alternateNewMessageView('msg-form')">New Message</button>
 		</div>
 	</div>
-	<div class="new-msg-div row" lang="en">
+	<div class="new-msg-div row" @if(!flash.containsKey("show_form")){style="display:none;"}>
 		@helper.form(action=controllers.web.client.routes.ClientActions.saveClientMessage(), 
 																	'class->"form-horizontal", 'id-> "client-messages-form"){
 				

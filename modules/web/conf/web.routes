@@ -3,17 +3,20 @@
 # ~~~~
 
 # Home page
-GET							/																controllers.web.Application.index()
-POST	   					/login														controllers.web.Application.authenticate()
-GET	   						/logout														controllers.web.Application.logout()
-GET	   						/mydashboard											controllers.web.client.ClientActions.index()
-GET	   						/mydashboard/messages						controllers.web.client.ClientActions.messages()
-POST						/mydashboard/savemessage					controllers.web.client.ClientActions.saveClientMessage()
+GET							/																	controllers.web.Application.index()
+POST	   					/login															controllers.web.Application.authenticate()
+GET	   						/logout															controllers.web.Application.logout()
+
+#client pages
+GET	   						/mydashboard												controllers.web.client.ClientActions.index()
+GET	   						/mydashboard/messages							controllers.web.client.ClientActions.messages()
+POST						/mydashboard/savemessage						controllers.web.client.ClientActions.saveClientMessage()
+GET							/mydashboard/affiliateprogram					controllers.web.client.ClientActions.affiliateProgram()
+POST						/mydashboard/sendinvitationmail				controllers.web.client.ClientActions.sendInvitationEmail()
 
 
 # Map static resources from the /public folder to the /assets URL path
 # GET     /assets/*file               controllers.web.Assets.versioned(path="/public", file: Asset)
 #common routes
-
 
 ->  / common.Routes
