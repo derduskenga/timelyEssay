@@ -27,7 +27,7 @@
 <div class="row"><!-- start of main body row -->
 <div class="col-md-3" id="navigation"><!-- start of navigation column -->
 	<div class="list-group">
-			<a href="#" class="list-group-item active"><span class=""></span>My Orders</a>
+			<a href="@controllers.web.client.routes.ClientActions.index()" class="list-group-item"><span class=""></span>My Orders</a>
 			<a href="#" class="list-group-item"><span class=""></span> My preferred writers </a>
 			<a href="#" class="list-group-item"><span class=""></span>My Profile </a>
 			<a href="#" class="list-group-item"><span class=""></span>My discounts </a>
@@ -75,7 +75,7 @@
 <div class="row">
 </div>
 </div>
-</body>
+
 <!--Scripts -->
 <script src="@routes.Assets.at("js/jquery/jquery.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
@@ -84,6 +84,12 @@
 <script src="@routes.Assets.at("bootstrapvalidator/js/bootstrapValidator.min.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("js/messages.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("js/clientpages.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("js/menu.js")" type="text/javascript"></script>
 <!--Scripts -->
-  </body>
+</body>
+	<!-- Pure Chat Snippet -->
+	<script type='text/javascript'>
+	(function () {  var done = false;   var script = document.createElement('script'); script.async = true; script.type = 'text/javascript';    script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript'; document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) {   if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) { var w = new PCWidget({ c: '4bcd4a19-80d3-4ffa-b0fc-5a2960b4a651', f: true }); done = true;   }   };  })();
+	</script>
+	<!-- End Pure Chat Snippet -->
 </html>
