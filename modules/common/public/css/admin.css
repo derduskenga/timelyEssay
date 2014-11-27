@@ -20,7 +20,7 @@
   }
   .form-control{
     border-radius:5px;
-    box-shadow: 5px 0px 1px 0px;
+    /*box-shadow: 5px 0px 1px 0px;*/
   }
 #intro-userform{
   background-color:#e6e6e6;
@@ -39,5 +39,10 @@
   border-radius: 5px;
 
 }
+
+
+
+
+
 
 

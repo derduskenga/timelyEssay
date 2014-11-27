@@ -25,11 +25,11 @@ public class Client extends Model{
 	public String password;
 	
 	//relationship fields
-	@OneToMany(mappedBy="client")
-	List <Orders> orders;
-	
 	@OneToOne
 	public Countries countries;
+	
+	@OneToMany(mappedBy="client")
+	List <Orders> orders;
 	
 	@OneToMany(mappedBy="client")
 	public List<OrderMessages> orderMessages;

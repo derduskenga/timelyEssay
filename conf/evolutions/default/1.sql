@@ -3,6 +3,13 @@
 
 # --- !Ups
 
+create table additions (
+  id                        bigint not null,
+  ui_label                  varchar(255),
+  additional_price          float,
+  constraint pk_additions primary key (id))
+;
+
 create table client (
   id                        bigint not null,
   f_name                    varchar(255),
@@ -41,8 +48,9 @@ create table freelance_writer (
 
 create table order_cpp_mode (
   id                        bigint not null,
-  order_cpp_mode_name       varchar(255),
+  order_cpp_mode_name       integer,
   cpp_mode_description      varchar(255),
+  constraint ck_order_cpp_mode_order_cpp_mode_name check (order_cpp_mode_name in (0,1,2)),
   constraint pk_order_cpp_mode primary key (id))
 ;
 
@@ -50,6 +58,7 @@ create table order_currence (
   order_currency_id         bigint not null,
   currency_name             varchar(255),
   currency_symbol           varchar(255),
+  currency_symbol_2         varchar(255),
   convertion_rate           float,
   constraint pk_order_currence primary key (order_currency_id))
 ;
@@ -121,7 +130,16 @@ create table orders (
   order_level_of_writing_id bigint,
   order_document_type_id    bigint,
   order_currence_order_currency_id bigint,
+  spacing_id                bigint,
   constraint pk_orders primary key (id))
+;
+
+create table spacing (
+  id                        bigint not null,
+  spacing                   varchar(255),
+  alias                     varchar(255),
+  factor                    integer,
+  constraint pk_spacing primary key (id))
 ;
 
 create table writer_support (
@@ -136,6 +154,14 @@ create table order_subject_order_document_typ (
   order_document_type_id         bigint not null,
   constraint pk_order_subject_order_document_typ primary key (order_subject_id, order_document_type_id))
 ;
+
+create table orders_additions (
+  orders_id                      bigint not null,
+  additions_id                   bigint not null,
+  constraint pk_orders_additions primary key (orders_id, additions_id))
+;
+create sequence additions_seq;
+
 create sequence client_seq;
 
 create sequence countries_seq;
@@ -163,6 +189,8 @@ create sequence order_subject_seq;
 create sequence order_subject_category_seq;
 
 create sequence orders_seq;
+
+create sequence spacing_seq;
 
 create sequence writer_support_seq;
 
@@ -194,6 +222,8 @@ alter table orders add constraint fk_orders_orderDocumentType_13 foreign key (or
 create index ix_orders_orderDocumentType_13 on orders (order_document_type_id);
 alter table orders add constraint fk_orders_orderCurrence_14 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
 create index ix_orders_orderCurrence_14 on orders (order_currence_order_currency_id);
+alter table orders add constraint fk_orders_spacing_15 foreign key (spacing_id) references spacing (id);
+create index ix_orders_spacing_15 on orders (spacing_id);
 
 
 
@@ -201,7 +231,15 @@ alter table order_subject_order_document_typ add constraint fk_order_subject_ord
 
 alter table order_subject_order_document_typ add constraint fk_order_subject_order_docume_02 foreign key (order_document_type_id) references order_document_type (id);
 
+alter table orders_additions add constraint fk_orders_additions_orders_01 foreign key (orders_id) references orders (id);
+
+alter table orders_additions add constraint fk_orders_additions_additions_02 foreign key (additions_id) references additions (id);
+
 # --- !Downs
+
+drop table if exists additions cascade;
+
+drop table if exists orders_additions cascade;
 
 drop table if exists client cascade;
 
@@ -233,7 +271,11 @@ drop table if exists order_subject_category cascade;
 
 drop table if exists orders cascade;
 
+drop table if exists spacing cascade;
+
 drop table if exists writer_support cascade;
+
+drop sequence if exists additions_seq;
 
 drop sequence if exists client_seq;
 
@@ -262,6 +304,8 @@ drop sequence if exists order_subject_seq;
 drop sequence if exists order_subject_category_seq;
 
 drop sequence if exists orders_seq;
+
+drop sequence if exists spacing_seq;
 
 drop sequence if exists writer_support_seq;
 

@@ -3,11 +3,15 @@
 # ~~~~
 
 # Home page
-GET							/															controllers.web.Application.index()
-POST	   					/login													controllers.web.Application.authenticate()
-GET	   						/logout													controllers.web.Application.logout()
-GET	   						/mydashboard										controllers.web.client.ClientActions.index()
-GET	   						/mydashboard/messages					controllers.web.client.ClientActions.messages()
+GET							/					controllers.web.Application.index()
+POST	   						/login					controllers.web.Application.authenticate()
+GET	   						/logout					controllers.web.Application.logout()
+GET	   						/mydashboard				controllers.web.client.ClientActions.index()
+GET	   						/mydashboard/messages			controllers.web.client.ClientActions.messages()
+#placing a new order 
+GET							/neworder				controllers.web.Application.newOrder()	
+#save client and order
+POST							/submit-order				controllers.web.Application.saveClientOrder()
 
 
 # Map static resources from the /public folder to the /assets URL path

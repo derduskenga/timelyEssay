@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import play.data.validation.Constraints;
 import javax.persistence.*;
 import play.db.ebean.Model;
+import java.util.Map;
+import java.util.HashMap;
 
 @Entity
 //Would be;
@@ -16,7 +18,7 @@ public class OrderDeadlineCategory extends Model{
 	//this is the label for 
 	@Constraints.Required(message="Deadline label is required")
 	public String order_deadline_category_name;
-	public String order_deadline_category_description;
+	public String order_deadline_category_description; 
 	
 	//relationship fields
 	@OneToMany(mappedBy="orderDeadlineCategory")

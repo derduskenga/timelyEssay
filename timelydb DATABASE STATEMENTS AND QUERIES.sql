@@ -4,7 +4,6 @@ ALTER USER postgres WITH PASSWORD 'hfXmsd7Sk8w3sady623p@-$£';
 
 
 --Create and populate countrys sada
-
 CREATE TABLE IF NOT EXISTS countries(
       id SERIAL NOT NULL,
       iso char(2) NOT NULL,
@@ -16,7 +15,6 @@ CREATE TABLE IF NOT EXISTS countries(
       PRIMARY KEY (id)
 );
 
-
 INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (1, 'AF', 'AFGHANISTAN', 'Afghanistan', 'AFG', 4, 93),
 (2, 'AL', 'ALBANIA', 'Albania', 'ALB', 8, 355),
@@ -25,7 +23,7 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (5, 'AD', 'ANDORRA', 'Andorra', 'AND', 20, 376),
 (6, 'AO', 'ANGOLA', 'Angola', 'AGO', 24, 244),
 (7, 'AI', 'ANGUILLA', 'Anguilla', 'AIA', 660, 1264),
-(8, 'AQ', 'ANTARCTICA', 'Antarctica', NULL, NULL, 0),
+(8, 'AQ', 'ANTARCTICA', 'Antarctica', 0, 0, 0),
 (9, 'AG', 'ANTIGUA AND BARBUDA', 'Antigua and Barbuda', 'ATG', 28, 1268),
 (10, 'AR', 'ARGENTINA', 'Argentina', 'ARG', 32, 54),
 (11, 'AM', 'ARMENIA', 'Armenia', 'ARM', 51, 374),
@@ -46,9 +44,9 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (26, 'BO', 'BOLIVIA', 'Bolivia', 'BOL', 68, 591),
 (27, 'BA', 'BOSNIA AND HERZEGOVINA', 'Bosnia and Herzegovina', 'BIH', 70, 387),
 (28, 'BW', 'BOTSWANA', 'Botswana', 'BWA', 72, 267),
-(29, 'BV', 'BOUVET ISLAND', 'Bouvet Island', NULL, NULL, 0),
+(29, 'BV', 'BOUVET ISLAND', 'Bouvet Island', 0, 0, 0),
 (30, 'BR', 'BRAZIL', 'Brazil', 'BRA', 76, 55),
-(31, 'IO', 'BRITISH INDIAN OCEAN TERRITORY', 'British Indian Ocean Territory', NULL, NULL, 246),
+(31, 'IO', 'BRITISH INDIAN OCEAN TERRITORY', 'British Indian Ocean Territory', 0, 0, 246),
 (32, 'BN', 'BRUNEI DARUSSALAM', 'Brunei Darussalam', 'BRN', 96, 673),
 (33, 'BG', 'BULGARIA', 'Bulgaria', 'BGR', 100, 359),
 (34, 'BF', 'BURKINA FASO', 'Burkina Faso', 'BFA', 854, 226),
@@ -62,8 +60,8 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (42, 'TD', 'CHAD', 'Chad', 'TCD', 148, 235),
 (43, 'CL', 'CHILE', 'Chile', 'CHL', 152, 56),
 (44, 'CN', 'CHINA', 'China', 'CHN', 156, 86),
-(45, 'CX', 'CHRISTMAS ISLAND', 'Christmas Island', NULL, NULL, 61),
-(46, 'CC', 'COCOS (KEELING) ISLANDS', 'Cocos (Keeling) Islands', NULL, NULL, 672),
+(45, 'CX', 'CHRISTMAS ISLAND', 'Christmas Island', 0, 0, 61),
+(46, 'CC', 'COCOS (KEELING) ISLANDS', 'Cocos (Keeling) Islands', 0, 0, 672),
 (47, 'CO', 'COLOMBIA', 'Colombia', 'COL', 170, 57),
 (48, 'KM', 'COMOROS', 'Comoros', 'COM', 174, 269),
 (49, 'CG', 'CONGO', 'Congo', 'COG', 178, 242),
@@ -93,7 +91,7 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (73, 'FR', 'FRANCE', 'France', 'FRA', 250, 33),
 (74, 'GF', 'FRENCH GUIANA', 'French Guiana', 'GUF', 254, 594),
 (75, 'PF', 'FRENCH POLYNESIA', 'French Polynesia', 'PYF', 258, 689),
-(76, 'TF', 'FRENCH SOUTHERN TERRITORIES', 'French Southern Territories', NULL, NULL, 0),
+(76, 'TF', 'FRENCH SOUTHERN TERRITORIES', 'French Southern Territories', 0, 0, 0),
 (77, 'GA', 'GABON', 'Gabon', 'GAB', 266, 241),
 (78, 'GM', 'GAMBIA', 'Gambia', 'GMB', 270, 220),
 (79, 'GE', 'GEORGIA', 'Georgia', 'GEO', 268, 995),
@@ -110,7 +108,7 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (90, 'GW', 'GUINEA-BISSAU', 'Guinea-Bissau', 'GNB', 624, 245),
 (91, 'GY', 'GUYANA', 'Guyana', 'GUY', 328, 592),
 (92, 'HT', 'HAITI', 'Haiti', 'HTI', 332, 509),
-(93, 'HM', 'HEARD ISLAND AND MCDONALD ISLANDS', 'Heard Island and Mcdonald Islands', NULL, NULL, 0),
+(93, 'HM', 'HEARD ISLAND AND MCDONALD ISLANDS', 'Heard Island and Mcdonald Islands', 0, 0, 0),
 (94, 'VA', 'HOLY SEE (VATICAN CITY STATE)', 'Holy See (Vatican City State)', 'VAT', 336, 39),
 (95, 'HN', 'HONDURAS', 'Honduras', 'HND', 340, 504),
 (96, 'HK', 'HONG KONG', 'Hong Kong', 'HKG', 344, 852),
@@ -154,7 +152,7 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (134, 'MQ', 'MARTINIQUE', 'Martinique', 'MTQ', 474, 596),
 (135, 'MR', 'MAURITANIA', 'Mauritania', 'MRT', 478, 222),
 (136, 'MU', 'MAURITIUS', 'Mauritius', 'MUS', 480, 230),
-(137, 'YT', 'MAYOTTE', 'Mayotte', NULL, NULL, 269),
+(137, 'YT', 'MAYOTTE', 'Mayotte', 0, 0, 269),
 (138, 'MX', 'MEXICO', 'Mexico', 'MEX', 484, 52),
 (139, 'FM', 'MICRONESIA, FEDERATED STATES OF', 'Micronesia, Federated States of', 'FSM', 583, 691),
 (140, 'MD', 'MOLDOVA, REPUBLIC OF', 'Moldova, Republic of', 'MDA', 498, 373),
@@ -181,7 +179,7 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (161, 'OM', 'OMAN', 'Oman', 'OMN', 512, 968),
 (162, 'PK', 'PAKISTAN', 'Pakistan', 'PAK', 586, 92),
 (163, 'PW', 'PALAU', 'Palau', 'PLW', 585, 680),
-(164, 'PS', 'PALESTINIAN TERRITORY, OCCUPIED', 'Palestinian Territory, Occupied', NULL, NULL, 970),
+(164, 'PS', 'PALESTINIAN TERRITORY, OCCUPIED', 'Palestinian Territory, Occupied', 0, 0, 970),
 (165, 'PA', 'PANAMA', 'Panama', 'PAN', 591, 507),
 (166, 'PG', 'PAPUA NEW GUINEA', 'Papua New Guinea', 'PNG', 598, 675),
 (167, 'PY', 'PARAGUAY', 'Paraguay', 'PRY', 600, 595),
@@ -206,7 +204,7 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (186, 'ST', 'SAO TOME AND PRINCIPE', 'Sao Tome and Principe', 'STP', 678, 239),
 (187, 'SA', 'SAUDI ARABIA', 'Saudi Arabia', 'SAU', 682, 966),
 (188, 'SN', 'SENEGAL', 'Senegal', 'SEN', 686, 221),
-(189, 'CS', 'SERBIA AND MONTENEGRO', 'Serbia and Montenegro', NULL, NULL, 381),
+(189, 'CS', 'SERBIA AND MONTENEGRO', 'Serbia and Montenegro', 0, 0, 381),
 (190, 'SC', 'SEYCHELLES', 'Seychelles', 'SYC', 690, 248),
 (191, 'SL', 'SIERRA LEONE', 'Sierra Leone', 'SLE', 694, 232),
 (192, 'SG', 'SINGAPORE', 'Singapore', 'SGP', 702, 65),
@@ -215,7 +213,7 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (195, 'SB', 'SOLOMON ISLANDS', 'Solomon Islands', 'SLB', 90, 677),
 (196, 'SO', 'SOMALIA', 'Somalia', 'SOM', 706, 252),
 (197, 'ZA', 'SOUTH AFRICA', 'South Africa', 'ZAF', 710, 27),
-(198, 'GS', 'SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS', 'South Georgia and the South Sandwich Islands', NULL, NULL, 0),
+(198, 'GS', 'SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS', 'South Georgia and the South Sandwich Islands', 0, 0, 0),
 (199, 'ES', 'SPAIN', 'Spain', 'ESP', 724, 34),
 (200, 'LK', 'SRI LANKA', 'Sri Lanka', 'LKA', 144, 94),
 (201, 'SD', 'SUDAN', 'Sudan', 'SDN', 736, 249),
@@ -229,7 +227,7 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (209, 'TJ', 'TAJIKISTAN', 'Tajikistan', 'TJK', 762, 992),
 (210, 'TZ', 'TANZANIA, UNITED REPUBLIC OF', 'Tanzania, United Republic of', 'TZA', 834, 255),
 (211, 'TH', 'THAILAND', 'Thailand', 'THA', 764, 66),
-(212, 'TL', 'TIMOR-LESTE', 'Timor-Leste', NULL, NULL, 670),
+(212, 'TL', 'TIMOR-LESTE', 'Timor-Leste', 0, 0, 670),
 (213, 'TG', 'TOGO', 'Togo', 'TGO', 768, 228),
 (214, 'TK', 'TOKELAU', 'Tokelau', 'TKL', 772, 690),
 (215, 'TO', 'TONGA', 'Tonga', 'TON', 776, 676),
@@ -244,7 +242,7 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 (224, 'AE', 'UNITED ARAB EMIRATES', 'United Arab Emirates', 'ARE', 784, 971),
 (225, 'GB', 'UNITED KINGDOM', 'United Kingdom', 'GBR', 826, 44),
 (226, 'US', 'UNITED STATES', 'United States', 'USA', 840, 1),
-(227, 'UM', 'UNITED STATES MINOR OUTLYING ISLANDS', 'United States Minor Outlying Islands', NULL, NULL, 1),
+(227, 'UM', 'UNITED STATES MINOR OUTLYING ISLANDS', 'United States Minor Outlying Islands', 0, 0, 1),
 (228, 'UY', 'URUGUAY', 'Uruguay', 'URY', 858, 598),
 (229, 'UZ', 'UZBEKISTAN', 'Uzbekistan', 'UZB', 860, 998),
 (230, 'VU', 'VANUATU', 'Vanuatu', 'VUT', 548, 678),
@@ -260,9 +258,20 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 
 
 -------populating the DATABASE-------
+-------additions
+insert into additions values
+(1,'An Editor to Proofread my work',3.50),---additional price is per page
+(2,'One of top 5 writers to writer my work',7.50);
+----spacing
+insert into spacing values
+(1,'Double spaced page','double-spacing',1),
+(2,'Single spaced page','single-spacing',2);
 ---order currence
 insert into order_currence values
-(1,'US Dollar', 'USD',1.0),(2,'Euro','EUR',0.8),(3,'British pound sterling','GBP',0.64),(4,'Australian dollar','AUD',1.16);
+(1,'US Dollar', 'USD','$',1.0),
+(2,'Euro','EUR','€',0.8),
+(3,'British pound sterling','GBP','£',0.64),
+(4,'Australian dollar','AUD','A$',1.16);
 
 ---level of writing 
 insert into order_level_of_writing (id,order_level,additional_price,description) values 
@@ -270,9 +279,16 @@ insert into order_level_of_writing (id,order_level,additional_price,description)
 (2,'Master',1.5,'For master level writers'),
 (3,'PhD',3.3,'For PhD level writing');
 
+----cpp mode
+insert into order_cpp_mode(id,order_cpp_mode_name,cpp_mode_description)
+values
+(1,0,'order is paid per page'),
+(2,1,'order is given as assignments. So it is paid per assignment'),
+(3,2,'order is paid per question');
+
 ----deadlines
 insert into order_deadlines(id,deadline_value,deadline_unit,seconds_elapsing_to_deadline) values
-(1,10,'days',864000),(2,20,'days',1728000),(3,7,'days',604800),(4,1,'day',86400),(5,12,'hours',43200),(6,6,'hours',21600),(7,3,'hours',10800);(8,2,'months',51840000)
+(1,10,'days',864000),(2,20,'days',1728000),(3,7,'days',604800),(4,1,'day',86400),(5,12,'hours',43200),(6,6,'hours',21600),(7,3,'hours',10800),(8,2,'months',51840000);
 
 ---deadline categories
 insert into order_deadline_category (id,order_deadline_category_name,order_deadline_category_description) values
@@ -280,16 +296,10 @@ insert into order_deadline_category (id,order_deadline_category_name,order_deadl
 (2,'dissertation','deadline range for long documents ranging from 12 hrs to 2 month'),
 (3,'programming','deadline ramges for programming assignments');
 
-----cpp mode
-insert into order_cpp_mode(id,order_cpp_mode_name,cpp_mode_description)
-values
-(1,'perpage','order is paid per page'),
-(2,'perassignment','order is given as assignments. So it is paid per assignment'),
-(3,'perquestion','order is paid per question');
 
 ----order_deadlines_order_deadline_c
-insert into deadline_deadline_category_association (order_deadlines_id,order_deadline_category_id) values
-(1,1),(3,1),(4,1),(5,1),(6,1),(7,1),(1,2),(3,2),(4,2),(5,2),(8,2),(1,3),(2,3),(4,3);
+insert into deadline_deadline_category_association (id,order_deadlines_id,order_deadline_category_id,additional_price) values
+(1,1,1,0.0),(2,3,1,3.40),(3,4,1,4.00),(4,5,1,6.50),(5,6,1,10.50),(6,7,1,20.00),(7,1,2,15.00),(8,3,2,7.00),(9,4,2,21.00),(10,5,2,25.00),(11,8,2,0.0),(12,1,3,5.50),(13,2,3,0.00),(14,4,3,15.00);
 
 ----order_subject_category table 
 INSERT INTO order_subject_category(id, subject_category_name, additional_price, description) VALUES 

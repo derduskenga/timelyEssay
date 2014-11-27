@@ -25,6 +25,11 @@ public class Orders extends Model{
 	public OrderCurrence orderCurrence;
 	@OneToMany(mappedBy="orders")
 	public List<OrderMessages> OrderMessages;
+	@ManyToOne
+	public Spacing spacing;
+	@ManyToMany
+	List<Additions> additions;
+	
 	
 	
 } 

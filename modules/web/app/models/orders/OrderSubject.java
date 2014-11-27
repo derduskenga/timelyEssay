@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import play.data.validation.Constraints;
 import javax.persistence.*;
 import play.db.ebean.Model;
+import java.util.Map;
+import java.util.HashMap;
+import play.Logger;
+import play.Logger.ALogger;
 
 @Entity
 public class OrderSubject extends Model{
@@ -17,7 +21,11 @@ public class OrderSubject extends Model{
 	//relationship field
 	@ManyToMany
 	List<OrderDocumentType> orderDocumentType;
+	
 	@ManyToOne
 	OrderSubjectCategory orderSubjectCategory;
+	
+	public OrderSubject(){}
+
 	
 } 
