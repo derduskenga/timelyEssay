@@ -7,7 +7,7 @@ import com.typesafe.sbt.rjs.Import.{rjs, RjsKeys}
 import com.typesafe.sbt.digest.Import.digest
 
 object Common {
-	def appName = "play-multidomain-seed"
+	def appName = "Timely Essay"
 	
 	// Common settings for every project
 	def settings (theName: String) = Seq(
@@ -38,6 +38,7 @@ object Common {
 		"org.webjars" % "jquery" % "2.1.1",
 		"org.webjars" % "bootstrap" % "3.2.0",
 		"org.webjars" % "requirejs" % "2.1.14-1",
+		"com.google.code.gson" % "gson" % "2.3.1",
 		javaJdbc,
 		javaEbean
 		// Add here more common dependencies:

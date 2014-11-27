@@ -31,5 +31,4 @@ public class Orders extends Model{
 	List<Additions> additions;
 	
 	
-	
 } 

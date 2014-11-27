@@ -15,11 +15,5 @@ public class FreelanceWriter extends Model{
   public String l_name;
   //relationship fields
   
-  @OneToMany(mappedBy="freelanceWriter")
-  public List<OrderMessages> orderMessages;
-  
-  
-  
-  
-  
+
 }
