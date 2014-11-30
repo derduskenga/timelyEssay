@@ -20,7 +20,7 @@ public class Orders extends Model{
 	public String operating_system;
 	public String programming_language;
 	public String database_used;
-	public int prefered_writer_id;
+	public int prefered_writer_id;//if this is a returning cistomer
 	//relationship fields
 	@ManyToOne
 	public Client client;
