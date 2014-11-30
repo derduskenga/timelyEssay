@@ -13,6 +13,9 @@ GET	   						/mydashboard/messages							controllers.web.client.ClientActions.me
 POST						/mydashboard/savemessage						controllers.web.client.ClientActions.saveClientMessage()
 GET							/mydashboard/affiliateprogram					controllers.web.client.ClientActions.affiliateProgram()
 POST						/mydashboard/sendinvitationmail				controllers.web.client.ClientActions.sendInvitationEmail()
+GET							/mydashboard/preferredwriters					controllers.web.client.ClientActions.preferredWriters()
+POST						/mydashboard/savepreferredwriter					controllers.web.client.ClientActions.savePreferredWriter()
+
 #placing a new order 
 GET							/neworder				controllers.web.Application.newOrder()	
 #save client and order

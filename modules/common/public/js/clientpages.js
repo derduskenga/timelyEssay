@@ -13,3 +13,13 @@ function alternateInvationMailView(panel){
 			$('.email-invitation-div').show(1000);
 		}
 } 
+
+function alternateAddWriterView(btn){
+		$('.add-preferred-writer-div').hide(1000);
+		$('.add-preferred-writer-form-div').hide(1000);
+		if(btn=="add_btn"){
+			$(".add-preferred-writer-form-div").show(1000);
+		}else{
+			$('.add-preferred-writer-div').show(1000);
+		}
+}

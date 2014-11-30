@@ -40,10 +40,10 @@ create table deadline_deadline_category_association (
 ;
 
 create table freelance_writer (
-  id                        bigint not null,
+  freelance_writer_id       bigint not null,
   f_name                    varchar(255),
   l_name                    varchar(255),
-  constraint pk_freelance_writer primary key (id))
+  constraint pk_freelance_writer primary key (freelance_writer_id))
 ;
 
 create table order_cpp_mode (
@@ -138,6 +138,13 @@ create table orders (
   constraint pk_orders primary key (id))
 ;
 
+create table preferred_writer (
+  preferred_writer_entry_id bigint not null,
+  client_id                 bigint,
+  freelance_writer_freelance_writer_id bigint,
+  constraint pk_preferred_writer primary key (preferred_writer_entry_id))
+;
+
 create table spacing (
   id                        bigint not null,
   spacing                   varchar(255),
@@ -194,6 +201,8 @@ create sequence order_subject_category_seq;
 
 create sequence orders_seq;
 
+create sequence preferred_writer_seq;
+
 create sequence spacing_seq;
 
 create sequence writer_support_seq;
@@ -222,6 +231,10 @@ alter table orders add constraint fk_orders_orderCurrence_11 foreign key (order_
 create index ix_orders_orderCurrence_11 on orders (order_currence_order_currency_id);
 alter table orders add constraint fk_orders_spacing_12 foreign key (spacing_id) references spacing (id);
 create index ix_orders_spacing_12 on orders (spacing_id);
+alter table preferred_writer add constraint fk_preferred_writer_client_13 foreign key (client_id) references client (id);
+create index ix_preferred_writer_client_13 on preferred_writer (client_id);
+alter table preferred_writer add constraint fk_preferred_writer_freelance_14 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
+create index ix_preferred_writer_freelance_14 on preferred_writer (freelance_writer_freelance_writer_id);
 
 
 
@@ -269,6 +282,8 @@ drop table if exists order_subject_category cascade;
 
 drop table if exists orders cascade;
 
+drop table if exists preferred_writer cascade;
+
 drop table if exists spacing cascade;
 
 drop table if exists writer_support cascade;
@@ -302,6 +317,8 @@ drop sequence if exists order_subject_seq;
 drop sequence if exists order_subject_category_seq;
 
 drop sequence if exists orders_seq;
+
+drop sequence if exists preferred_writer_seq;
 
 drop sequence if exists spacing_seq;
 

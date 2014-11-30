@@ -6,6 +6,7 @@ import javax.persistence.*;
 import play.db.ebean.Model;
 import models.orders.Orders;
 import models.orders.OrderMessages;
+import models.client.PreferredWriter;
 
 @Entity
 public class Client extends Model{
@@ -31,6 +32,9 @@ public class Client extends Model{
 	@OneToOne
 	public Countries countries;
 	
+	@OneToMany(mappedBy="client")
+	public List<PreferredWriter> preferredWriter;  
+	
 	public static Finder<Long, Client> finder = new Finder<Long, Client>(Long.class, Client.class);
 	
 	public Client(){
@@ -38,16 +42,22 @@ public class Client extends Model{
 	}
 	
 	public Client(String email, String password){
-	  this.password = password;
-	  this.email = email;
+		this.password = password;
+		this.email = email;
 	}
 	
 	public static Client getClient(String email){
-	  return finder.where().eq("emal", email).findUnique();
+		return finder.where().eq("emal", email).findUnique();
 	}
 	
 	public static Client authenticate(String email, String password) {
 	    return finder.where().eq("email", email).eq("password", password).findUnique();
+	}
+	
+	public static Finder<Long, PreferredWriter> preferredWriterFinder = new Finder<Long, PreferredWriter>(Long.class, PreferredWriter.class);
+	
+	public static List<PreferredWriter> getPreferedWriters(){
+		return preferredWriterFinder.all();
 	}
 		
 } 
