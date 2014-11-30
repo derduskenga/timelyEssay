@@ -14,24 +14,24 @@
 	@text(clientForm("f_name"),
 	  label = "First Name",
 	  placeholder = "First Name",
-	  divClass="col-sm-6")
+	  divClass="col-sm-9")
 	
 	@text(clientForm("l_name"),
 	  label = "Last Name",
-	  placeholder = "Last Name",divClass="col-sm-6")
+	  placeholder = "Last Name",divClass="col-sm-9")
 	
 	@text(clientForm("email"),
 	  label = "Email",
-	  placeholder = "Email",divClass="col-sm-6")
+	  placeholder = "Email",divClass="col-sm-9")
 	
 	@text(clientForm("c_email"),
 	  label = "Confirm email",
-	  placeholder = "Re-enter your email",divClass="col-sm-6")
+	  placeholder = "Re-enter your email",divClass="col-sm-9")
 	
 	@fieldtemplates.countryselect(clientForm("client_country"),
 	  label = "Select country",
 	  optionMap=countryMap,
-	  default="Select your country",divClass="col-sm-6"
+	  default="Select your country",divClass="col-sm-9"
 	)
 
 	<div class="row form-inline" id="client-mobile-phone">
@@ -65,7 +65,7 @@
 	  label = "Document type",
 	  optionMap=documentMap,
 	  default="Select document type",
-	  includeStaticDefault=false,divClass="col-sm-6"
+	  includeStaticDefault=false,divClass="col-sm-9"
 	)
 	
 	@fieldtemplates.countryselect(orderForm("document_dead"),
@@ -79,18 +79,18 @@
 	  label = "Order Subject",
 	  optionMap=documentSubjects,
 	  default="Select subject",
-	  includeStaticDefault=true,divClass="col-sm-6"
+	  includeStaticDefault=true,divClass="col-sm-9"
 	)
 	
 	@text(clientForm("topic"),
 	  label = "You Topic",
-	  placeholder = "Topic",divClass="col-sm-6")
+	  placeholder = "Topic",divClass="col-sm-9")
 	  
 	@fieldtemplates.textarea(clientForm("order_instruction"),
 	  label="Your instructions",
 	  placeholder = "Type the instructions you would like to be followed by our writer to complete your work",
 	  rows="4",
-	  help="You will be able to upload any additional files to your order once your account is created",divClass="col-sm-7")
+	  help="You will be able to upload any additional files to your order once your account is created",divClass="col-sm-9")
 	  
 	@fieldtemplates.unitsSelect(orderForm("number_of_units"),
 	  label = "",
@@ -108,17 +108,17 @@
 	
 	@currencyradiobuttons(orderForm("order_currency"),
 	  label="Currency",
-	  buttonNameList=currenceList,divClass="col-sm-6"
+	  buttonNameList=currenceList,divClass="col-sm-9"
 	)
 	
 	@spacingradiobutton(orderForm("page_spacing"),
 	  label="Line spacing", 
-	  buttonNameList=spacinList,divClass="col-sm-6"
+	  buttonNameList=spacinList,divClass="col-sm-9"
 	)
 	
 	@fieldtemplates.select(orderForm("writing_style"),
 	 label="Reference Style",
-	 optionMap=styleMap,divClass="col-sm-6"
+	 optionMap=styleMap,divClass="col-sm-9"
 	)  
 	  
 	@fieldtemplates.referencecountselect(orderForm("prog_language"),
@@ -164,10 +164,10 @@
 	    price=additions.additional_price,divClass="col-sm-7"
 	    )
 	  }
-	  
+	  <hr>
 	  @fieldtemplates.text(orderForm("prefered_writer"),
 	    label = "Prefered writer ID",
-	    divClass="col-sm-6",
+	    divClass="col-sm-7",
 	    help="If you have already used this writing service, enter the Id of the writer you would love to complete your work. If your prefered writer acceptes this order, you will pay 10% more, which will go directly to the writer")
 	  
       </div>

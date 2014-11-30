@@ -3,6 +3,13 @@
 
 # --- !Ups
 
+create table additions (
+  id                        bigint not null,
+  ui_label                  varchar(255),
+  additional_price          float,
+  constraint pk_additions primary key (id))
+;
+
 create table client (
   id                        bigint not null,
   f_name                    varchar(255),
@@ -213,6 +220,8 @@ alter table orders add constraint fk_orders_orderDocumentType_10 foreign key (or
 create index ix_orders_orderDocumentType_10 on orders (order_document_type_id);
 alter table orders add constraint fk_orders_orderCurrence_11 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
 create index ix_orders_orderCurrence_11 on orders (order_currence_order_currency_id);
+alter table orders add constraint fk_orders_spacing_12 foreign key (spacing_id) references spacing (id);
+create index ix_orders_spacing_12 on orders (spacing_id);
 
 
 

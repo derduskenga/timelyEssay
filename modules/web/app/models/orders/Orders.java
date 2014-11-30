@@ -11,9 +11,16 @@ public class Orders extends Model{
 	//fields
 	@Id
 	public Long id;
-	public String first_name;
-	public String last_name;
-	public String email;
+	public int order_urgency;//this is the period given to do the order; it is given in seconds
+	public String order_topic;
+	public String order_instructions;
+	public int number_of_units;// this is the number of pages of order, assingments of questions
+	public String style_of_writing;
+	public int number_of_sources;
+	public String operating_system;
+	public String programming_language;
+	public String database_used;
+	public int prefered_writer_id;
 	//relationship fields
 	@ManyToOne
 	public Client client;
@@ -29,6 +36,8 @@ public class Orders extends Model{
 	public Spacing spacing;
 	@ManyToMany
 	List<Additions> additions;
+	@ManyToOne
+	public OrderSubject orderSubject;
 	
 	
 } 

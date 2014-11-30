@@ -25,6 +25,11 @@ public class OrderSubject extends Model{
 	@ManyToOne
 	OrderSubjectCategory orderSubjectCategory;
 	
+	@OneToMany(mappedBy="orderSubject")
+	Orders orders;
+	
+	
+	
 	public OrderSubject(){}
 
 	
