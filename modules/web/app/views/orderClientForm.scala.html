@@ -11,7 +11,11 @@
     <fieldset>
       <input type="hidden"  value="@clientForm("id").valueOr("")" name="client_id"/>
       <div id=client-personal-info>
-    
+	 @if(flash.containsKey("clientorderformerros")){
+	    <div class="alert alert-danger">
+		    @flash.get("clientorderformerros")
+	    </div>
+	    }
 	<legend>Personal details</legend>
 	@text(clientForm("f_name"),
 	  label = "First Name",
