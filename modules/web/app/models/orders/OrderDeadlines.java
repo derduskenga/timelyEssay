@@ -6,8 +6,12 @@ import javax.persistence.*;
 import play.db.ebean.Model;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.TreeMap;
 import play.Logger;
-import play.Logger.ALogger;
+import org.json.simple.*;
+//import org.json.simple.JSONArray;
+import java.util.Collections;
+import java.util.Comparator;
 
 @Entity
 //These are real order durations with their time equivalent in seconds
@@ -34,7 +38,7 @@ public class OrderDeadlines extends Model{
 	
 	public static Map<Map<Long,String>,Boolean> getDeadlines(OrderDeadlineCategory orderDeadlineCategory){
 	  Logger.info("in getDeadlines " + orderDeadlineCategory.order_deadline_category_name);
-	  Map<Long,String> documentDeadlinesMap = new HashMap<Long,String>();
+	  Map<Long,String> documentDeadlinesMap = new TreeMap<Long, String>(java.util.Collections.reverseOrder());
 	  List<DeadlineDeadlineCategoryAssociation> deadline_deadline_category_association_list = orderDeadlineCategory.deadlineDeadlineCategoryAssociation;
 	  for(int i = 0; i < deadline_deadline_category_association_list.size(); i++){
 	    //elapsedseconds
@@ -45,10 +49,60 @@ public class OrderDeadlines extends Model{
 	  }
 	  Map<Map<Long,String>,Boolean> documentDeadlinesMapOuter =  new HashMap<Map<Long,String>,Boolean>();
 	  
+	  
+	  //documentDeadlinesMap = new TreeMap<Long, String>(java.util.Collections.reverseOrder());
 	  documentDeadlinesMapOuter.put(documentDeadlinesMap,false);
 	 
 	  return documentDeadlinesMapOuter;
 	  
+	}
+	
+	public static JSONArray getDeadlinesArray(OrderDeadlineCategory orderDeadlineCategory){
+	  //what i need is id,time in seconds,additional price, deadline labels
+	  Logger.info("in getDeadlines " + orderDeadlineCategory.order_deadline_category_name);
+	 
+	  JSONArray jArray = new JSONArray();
+	  List <DeadlineDeadlineCategoryAssociation> deadline_deadline_category_association_list = new ArrayList<DeadlineDeadlineCategoryAssociation>();
+	  deadline_deadline_category_association_list = orderDeadlineCategory.deadlineDeadlineCategoryAssociation;
+	  
+	  if(deadline_deadline_category_association_list!=null){
+	    for(int i = 0; i < deadline_deadline_category_association_list.size(); i++){
+	       JSONObject jObj = new JSONObject();
+	      jObj.put("id",deadline_deadline_category_association_list.get(i).orderDeadlines.id);
+	      Logger.info("testing: " + deadline_deadline_category_association_list.get(i).orderDeadlines.deadline_value);
+	      jObj.put("time_in_seconds",deadline_deadline_category_association_list.get(i).orderDeadlines.seconds_elapsing_to_deadline);
+	      jObj.put("additional_price",deadline_deadline_category_association_list.get(i).additional_price);
+	      jObj.put("deadline_labels",deadline_deadline_category_association_list.get(i).orderDeadlines.deadline_value + " " + deadline_deadline_category_association_list.get(i).orderDeadlines.deadline_unit);
+	      jArray.add(jObj);
+	    }
+	  }
+	  //sort the array descending
+	   return sortArrray(jArray);
+	}
+	public static JSONArray sortArrray(JSONArray jsonArr){				
+	  JSONArray sortedJsonArray = new JSONArray();
+	  List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+	  for (int i = 0; i < jsonArr.size(); i++) {
+	      jsonValues.add((JSONObject)jsonArr.get(i));
+	  }
+	  Collections.sort( jsonValues, new Comparator<JSONObject>() {
+	      //You can change "Name" with "ID" if you want to sort by ID
+	      private static final String KEY_NAME = "time_in_seconds";
+
+	      @Override
+	      public int compare(JSONObject a, JSONObject b) {
+		  Long valA = 1L;
+		  Long valB = 1L;				
+		  valA = (Long) a.get(KEY_NAME);
+		  valB = (Long) b.get(KEY_NAME);
+		  return -valA.compareTo(valB);
+	      }
+	  });
+
+	  for (int i = 0; i < jsonArr.size(); i++) {
+	      sortedJsonArray.add(jsonValues.get(i));
+	  }
+	  return sortedJsonArray;
 	}
 
 } 

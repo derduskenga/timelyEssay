@@ -6,10 +6,12 @@
 @import java.util.Map
 @import java.util.HashMap
 @main("Timely Essay | New Order")(loginForm){
-  @helper.form(action=controllers.web.routes.Application.saveClientOrder(),'class->"form-horizontal",'id->"radio-demo"){
+
+  @helper.form(action=controllers.web.routes.Application.saveClientOrder(),'class->"form-horizontal",'id->"clientorderform", 'name->"clientorderform"){
     <fieldset>
       <input type="hidden"  value="@clientForm("id").valueOr("")" name="client_id"/>
       <div id=client-personal-info>
+    
 	<legend>Personal details</legend>
 	@text(clientForm("f_name"),
 	  label = "First Name",
@@ -39,7 +41,8 @@
 	  <div class="col-sm-7">	    
 	    @shortText(clientForm("country_code"),
 	      size="5",
-	      maxSize="3")
+	      maxSize="3",
+	      activity="readonly")
 	    
 	    @shortText(clientForm("area_code"),
 	      label="-",
@@ -59,6 +62,8 @@
       </div>
       
       <input type="hidden"  value="@orderForm("id").valueOr("")" name="order_id"/>
+      <input type="hidden" id="deadline_category_tracker" value="">
+      
       <div id="order-info">
 	<legend>Order details</legend>
 	@fieldtemplates.countryselect(orderForm("document_type"),
@@ -68,19 +73,21 @@
 	  includeStaticDefault=false,divClass="col-sm-9"
 	)
 	
-	@fieldtemplates.countryselect(orderForm("document_dead"),
+	@fieldtemplates.countryselect(orderForm("document_deadline"),
 	  label = "Order Urgency",
 	  optionMap=documentDeadlines,
 	  default="Urgency",
 	  includeStaticDefault=false,divClass="col-sm-6"
 	)
 	
-	@fieldtemplates.subjectSelect(orderForm("document_dead"),
-	  label = "Order Subject",
-	  optionMap=documentSubjects,
-	  default="Select subject",
-	  includeStaticDefault=true,divClass="col-sm-9"
-	)
+	<div id="order-subject-area">
+	  @fieldtemplates.subjectSelect(orderForm("document_subject"),
+	    label = "Order Subject",
+	    optionMap=documentSubjects,
+	    default="Select subject",
+	    includeStaticDefault=true,divClass="col-sm-9"
+	  )
+	</div>
 	
 	@text(clientForm("topic"),
 	  label = "You Topic",
@@ -97,7 +104,14 @@
 	  optionMap=numberOfUnitsMap,
 	  default="--select--",
 	  includeStaticDefault=true,divClass="col-sm-6"
-	)
+	)	
+		
+	<div id="spacing-area">
+	  @spacingradiobutton(orderForm("page_spacing"),
+	    label="Line spacing", 
+	    buttonNameList=spacinList,divClass="col-sm-9"
+	  )
+	</div>
 	
 	@fieldtemplates.countryselect(orderForm("level_of_writing"),
 	  label = "Level",
@@ -111,17 +125,12 @@
 	  buttonNameList=currenceList,divClass="col-sm-9"
 	)
 	
-	@spacingradiobutton(orderForm("page_spacing"),
-	  label="Line spacing", 
-	  buttonNameList=spacinList,divClass="col-sm-9"
-	)
-	
 	@fieldtemplates.select(orderForm("writing_style"),
 	 label="Reference Style",
 	 optionMap=styleMap,divClass="col-sm-9"
 	)  
 	  
-	@fieldtemplates.referencecountselect(orderForm("prog_language"),
+	@fieldtemplates.referencecountselect(orderForm("no_of_references"),
 	  label="No. of References",
 	  optionMap=refMap,
 	  isDefaultSelect=false,
@@ -129,7 +138,7 @@
 	  default="--select--"
 	)
 
-	<div id="os-language-database">
+	<div id="os-language-database" class="hidden">
 	  @fieldtemplates.osmultiselect(orderForm("operating_system"),
 	    label="Operating system",
 	    optionMap=styleMap,divClass="col-sm-6"
@@ -159,9 +168,9 @@
 	  
 	  @for(additions <-additionsList){
 	    @additionscheckboxes(orderForm("orders_additions"),
-	    checkboxList=additions.id,
-	    label=additions.ui_label,
-	    price=additions.additional_price,divClass="col-sm-7"
+	      checkboxList=additions.id,
+	      label=additions.ui_label,
+	      price=additions.additional_price,divClass="col-sm-7"
 	    )
 	  }
 	  <hr>
@@ -173,7 +182,7 @@
       </div>
       <hr>
       <div class="form-group" align="center">
-	<input type="submit" class="btn btn-primary" value="Vie summary">
+	<input type="submit" class="btn btn-primary" value="Vie summary" id = "client-order-form-submit">
       </div>
     </fieldset>
   }

@@ -7,8 +7,9 @@
         <input
           type="radio"
           name="@field.name"
-          id="@buttonName.alias"
+          id="spacing-@buttonName.factor"
           value="@buttonName.id"
+          class="spacing-shared-class"
           @if(buttonName.factor == 1) {checked} />
         @buttonName.spacing
       </label>

@@ -6,11 +6,12 @@
         <label class="checkbox-inline">
           <input
             type="checkbox"
-            name="@(field.name + "[]")"
-            id="@checkboxList"
+            name="@field.name"
+            id="additions-@checkboxList"
             value="@checkboxList"
+            class="shared-order-additions"
             @if(isChecked) {checked}>
-            <span id="addition-currency-symbol-@checkboxList">+$</span> <span id="addition-price-@checkboxList">@price</span>
+            <span id="addition-currency-symbol-@checkboxList">+&nbsp;$</span> <span id="addition-price-@checkboxList">@price</span>
          <label>
          
       <span class="help-block">@help</span>

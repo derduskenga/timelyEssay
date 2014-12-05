@@ -3,7 +3,8 @@
 	name="@field.name"
 	size="@size" 
 	maxlength="@maxSize" 
+	id="@field.id"
 	class="form-control"
 	placeholder="@placeholder"
-	@activity
+	@if(activity=="readonly"){readonly}
 	placeholder="@placeholder">

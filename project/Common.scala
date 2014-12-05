@@ -39,6 +39,7 @@ object Common {
 		"org.webjars" % "bootstrap" % "3.2.0",
 		"org.webjars" % "requirejs" % "2.1.14-1",
 		"com.google.code.gson" % "gson" % "2.3.1",
+		"com.googlecode.json-simple"%"json-simple"%"1.1",
 		javaJdbc,
 		javaEbean
 		// Add here more common dependencies:

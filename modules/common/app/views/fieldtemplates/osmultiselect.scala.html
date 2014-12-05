@@ -6,14 +6,15 @@
       <select
         class="form-control"
         id="@field.id"
-        name="@if(isMultiple) {@(field.name + "[]")} else {@field.name}"
+        name="@field.name"
         @if(isMultiple) {multiple="multiple"}>
         
-        @if(isMultiple) {<option class="blank" value="">@default</option>}
-	<option class="blank" value="Windows Vista/7/8">Windows Vista/7/8</option>
-	<option class="blank" value="Linux/variants">Linux</option>
-	<option class="blank" value="Mac Os">Mac OS</option>
-	<option class="blank" value="Unix/variants">Unix/variants</option>
+        @if(isMultiple) {<option class="blank" value="" selected>@default</option>}
+	<option value="Windows Vista/7/8">Windows Vista/7/8</option>
+	<option value="Linux/variants">Linux</option>
+	<option value="Mac Os">Mac OS</option>
+	<option value="Unix/variants">Unix/variants</option>
+	<option value="Any">Any</option>
       </select>
       <span class="help-block">@help</span>
       <span class="help-block">@{field.error.map { error => error.message }}</span>

@@ -26,7 +26,7 @@ public class OrderSubject extends Model{
 	OrderSubjectCategory orderSubjectCategory;
 	
 	@OneToMany(mappedBy="orderSubject")
-	Orders orders;
+	List<Orders> orders;
 	
 	
 	

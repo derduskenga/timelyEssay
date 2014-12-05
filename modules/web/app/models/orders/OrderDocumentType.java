@@ -9,6 +9,13 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import play.Logger;
 import java.util.Collections;
+import play.libs.Json;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 @Entity
 public class OrderDocumentType extends Model{
@@ -19,6 +26,7 @@ public class OrderDocumentType extends Model{
 	//all prices are in dollars
 	public double base_price;
 	public String description;
+	public double additions_factor;
 	
 	//relationship fields
 	@OneToMany(mappedBy="orderDocumentType")
@@ -56,12 +64,12 @@ public class OrderDocumentType extends Model{
 	    List<OrderSubject> subjectsForDocument = documentList.get(0).orderSubject;
 	    if(subjectsForDocument.size() > 0){
 	      for(int j = 0 ; j<subjectsForDocument.size(); j++){
-		Logger.info("subject " + j + ": " + subjectsForDocument.get(j).subject_name);
+		//Logger.info("subject " + j + ": " + subjectsForDocument.get(j).subject_name);
 		subjectByDocumentMapInnerMap.put(subjectsForDocument.get(j).id, subjectsForDocument.get(j).subject_name);
 	      }	     
 	    }
 	    
-	    Logger.info("size at sending" + subjectByDocumentMapInnerMap.size());
+	    //Logger.info("size at sending" + subjectByDocumentMapInnerMap.size());
 	    TempStore.setDocumentSubjects(new TreeMap<Long,String>(subjectByDocumentMapInnerMap));
 	    //sort the list
 	    Collections.sort(documentList, new ListSort());
@@ -88,9 +96,37 @@ public class OrderDocumentType extends Model{
 	    
 	    return new HashMap<Map<Long,String>,Boolean>(); 
 	  }
-	}  
+	}
 	
-	
-	
-	
+	public static JSONObject getDocumentById(Long docId){
+	  JSONObject finalJsonObject = new JSONObject();
+	  OrderDocumentType odt= OrderDocumentType.find().byId(docId);//where().eq("id", docId).findList();
+	  //Logger.info("id passed is: " + docId);
+	 //Logger.info("id sent: " + odt.orderDeadlineCategory.id);
+	  //add base_price
+	  //subjects object
+	  JSONArray jArray = new JSONArray();
+	  List<OrderSubject> orderSubList = odt.orderSubject;
+	  if(orderSubList.size()>0){ 
+	     for(int i=0;i<orderSubList.size();i++){
+	      JSONObject subjectOJObject = new JSONObject();
+	      subjectOJObject.put("id",orderSubList.get(i).id);
+	      subjectOJObject.put("subject_name",orderSubList.get(i).subject_name);
+	      subjectOJObject.put("additional_price",orderSubList.get(i).orderSubjectCategory.additional_price);
+	      jArray.add(subjectOJObject);
+	     }
+	  }	 
+	  //getDeadlines
+	  //what i need is id,time in seconds,additional price, deadline labels
+	  JSONArray deadlineJArray = new JSONArray();
+	  finalJsonObject.put("id",odt.id);
+	  finalJsonObject.put("additions_factor",odt.additions_factor);
+	  finalJsonObject.put("base_price",odt.base_price);
+	  finalJsonObject.put("deadline_category",odt.orderDeadlineCategory.order_deadline_category_name);
+	  finalJsonObject.put("count_units",OrderCppMode.getOrderUnits(odt.orderCppMode.order_cpp_mode_name));
+	  finalJsonObject.put("document_subjects",jArray);
+	  finalJsonObject.put("document_deadlines",OrderDeadlines.getDeadlinesArray(odt.orderDeadlineCategory));
+	  finalJsonObject.put("cpp_mode",odt.orderCppMode.order_cpp_mode_name.toString());
+	  return finalJsonObject;
+	}
 } 

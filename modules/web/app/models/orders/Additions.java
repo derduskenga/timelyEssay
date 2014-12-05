@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import play.data.validation.Constraints;
 import javax.persistence.*;
 import play.db.ebean.Model;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 @Entity
 public class Additions extends Model{
@@ -32,5 +34,18 @@ public class Additions extends Model{
 	additionList = Additions.find().findList();
 	return additionList;
       } 
+      
+      public static JSONArray getAdditionsArray(){
+	JSONArray jArray = new JSONArray();
+	List<Additions> additionlist = getAdditionsList();
+	for(int i = 0; i<additionlist.size(); i++){
+	  JSONObject jobject = new JSONObject();
+	  jobject.put("id",additionlist.get(i).id);
+	  jobject.put("ui_label",additionlist.get(i).ui_label);
+	  jobject.put("additional_price",additionlist.get(i).additional_price);
+	  jArray.add(jobject);
+	}
+	return jArray;
+      }
     
 }

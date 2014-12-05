@@ -8,15 +8,28 @@ POST	   					/login															controllers.web.Application.authenticate()
 GET	   						/logout															controllers.web.Application.logout()
 
 #client pages
-GET	   						/mydashboard												controllers.web.client.ClientActions.index()
-GET	   						/mydashboard/messages							controllers.web.client.ClientActions.messages()
-POST						/mydashboard/savemessage						controllers.web.client.ClientActions.saveClientMessage()
-GET							/mydashboard/affiliateprogram					controllers.web.client.ClientActions.affiliateProgram()
-POST						/mydashboard/sendinvitationmail				controllers.web.client.ClientActions.sendInvitationEmail()
+GET	   					/mydashboard												controllers.web.client.ClientActions.index()
+GET	   					/mydashboard/messages              	controllers.web.client.ClientActions.messages()
+POST						/mydashboard/savemessage		controllers.web.client.ClientActions.saveClientMessage()
+GET						/mydashboard/affiliateprogram		controllers.web.client.ClientActions.affiliateProgram()
+POST						/mydashboard/sendinvitationmail		controllers.web.client.ClientActions.sendInvitationEmail()
 #placing a new order 
-GET							/neworder				controllers.web.Application.newOrder()	
+GET						/neworder				controllers.web.Application.newOrder()	
 #save client and order
-POST							/submit-order				controllers.web.Application.saveClientOrder()
+POST						/submit-order				controllers.web.Application.saveClientOrder()
+#fetching countries 
+#POST						/fetch/countries_json			controllers.web.Application.fetchCountries()
+#fetch Documents using id
+POST						/fetch/order_document/:docId		controllers.web.Application.fetchDocument(docId:Long)
+#fetch currency
+POST						/fetch/currency/			controllers.web.Application.fetchCurrency()
+#fetch additions
+POST						/fetch/additions/			controllers.web.Application.fetchAdditions()
+#level of writing
+POST						/fetch/level/				controllers.web.Application.fetchLevelOfWriting()
+#perpage order page spacing
+POST 						/fetch/spacing/				controllers.web.Application.fetchSpacing()
+
 
 
 # Map static resources from the /public folder to the /assets URL path

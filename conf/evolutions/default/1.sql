@@ -16,7 +16,11 @@ create table client (
   l_name                    varchar(255),
   email                     varchar(255),
   password                  varchar(255),
-  countries_id              bigint,
+  country_code              varchar(255),
+  area_code                 varchar(255),
+  phone_number              varchar(255),
+  created_on                timestamp,
+  client_country_id         bigint,
   constraint pk_client primary key (id))
 ;
 
@@ -83,6 +87,7 @@ create table order_document_type (
   document_type_name        varchar(255),
   base_price                float,
   description               varchar(255),
+  additions_factor          float,
   order_deadline_category_id bigint,
   order_cpp_mode_id         bigint,
   constraint pk_order_document_type primary key (id))
@@ -127,14 +132,27 @@ create table order_subject_category (
 
 create table orders (
   id                        bigint not null,
-  first_name                varchar(255),
-  last_name                 varchar(255),
-  email                     varchar(255),
+  order_urgency             integer,
+  order_topic               varchar(255),
+  order_instructions        varchar(255),
+  number_of_units           integer,
+  style_of_writing          varchar(255),
+  number_of_sources         integer,
+  operating_system          varchar(255),
+  programming_language      varchar(255),
+  database_used             varchar(255),
+  prefered_writer_id        integer,
+  order_date                timestamp,
+  order_total               float,
+  amount_paid               float,
+  is_paid                   boolean,
+  is_writer_assigned        boolean,
   client_id                 bigint,
   order_level_of_writing_id bigint,
   order_document_type_id    bigint,
   order_currence_order_currency_id bigint,
   spacing_id                bigint,
+  order_subject_id          bigint,
   constraint pk_orders primary key (id))
 ;
 
@@ -198,8 +216,8 @@ create sequence spacing_seq;
 
 create sequence writer_support_seq;
 
-alter table client add constraint fk_client_countries_1 foreign key (countries_id) references countries (id);
-create index ix_client_countries_1 on client (countries_id);
+alter table client add constraint fk_client_client_country_1 foreign key (client_country_id) references countries (id);
+create index ix_client_client_country_1 on client (client_country_id);
 alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__2 foreign key (order_deadlines_id) references order_deadlines (id);
 create index ix_deadline_deadline_category__2 on deadline_deadline_category_association (order_deadlines_id);
 alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__3 foreign key (order_deadline_category_id) references order_deadline_category (id);
@@ -222,6 +240,8 @@ alter table orders add constraint fk_orders_orderCurrence_11 foreign key (order_
 create index ix_orders_orderCurrence_11 on orders (order_currence_order_currency_id);
 alter table orders add constraint fk_orders_spacing_12 foreign key (spacing_id) references spacing (id);
 create index ix_orders_spacing_12 on orders (spacing_id);
+alter table orders add constraint fk_orders_orderSubject_13 foreign key (order_subject_id) references order_subject (id);
+create index ix_orders_orderSubject_13 on orders (order_subject_id);
 
 
 

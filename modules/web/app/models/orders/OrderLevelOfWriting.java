@@ -8,6 +8,8 @@ import play.db.ebean.Model;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 @Entity
 public class OrderLevelOfWriting extends Model{
@@ -43,6 +45,20 @@ public class OrderLevelOfWriting extends Model{
 	  }
 	  outerLevelMap.put(new TreeMap<Long,String>(innerLevelMap),false);
 	  return outerLevelMap;
+	}
+	
+	public static JSONArray getLevelOfWriting(){
+	  List<OrderLevelOfWriting> levelList = new ArrayList<OrderLevelOfWriting>();
+	  levelList = OrderLevelOfWriting.find().orderBy("id").findList();
+	  JSONArray jArray = new JSONArray();
+	  for(int i=0; i<levelList.size(); i++){
+	    JSONObject jobject = new JSONObject();
+	    jobject.put("id",levelList.get(i).id);
+	    jobject.put("level_of_writing",levelList.get(i).order_level);
+	    jobject.put("additional_price",levelList.get(i).additional_price);
+	    jArray.add(jobject);
+	  }
+	  return jArray;
 	}
 	
 	

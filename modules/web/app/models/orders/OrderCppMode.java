@@ -12,6 +12,8 @@ import play.Logger;
 import play.Logger.ALogger;
 import models.utility.Utilities;
 import java.util.Collections;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 @Entity
 //Would be pay per page, pay per assignment or pay per question 
@@ -56,6 +58,43 @@ public class OrderCppMode extends Model{
 	  }
 	  return outerMap;
 	  
+	}
+	
+	public static JSONArray getOrderUnits(OrderCppMode.CppModes order_cpp_mode){
+	  JSONArray jArray = new JSONArray();
+	  switch(order_cpp_mode){
+	    case perpage:
+		  for(int i=1;i<=Utilities.ORDER_UNITS;i++){
+		    JSONObject jObject = new JSONObject();
+		    jObject.put("value",i);
+		    jObject.put("text",i + " page(s) or " + i*Utilities.PAGE_WORD_COUNT + " words");
+		    jObject.put("label","Order page/word count");
+		    jArray.add(jObject);
+		  }
+		  break;
+	    case perassignment:
+		  for(int i=1;i<=Utilities.ORDER_UNITS;i++){
+		    JSONObject jObject = new JSONObject();
+		    jObject.put("value",i);
+		    jObject.put("text",i);
+		    jObject.put("label","Number of assignments");  
+		    jArray.add(jObject);
+		  }
+		  break;  
+	    case perquestion:
+		  for(int i=1;i<=Utilities.ORDER_UNITS;i++){
+		    JSONObject jObject = new JSONObject();
+		    jObject.put("value",i);
+		    jObject.put("text",i);
+		    jObject.put("label","Number of questions");
+		    jArray.add(jObject);
+		  }
+		  break;
+	    default:
+	      //do nothing, the empty map wil be returned
+	      break;
+	  }
+	  return jArray;
 	}
 	
 	public static Map<Long,String> orderMap(Map<Long,String> lsMap){

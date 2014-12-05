@@ -1,6 +1,7 @@
 package models.client;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import play.data.validation.Constraints;
 import javax.persistence.*;
 import play.db.ebean.Model;
@@ -24,12 +25,21 @@ public class Client extends Model{
 	@Constraints.Required(message="Password is required.")
 	public String password;
 	
+	public String country_code;
+	
+	public String area_code;
+	
+	public String phone_number;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date created_on;
+	
 	//relationship fields
 	@OneToMany(mappedBy="client")
 	List <Orders> orders;
 	
 	@OneToOne
-	public Countries countries;
+	public Countries client_country;
 	
 	public static Finder<Long, Client> finder = new Finder<Long, Client>(Long.class, Client.class);
 	

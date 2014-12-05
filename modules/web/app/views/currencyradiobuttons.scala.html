@@ -8,7 +8,9 @@
           type="radio"
           name="@field.name"
           id="@buttonName.currency_symbol"
+          factor="@buttonName.convertion_rate"
           value="@buttonName.order_currency_id"
+          class="currency-shared-class"
           @if(buttonName.convertion_rate == 1) {checked} />
         @buttonName.currency_symbol
       </label>

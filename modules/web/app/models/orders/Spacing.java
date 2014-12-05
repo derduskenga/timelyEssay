@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import play.Logger;
 import java.util.Collections;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 @Entity
 public class Spacing extends Model{
@@ -41,7 +43,22 @@ public class Spacing extends Model{
 	  //sort the list
 	  Collections.sort(spacingList, new SpacingListSort());
 	  return spacingList;
-      } 
+      }
+      
+      public static JSONArray getSpacingArray(){
+	JSONArray jArray = new JSONArray();
+	List<Spacing> slist = new ArrayList<Spacing>();
+	slist = getSpacingList();
+	for(int i=0; i<slist.size();i++){
+	  JSONObject job = new JSONObject();
+	  job.put("id",slist.get(i).id);
+	  job.put("spacing",slist.get(i).spacing);
+	  job.put("alias",slist.get(i).alias);
+	  job.put("factor",slist.get(i).factor);
+	  jArray.add(job);
+	}
+	return jArray;
+      }
   
   
 }

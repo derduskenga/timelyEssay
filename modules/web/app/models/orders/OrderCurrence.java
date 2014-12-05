@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import play.Logger;
 import java.util.Collections;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 @Entity
 public class OrderCurrence extends Model{
@@ -45,6 +47,22 @@ public class OrderCurrence extends Model{
 	  Collections.sort(currenceList, new CurrenceListSort());
 	  return currenceList;
 	} 
+	
+	public static JSONArray getCurrencyArray(){
+	  List<OrderCurrence> currenceList = new ArrayList<OrderCurrence>();
+	  currenceList =  getCurrenceList();
+	  JSONArray jArray = new JSONArray();
+	  for(int i = 0; i<currenceList.size();i++){
+	    JSONObject jObject = new JSONObject();
+	    jObject.put("id",currenceList.get(i).order_currency_id);
+	    jObject.put("currency_name",currenceList.get(i).currency_name);
+	    jObject.put("currency_symbol",currenceList.get(i).currency_symbol);
+	    jObject.put("currency_symbol_2",currenceList.get(i).currency_symbol_2);
+	    jObject.put("convertion_rate",currenceList.get(i).convertion_rate);
+	    jArray.add(jObject);
+	  } 
+	  return jArray;  
+	}
 	
 	
 } 

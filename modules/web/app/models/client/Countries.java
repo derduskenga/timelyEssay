@@ -26,7 +26,7 @@ public class Countries extends Model{
   public int phonecode;
   
   //field relationship
-  @OneToOne(mappedBy="countries")
+  @OneToOne(mappedBy="client_country")
   Client client;
   
   public Countries(){
@@ -45,5 +45,11 @@ public class Countries extends Model{
     Map<Map<Long,String>,Boolean> countriesMap = new HashMap<Map<Long,String>,Boolean>();    
     countriesMap.put(innerMap,false);    
     return countriesMap;    
-  }  
+  } 
+  
+  public static List<Countries> getCountries(){
+    List<Countries> countriesList = Countries.find().orderBy("nicename").findList(); 
+    return countriesList;
+  }
+  
 }
