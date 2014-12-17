@@ -9,7 +9,6 @@ import models.writer.FreelanceWriter;
 
 @Entity
 public class PreferredWriter extends Model{
-	
 	@Id
 	public Long preferred_writer_entry_id;
 	@ManyToOne

@@ -10,6 +10,23 @@ create table additions (
   constraint pk_additions primary key (id))
 ;
 
+create table admin_user (
+  admin_user_id             bigint not null,
+  first_name                varchar(255),
+  last_name                 varchar(255),
+  email                     varchar(255),
+  password                  varchar(255),
+  active                    boolean default 'true',
+  constraint uq_admin_user_email unique (email),
+  constraint pk_admin_user primary key (admin_user_id))
+;
+
+create table authorised_user (
+  id                        bigint not null,
+  user_name                 varchar(255),
+  constraint pk_authorised_user primary key (id))
+;
+
 create table client (
   id                        bigint not null,
   f_name                    varchar(255),
@@ -127,14 +144,22 @@ create table order_subject_category (
 
 create table orders (
   id                        bigint not null,
-  first_name                varchar(255),
-  last_name                 varchar(255),
-  email                     varchar(255),
+  order_urgency             integer,
+  order_topic               varchar(255),
+  order_instructions        varchar(255),
+  number_of_units           integer,
+  style_of_writing          varchar(255),
+  number_of_sources         integer,
+  operating_system          varchar(255),
+  programming_language      varchar(255),
+  database_used             varchar(255),
+  prefered_writer_id        integer,
   client_id                 bigint,
   order_level_of_writing_id bigint,
   order_document_type_id    bigint,
   order_currence_order_currency_id bigint,
   spacing_id                bigint,
+  order_subject_id          bigint,
   constraint pk_orders primary key (id))
 ;
 
@@ -145,6 +170,13 @@ create table preferred_writer (
   constraint pk_preferred_writer primary key (preferred_writer_entry_id))
 ;
 
+create table security_role (
+  id                        bigint not null,
+  name                      varchar(255) not null,
+  constraint uq_security_role_name unique (name),
+  constraint pk_security_role primary key (id))
+;
+
 create table spacing (
   id                        bigint not null,
   spacing                   varchar(255),
@@ -153,12 +185,42 @@ create table spacing (
   constraint pk_spacing primary key (id))
 ;
 
+create table user_permission (
+  id                        bigint not null,
+  permission_value          varchar(255),
+  constraint pk_user_permission primary key (id))
+;
+
 create table writer_support (
   id                        bigint not null,
   f_name                    varchar(255),
   constraint pk_writer_support primary key (id))
 ;
 
+
+create table admin_user_security_role (
+  admin_user_admin_user_id       bigint not null,
+  security_role_id               bigint not null,
+  constraint pk_admin_user_security_role primary key (admin_user_admin_user_id, security_role_id))
+;
+
+create table admin_user_user_permission (
+  admin_user_admin_user_id       bigint not null,
+  user_permission_id             bigint not null,
+  constraint pk_admin_user_user_permission primary key (admin_user_admin_user_id, user_permission_id))
+;
+
+create table authorised_user_security_role (
+  authorised_user_id             bigint not null,
+  security_role_id               bigint not null,
+  constraint pk_authorised_user_security_role primary key (authorised_user_id, security_role_id))
+;
+
+create table authorised_user_user_permission (
+  authorised_user_id             bigint not null,
+  user_permission_id             bigint not null,
+  constraint pk_authorised_user_user_permission primary key (authorised_user_id, user_permission_id))
+;
 
 create table order_subject_order_document_typ (
   order_subject_id               bigint not null,
@@ -172,6 +234,10 @@ create table orders_additions (
   constraint pk_orders_additions primary key (orders_id, additions_id))
 ;
 create sequence additions_seq;
+
+create sequence admin_user_seq;
+
+create sequence authorised_user_seq;
 
 create sequence client_seq;
 
@@ -203,7 +269,11 @@ create sequence orders_seq;
 
 create sequence preferred_writer_seq;
 
+create sequence security_role_seq;
+
 create sequence spacing_seq;
+
+create sequence user_permission_seq;
 
 create sequence writer_support_seq;
 
@@ -231,12 +301,30 @@ alter table orders add constraint fk_orders_orderCurrence_11 foreign key (order_
 create index ix_orders_orderCurrence_11 on orders (order_currence_order_currency_id);
 alter table orders add constraint fk_orders_spacing_12 foreign key (spacing_id) references spacing (id);
 create index ix_orders_spacing_12 on orders (spacing_id);
-alter table preferred_writer add constraint fk_preferred_writer_client_13 foreign key (client_id) references client (id);
-create index ix_preferred_writer_client_13 on preferred_writer (client_id);
-alter table preferred_writer add constraint fk_preferred_writer_freelance_14 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
-create index ix_preferred_writer_freelance_14 on preferred_writer (freelance_writer_freelance_writer_id);
+alter table orders add constraint fk_orders_orderSubject_13 foreign key (order_subject_id) references order_subject (id);
+create index ix_orders_orderSubject_13 on orders (order_subject_id);
+alter table preferred_writer add constraint fk_preferred_writer_client_14 foreign key (client_id) references client (id);
+create index ix_preferred_writer_client_14 on preferred_writer (client_id);
+alter table preferred_writer add constraint fk_preferred_writer_freelance_15 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
+create index ix_preferred_writer_freelance_15 on preferred_writer (freelance_writer_freelance_writer_id);
 
 
+
+alter table admin_user_security_role add constraint fk_admin_user_security_role_a_01 foreign key (admin_user_admin_user_id) references admin_user (admin_user_id);
+
+alter table admin_user_security_role add constraint fk_admin_user_security_role_s_02 foreign key (security_role_id) references security_role (id);
+
+alter table admin_user_user_permission add constraint fk_admin_user_user_permission_01 foreign key (admin_user_admin_user_id) references admin_user (admin_user_id);
+
+alter table admin_user_user_permission add constraint fk_admin_user_user_permission_02 foreign key (user_permission_id) references user_permission (id);
+
+alter table authorised_user_security_role add constraint fk_authorised_user_security_r_01 foreign key (authorised_user_id) references authorised_user (id);
+
+alter table authorised_user_security_role add constraint fk_authorised_user_security_r_02 foreign key (security_role_id) references security_role (id);
+
+alter table authorised_user_user_permission add constraint fk_authorised_user_user_permi_01 foreign key (authorised_user_id) references authorised_user (id);
+
+alter table authorised_user_user_permission add constraint fk_authorised_user_user_permi_02 foreign key (user_permission_id) references user_permission (id);
 
 alter table order_subject_order_document_typ add constraint fk_order_subject_order_docume_01 foreign key (order_subject_id) references order_subject (id);
 
@@ -251,6 +339,18 @@ alter table orders_additions add constraint fk_orders_additions_additions_02 for
 drop table if exists additions cascade;
 
 drop table if exists orders_additions cascade;
+
+drop table if exists admin_user cascade;
+
+drop table if exists admin_user_security_role cascade;
+
+drop table if exists admin_user_user_permission cascade;
+
+drop table if exists authorised_user cascade;
+
+drop table if exists authorised_user_security_role cascade;
+
+drop table if exists authorised_user_user_permission cascade;
 
 drop table if exists client cascade;
 
@@ -284,11 +384,19 @@ drop table if exists orders cascade;
 
 drop table if exists preferred_writer cascade;
 
+drop table if exists security_role cascade;
+
 drop table if exists spacing cascade;
+
+drop table if exists user_permission cascade;
 
 drop table if exists writer_support cascade;
 
 drop sequence if exists additions_seq;
+
+drop sequence if exists admin_user_seq;
+
+drop sequence if exists authorised_user_seq;
 
 drop sequence if exists client_seq;
 
@@ -320,7 +428,11 @@ drop sequence if exists orders_seq;
 
 drop sequence if exists preferred_writer_seq;
 
+drop sequence if exists security_role_seq;
+
 drop sequence if exists spacing_seq;
+
+drop sequence if exists user_permission_seq;
 
 drop sequence if exists writer_support_seq;
 

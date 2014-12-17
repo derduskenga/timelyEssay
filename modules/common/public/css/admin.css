@@ -40,4 +40,17 @@
 
 }
 
+.admin-main-content{
+	
+}
+
+.activation-link{
+	 cursor: pointer;
+}
+
+.admin-logout{
+	float:right;
+	margin-right:30px;
+}
+
 
