@@ -8,6 +8,7 @@ import play.db.ebean.Model;
 import models.orders.Orders;
 import models.orders.OrderMessages;
 import play.Logger;
+import models.client.PreferredWriter;
 
 @Entity
 public class Client extends Model{
@@ -46,6 +47,10 @@ public class Client extends Model{
 	@OneToOne
 	public Countries country;
 	
+	@OneToMany(mappedBy="client")
+	public List<PreferredWriter> preferredWriter;  
+	
+	
 	public static Finder<Long, Client> finder = new Finder<Long, Client>(Long.class, Client.class);
 	
 	public Client(){
@@ -79,6 +84,12 @@ public class Client extends Model{
 	   update();
 	    return id;
 	  }
+	}
+	
+	public static Finder<Long, PreferredWriter> preferredWriterFinder = new Finder<Long, PreferredWriter>(Long.class, PreferredWriter.class);
+	
+	public static List<PreferredWriter> getPreferedWriters(){
+		return preferredWriterFinder.all();
 	}
 		
 } 
