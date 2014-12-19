@@ -260,8 +260,8 @@ INSERT INTO countries(id, iso, name, nicename, iso3, numcode, phonecode) VALUES
 -------populating the DATABASE-------
 -------additions
 insert into additions values
-(1,'An Editor to Proofread my work',3.50),---additional price is per page
-(2,'One of top 5 writers to writer my work',7.50);
+(1,'An Editor to Proofread my work',2.5),---additional price is per page
+(2,'One of top 5 writers to writer my work',4);
 ----spacing
 insert into spacing values
 (1,'Double spaced page','double-spacing',1),
@@ -284,8 +284,7 @@ insert into order_cpp_mode(id,order_cpp_mode_name,cpp_mode_description)
 values
 (1,0,'order is paid per page'),
 (2,1,'order is given as assignments. So it is paid per assignment'),
-(3,2,'order is paid per question');
-
+(3,2,'order is paid per question for Multiple Choice questions (time-bound/non-time bound)');
 ----deadlines
 insert into order_deadlines(id,deadline_value,deadline_unit,seconds_elapsing_to_deadline) values
 (1,10,'days',864000),(2,20,'days',1728000),(3,7,'days',604800),(4,1,'day',86400),(5,12,'hours',43200),(6,6,'hours',21600),(7,3,'hours',10800),(8,2,'months',51840000);
@@ -307,17 +306,17 @@ INSERT INTO order_subject_category(id, subject_category_name, additional_price, 
 (2, 'academic',0.00,'nn');
 
 ----order_document_type
-insert into order_document_type(id,document_type_name,base_price,order_deadline_category_id,order_cpp_mode_id)values
-(1,'Term Paper',19.50,1,1),
-(2,'Research Paper',19.50,1,1),
-(3,'Dissertation',19.50,2,1),
-(4,'Dissertation Chapter - Literature Review',19.50,2,1),
-(5,'Dissertation Chapter - Literature Review',19.50,2,1),
-(6,'Math/Physics/Economics/Statistics Problems',19.50,1,3),
-(7,'Multiple Choice Questions (Non-time-framed)',1.20,1,3),
-(8,'Programming',98.50,3,2),
-(9,'Formatting',2.99,1,1),
-(10,'Research summary',20.50,1,1);
+insert into order_document_type(id,document_type_name,base_price,additions_factor,order_deadline_category_id,order_cpp_mode_id)values
+(1,'Term Paper',19.50,1.0,1,1),
+(2,'Research Paper',19.50,1.0,1,1),
+(3,'Dissertation',19.50,1.0,2,1),
+(4,'Dissertation Chapter - Literature Review',19.50,1.0,2,1),
+(5,'Dissertation Chapter - Literature Review',19.50,1.0,2,1),
+(6,'Math/Physics/Economics/Statistics Problems',19.50,1.0,1,3),
+(7,'Multiple Choice Questions (Non-time-framed)',1.20,0.025,1,3),
+(8,'Programming',98.50,1.1,3,2),
+(9,'Formatting',2.99,0.05,1,1),
+(10,'Research summary',20.50,1,1,1.0);
 
 ----order Subject
 insert into order_subject(id,subject_name,order_subject_category_id) values
@@ -325,10 +324,10 @@ insert into order_subject(id,subject_name,order_subject_category_id) values
 (2,'Chemistry',2),
 (3,'Technology',1),
 (4,'IT Management',1),
-(5,'Engineering',1);
-
+(5,'Engineering',1),
+(6,'Programming',1);
 ----
 insert into order_subject_order_document_typ (order_subject_id,order_document_type_id) values
 (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,9),(1,10),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),(2,7),(2,9),(2,10),(3,1),(3,2),(3,3),
 (3,4),(3,5),(3,6),(3,7),(3,9),(3,10),(4,1),(4,2),(4,3),(4,4),(4,5),(4,6),(4,7),(4,9),(4,10),(5,1),(5,2),(5,3),(5,4),(5,5),(5,6),
-(5,7),(5,9),(5,10);
+(5,7),(5,9),(5,10),(6,8);

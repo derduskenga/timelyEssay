@@ -6,6 +6,7 @@ import javax.persistence.*;
 import play.db.ebean.Model;
 import java.util.Map;
 import java.util.HashMap;
+import play.Logger;
 
 @Entity
 public class Countries extends Model{
@@ -26,7 +27,7 @@ public class Countries extends Model{
   public int phonecode;
   
   //field relationship
-  @OneToOne(mappedBy="countries")
+  @OneToOne(mappedBy="country")
   Client client;
   
   public Countries(){
@@ -37,13 +38,40 @@ public class Countries extends Model{
   }
   
   public static Map<Map<Long,String>,Boolean> fetchCountriesMap(){
-    List<Countries> countriesList = Countries.find().orderBy("nicename").findList();    
-    Map<Long,String> innerMap = new HashMap<Long,String>();    
+    List<Countries> countriesList = Countries.find().orderBy("nicename").findList();
+    Map<Map<Long,String>,Boolean> countriesMap = new HashMap<Map<Long,String>,Boolean>();       
     for(int i = 0; i < countriesList.size(); i++){
+      Map<Long,String> innerMap = new HashMap<Long,String>(); 
       innerMap.put(countriesList.get(i).id,countriesList.get(i).nicename + "-" + countriesList.get(i).phonecode);
-    }
-    Map<Map<Long,String>,Boolean> countriesMap = new HashMap<Map<Long,String>,Boolean>();    
-    countriesMap.put(innerMap,false);    
+      countriesMap.put(innerMap,false);
+    }    
     return countriesMap;    
-  }  
+  } 
+  
+  
+  
+  public static Map<Map<Long,String>,Boolean> fetchCountriesMapForErrorForm(Long country_id){    
+    List<Countries> countriesList = Countries.find().orderBy("nicename").findList();
+    Map<Map<Long,String>,Boolean> countriesMap = new HashMap<Map<Long,String>,Boolean>();        
+    for(int i = 0; i < countriesList.size(); i++){
+      Map<Long,String> innerMap = new HashMap<Long,String>();
+      innerMap.put(countriesList.get(i).id,countriesList.get(i).nicename + "-" + countriesList.get(i).phonecode);
+      if(countriesList.get(i).id.equals(country_id)){
+	countriesMap.put(innerMap,true);
+      }else{
+	countriesMap.put(innerMap,false);
+      }
+    }    
+    return countriesMap;    
+  }
+  
+  public static List<Countries> getCountries(){
+    List<Countries> countriesList = Countries.find().orderBy("nicename").findList(); 
+    return countriesList;
+  }
+  
+  public static Countries getCountryObject(Long id){
+    return Countries.find().byId(id);
+  }
+  
 }
