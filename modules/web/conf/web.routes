@@ -29,6 +29,13 @@ POST						/fetch/additions/			controllers.web.Application.fetchAdditions()
 POST						/fetch/level/				controllers.web.Application.fetchLevelOfWriting()
 #perpage order page spacing
 POST 						/fetch/spacing/				controllers.web.Application.fetchSpacing()
+#view new order summary
+GET						/neworder/order-summary/:id		controllers.web.Application.previewOrder(id:Long)
+#edit new order
+GET						/neworder/edit/:id			controllers.web.Application.editOrder(id:Long)
+#pay for new order
+GET						/neworder/pay/:id			controllers.web.Application.payForOrder(id:Long)
+
 
 
 

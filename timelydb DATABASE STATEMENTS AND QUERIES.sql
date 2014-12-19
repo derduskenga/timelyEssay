@@ -309,7 +309,7 @@ INSERT INTO order_subject_category(id, subject_category_name, additional_price, 
 insert into order_document_type(id,document_type_name,base_price,additions_factor,order_deadline_category_id,order_cpp_mode_id)values
 (1,'Term Paper',19.50,1.0,1,1),
 (2,'Research Paper',19.50,1.0,1,1),
-(3,'Dissertation',19.50,2,1,1.0),
+(3,'Dissertation',19.50,1.0,2,1),
 (4,'Dissertation Chapter - Literature Review',19.50,1.0,2,1),
 (5,'Dissertation Chapter - Literature Review',19.50,1.0,2,1),
 (6,'Math/Physics/Economics/Statistics Problems',19.50,1.0,1,3),

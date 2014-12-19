@@ -1,21 +1,29 @@
-@(orderForm: Form[orders.Orders])(clientForm:Form[client.Client])(loginForm: Form[web.Application.Login])(countryMap:Map[Map[Long,String],Boolean])(documentMap:Map[Map[Long,String],Boolean])(documentDeadlines:Map[Map[Long,String],Boolean])(documentSubjects:Map[Long,String])(numberOfUnitsMap:Map[Map[Long,String],String])(levelOfWriting:Map[Map[Long,String],Boolean])(currenceList:List[orders.OrderCurrence])(spacinList:List[orders.Spacing])(styleMap:Map[String,Boolean])(languageMap:Map[String,Boolean])(databaseMap:Map[String,Boolean])(refMap:Map[Integer,Boolean])(additionsList:List[orders.Additions])
+@(orderForm: Form[orders.Orders])(clientForm:Form[client.Client])(loginForm: Form[web.Application.Login])(countryMap:Map[Map[Long,String],Boolean])(documentMap:Map[Map[Long,String],Boolean])(documentDeadlines:Map[Map[Long,String],Boolean])(documentSubjects:Map[Map[Long,String],Boolean])(numberOfUnitsMap:Map[Map[Long,String],Boolean])(levelOfWriting:Map[Map[Long,String],Boolean])(currenceList:Map[orders.OrderCurrence,Boolean])(spacinList:Map[orders.Spacing,Boolean])(styleMap:Map[String,Boolean])(languageMap:Map[String,Boolean])(databaseMap:Map[String,Boolean])(refMap:Map[Integer,Boolean])(additionsList:Map[orders.Additions,Boolean])
 @import fieldtemplates._
 @import models.orders._
 @import helper._
 @import java.util._
 @import java.util.Map
 @import java.util.HashMap
+
 @main("Timely Essay | New Order")(loginForm){
 
   @helper.form(action=controllers.web.routes.Application.saveClientOrder(),'class->"form-horizontal",'id->"clientorderform", 'name->"clientorderform"){
     <fieldset>
-      <input type="hidden"  value="@clientForm("id").valueOr("")" name="client_id"/>
-      <div id=client-personal-info>
-	 @if(flash.containsKey("clientorderformerros")){
+      @priceLabel(orderForm)(currenceList)
+      <input type="hidden"  value="@clientForm("id").valueOr("")" name="id"/>
+      @if(flash.containsKey("clientorderformerros")){
 	    <div class="alert alert-danger">
 		    @flash.get("clientorderformerros")
 	    </div>
-	    }
+	  }
+      <div id="client-personal-info" class=" @if(clientForm("id").valueOr("") != ""){hidden}">
+	  @if(flash.containsKey("emailinuse")){
+	    <div class="alert alert-danger">
+		    @flash.get("emailinuse")
+	    </div>
+	  }
+	    
 	<legend>Personal details</legend>
 	@text(clientForm("f_name"),
 	  label = "First Name",
@@ -43,30 +51,51 @@
 	<div class="row form-inline" id="client-mobile-phone">
 	  <label class="col-sm-3 control-label">Phone number</label><br>
 	  <div class="col-sm-7">	    
-	    @shortText(clientForm("country_code"),
+	    @fieldtemplates.shortText(clientForm("country_code"),
 	      size="5",
-	      maxSize="3",
+	      maxSize="4",
 	      activity="readonly")
 	    
-	    @shortText(clientForm("area_code"),
+	    @fieldtemplates.shortText(clientForm("area_code"),
 	      label="-",
 	      size="6",
 	      maxSize="4",
 	      activity="",
 	      placeholder="area code")
 	    
-	    @shortText(clientForm("phone_number"),
+	    @fieldtemplates.shortText(clientForm("phone_number"),
 	      label="-",
 	      size="12",
 	      maxSize="8",
 	      activity="",
 	      placeholder="number")
 	  </div>
+	  
 	</div>
+	
+	<div class="form-group" id="">
+	  <label class="col-sm-3 control-label">&nbsp;</label><br>
+	  <div class="col-sm-9">	    
+	    <p class="phone-number"> 
+	      @if(flash.containsKey("phone_number")){
+		    @flash.get("phone_number")
+	      }
+	      @if(flash.containsKey("area_code")){
+		@flash.get("area_code")
+	      }
+	      @if(flash.containsKey("country_code")){
+		@flash.get("country_code")
+	      }
+	  </p>
+	  </div>
+	</div>
+	
       </div>
       
-      <input type="hidden"  value="@orderForm("id").valueOr("")" name="order_id"/>
-      <input type="hidden" id="deadline_category_tracker" value="">
+      <input type="hidden"  value="@orderForm("order_id").valueOr("")" name="order_id"/>
+      
+      
+      <input type="hidden" id="deadline_category_tracker" name ="deadline_category_tracker" value="">
       
       <div id="order-info">
 	<legend>Order details</legend>
@@ -85,7 +114,7 @@
 	)
 	
 	<div id="order-subject-area">
-	  @fieldtemplates.subjectSelect(orderForm("document_subject"),
+	  @fieldtemplates.countryselect(orderForm("document_subject"),
 	    label = "Order Subject",
 	    optionMap=documentSubjects,
 	    default="Select subject",
@@ -93,18 +122,18 @@
 	  )
 	</div>
 	
-	@text(clientForm("topic"),
+	@text(orderForm("topic"),
 	  label = "You Topic",
 	  placeholder = "Topic",divClass="col-sm-9")
 	  
-	@fieldtemplates.textarea(clientForm("order_instruction"),
+	@fieldtemplates.textarea(orderForm("order_instruction"),
 	  label="Your instructions",
 	  placeholder = "Type the instructions you would like to be followed by our writer to complete your work",
 	  rows="4",
 	  help="You will be able to upload any additional files to your order once your account is created",divClass="col-sm-9")
 	  
 	@fieldtemplates.unitsSelect(orderForm("number_of_units"),
-	  label = "",
+	  label = "Select number of pages/assignments/questions",
 	  optionMap=numberOfUnitsMap,
 	  default="--select--",
 	  includeStaticDefault=true,divClass="col-sm-6"
@@ -167,17 +196,17 @@
       </div> <!--end of order-details -->
       
       <div id="order-additions">
-	<legend>Additions (You may need this)</legend>
-	
-	  
-	  @for(additions <-additionsList){
+	<legend>Additions (You may need this)</legend>	  
+	  @for((additions,checked_)<-additionsList){
 	    @additionscheckboxes(orderForm("orders_additions"),
 	      checkboxList=additions.id,
 	      label=additions.ui_label,
+	      isChecked=checked_,
 	      price=additions.additional_price,divClass="col-sm-7"
 	    )
 	  }
 	  <hr>
+	  
 	  @fieldtemplates.text(orderForm("prefered_writer"),
 	    label = "Prefered writer ID",
 	    divClass="col-sm-7",

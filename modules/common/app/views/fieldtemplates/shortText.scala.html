@@ -4,7 +4,8 @@
 	size="@size" 
 	maxlength="@maxSize" 
 	id="@field.id"
+	value="@field.value.getOrElse("")"
 	class="form-control"
 	placeholder="@placeholder"
-	@if(activity=="readonly"){readonly}
-	placeholder="@placeholder">
+	@if(activity=="readonly"){readonly}>
+

@@ -20,17 +20,37 @@ public class OrderSubject extends Model{
 	
 	//relationship field
 	@ManyToMany
-	List<OrderDocumentType> orderDocumentType;
+	public List<OrderDocumentType> orderDocumentType;
 	
 	@ManyToOne
-	OrderSubjectCategory orderSubjectCategory;
+	public OrderSubjectCategory orderSubjectCategory;
 	
 	@OneToMany(mappedBy="orderSubject")
-	List<Orders> orders;
-	
-	
+	public List<Orders> orders;
 	
 	public OrderSubject(){}
-
 	
+	public static Finder<Long, OrderSubject> find() {
+		return new Finder<Long, OrderSubject>(Long.class, OrderSubject.class);
+	}
+
+	public static OrderSubject getSubjectObject(Long id){
+	  return OrderSubject.find().byId(id);
+	}
+	
+	public static Map<Map<Long,String>,Boolean> getOrderSubjectsForErrorForm(Long subject_selected,Long document_selected){
+	  OrderDocumentType documentObject = OrderDocumentType.find().byId(document_selected);
+	  List<OrderSubject> subjectsList = documentObject.orderSubject;	  
+	  Map<Map<Long,String>,Boolean> documentSubjects = new HashMap<Map<Long,String>,Boolean>();
+	    for(int i = 0; i< subjectsList.size(); i++){
+	      Map<Long,String> innerSubjects = new HashMap<Long,String>();
+	      innerSubjects.put(subjectsList.get(i).id,subjectsList.get(i).subject_name);
+	      if(subjectsList.get(i).id == subject_selected){
+		documentSubjects.put(innerSubjects,true);
+	      }else{
+		documentSubjects.put(innerSubjects,false);
+	      }
+	    }
+	    return documentSubjects;
+	} 
 } 

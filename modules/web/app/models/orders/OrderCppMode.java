@@ -8,6 +8,7 @@ import play.db.ebean.Model;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.LinkedHashMap;
 import play.Logger;
 import play.Logger.ALogger;
 import models.utility.Utilities;
@@ -20,45 +21,97 @@ import org.json.simple.JSONArray;
 public class OrderCppMode extends Model{
 	@Id
 	public Long id;
-	@Constraints.Required(message="CPP mode is required")
+	//@Constraints.Required(message="CPP mode is required")
 	public OrderCppMode.CppModes order_cpp_mode_name;
 	public String cpp_mode_description;
 	
 	//relationship fields
 	@OneToMany(mappedBy="orderCppMode")
-	List<OrderDocumentType> orderDocumentType;
+	public List<OrderDocumentType> orderDocumentType;
 	
-	public static Map<Map<Long,String>,String>getUnitsCount(OrderCppMode.CppModes order_cpp_mode){
-	  Map<Map<Long,String>,String> outerMap = new HashMap<Map<Long,String>,String>();
-	  Map<Long,String> innerMap = new HashMap<Long,String>();
+	public static Map<Map<Long,String>,Boolean>getUnitsCount(OrderCppMode.CppModes order_cpp_mode){
+	  Map<Map<Long,String>,Boolean> outerMap = new LinkedHashMap<Map<Long,String>,Boolean>();
+	  //Map<Long,String> innerMap = new HashMap<Long,String>();
 	  String selectLabel = "";
 	  //A page has a minimum of 280 words
 	  switch(order_cpp_mode){
 	    case perpage:
 		  for(int i=1;i<=Utilities.ORDER_UNITS;i++){
-		    innerMap.put(Long.valueOf(i),i + "page(s) or " + i*Utilities.PAGE_WORD_COUNT + " words");
+		   Map<Long,String> innerMap = new LinkedHashMap<Long,String>();
+		   innerMap.put(Long.valueOf(i),i + " page(s) or " + i*Utilities.PAGE_WORD_COUNT + " words");
+		   outerMap.put(innerMap,false);
 		  }
-		  outerMap.put(orderMap(innerMap),"Order page/word count");
+		  
 		  break;
 	    case perassignment:
 		  for(int i=1;i<=Utilities.ORDER_UNITS;i++){
+		    Map<Long,String> innerMap = new LinkedHashMap<Long,String>();
 		    innerMap.put(Long.valueOf(i),i + "");
+		    outerMap.put(innerMap,false);
 		  }
-		  outerMap.put(orderMap(innerMap),"Number of assignments");
+		  
 		  break;		  
 	    case perquestion:
 		  for(int i=1;i<=Utilities.ORDER_UNITS;i++){
+		    Map<Long,String> innerMap = new LinkedHashMap<Long,String>();
 		    innerMap.put(Long.valueOf(i),i + "");
+		    outerMap.put(innerMap,false);
 		  }
-		  outerMap.put(orderMap(innerMap),"Number of questions");
+		  
 		  break;
 	    default:
-	      //do nothing, the empty map wil be returned
+	      break;
+	  }
+	  return outerMap;  
+	}
+	
+	public Map<Map<Long,String>,Boolean> getNumberOfUnitsMapForErrorForm(Long spacing, int units, Long documentId){
+	  OrderCppMode.CppModes order_cpp_mode = OrderDocumentType.find().byId(documentId).orderCppMode.order_cpp_mode_name;
+	  int spacing_factor = Spacing.find().byId(spacing).factor;
+	  Map<Map<Long,String>,Boolean> outerMap = new LinkedHashMap<Map<Long,String>,Boolean>();
+	  //Map<Long,String> innerMap = new HashMap<Long,String>();
+	  //A page has a minimum of 280 words
+	  switch(order_cpp_mode){
+	    case perpage:
+		  for(int i=1;i<=Utilities.ORDER_UNITS;i++){
+		    Map<Long,String> innerMap = new LinkedHashMap<Long,String>();
+		    innerMap.put(Long.valueOf(i),i + " page(s) or " + i*Utilities.PAGE_WORD_COUNT*spacing_factor + " words");    
+		    if(i == units){
+		      outerMap.put(innerMap,true);
+		    }else{
+		      outerMap.put(innerMap,false);
+		    }		   
+		  }
+		  
+		  break;
+	    case perassignment:
+		  for(int i=1;i<=Utilities.ORDER_UNITS;i++){
+		    Map<Long,String> innerMap = new LinkedHashMap<Long,String>();
+		    innerMap.put(Long.valueOf(i),i + "");
+		    if(i == units){
+		      outerMap.put(innerMap,true);
+		    }else{
+		      outerMap.put(innerMap,false);
+		    }	      
+		  }  
+		  break;
+	    case perquestion:
+		  for(int i=1;i<=Utilities.ORDER_UNITS;i++){
+		    Map<Long,String> innerMap = new LinkedHashMap<Long,String>();
+		    innerMap.put(Long.valueOf(i),i + "");
+		    if(i == units){
+		      outerMap.put(innerMap,true);
+		    }else{
+		      outerMap.put(innerMap,false);
+		    }    
+		  }  
+		  break;
+	    default:
 	      break;
 	  }
 	  return outerMap;
-	  
 	}
+	
 	
 	public static JSONArray getOrderUnits(OrderCppMode.CppModes order_cpp_mode){
 	  JSONArray jArray = new JSONArray();
@@ -102,6 +155,7 @@ public class OrderCppMode extends Model{
 	  newMap.putAll(lsMap);
 	  return lsMap;
 	}
+	
 	public enum CppModes{
 	  perpage,perassignment,perquestion
 	}

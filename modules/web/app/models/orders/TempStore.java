@@ -7,8 +7,8 @@ import java.util.HashMap;
 public class TempStore{
   //fields
   private static Map<Map<Long,String>,Boolean> documentDeadlines;
-  private static Map<Long,String> documentSubjects;
-  private static Map<Map<Long,String>,String> numberOfUnits;
+  private static Map<Map<Long,String>,Boolean> documentSubjects;
+  private static Map<Map<Long,String>,Boolean> numberOfUnits;
  
   public TempStore(){}
   //setters
@@ -16,12 +16,12 @@ public class TempStore{
       documentDeadlines =  docDeadlines;
   }
   
-   public static void setDocumentSubjects(Map<Long,String> docSubjects){
+   public static void setDocumentSubjects(Map<Map<Long,String>,Boolean> docSubjects){
       documentSubjects =  docSubjects;
   }
   //map structure
   //map(map(select value, select string),select label).
-  public static void setnumberOfUnitsMap(Map<Map<Long,String>,String> numOfUnits){
+  public static void setnumberOfUnitsMap(Map<Map<Long,String>,Boolean> numOfUnits){
     numberOfUnits = numOfUnits;
   }
   
@@ -30,11 +30,11 @@ public class TempStore{
     return documentDeadlines;
   }
   
-   public static Map<Long,String> getDocumentSubjects(){
+   public static Map<Map<Long,String>,Boolean> getDocumentSubjects(){
     return documentSubjects;
   }
   
-  public static Map<Map<Long,String>,String> getNumberOfUnits(){
+  public static Map<Map<Long,String>,Boolean> getNumberOfUnits(){
     return numberOfUnits;
   }
 }

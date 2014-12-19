@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import java.util.LinkedHashMap;
 
 @Entity
 public class OrderLevelOfWriting extends Model{
@@ -25,13 +26,17 @@ public class OrderLevelOfWriting extends Model{
 	public String description;
 	
 	@OneToMany(mappedBy="orderLevelOfWriting")
-	List<Orders> orders;
+	public List<Orders> orders;
 	
 	public OrderLevelOfWriting(){}
 	
 	
 	public static Finder<Long, OrderLevelOfWriting> find() {
 	  return new Finder<Long, OrderLevelOfWriting>(Long.class, OrderLevelOfWriting.class);
+	}
+	
+	public static OrderLevelOfWriting getLevelObject(Long id){
+	  return OrderLevelOfWriting.find().byId(id);
 	}
 	
 	public static Map<Map<Long,String>,Boolean> fetchLevelMap(){
@@ -44,6 +49,21 @@ public class OrderLevelOfWriting extends Model{
 	    }
 	  }
 	  outerLevelMap.put(new TreeMap<Long,String>(innerLevelMap),false);
+	  return outerLevelMap;
+	}
+	
+	public Map<Map<Long,String>,Boolean> fetchLevelMapForErrorForm(Long levelId){
+	  Map<Map<Long,String>,Boolean> outerLevelMap = new LinkedHashMap<Map<Long,String>,Boolean>();
+	  List<OrderLevelOfWriting> levelList = OrderLevelOfWriting.find().orderBy("id").findList();
+	  for(int i=0;i<levelList.size();i++){
+	    Map<Long,String> innerLevelMap = new LinkedHashMap<Long,String>();
+	    innerLevelMap.put(levelList.get(i).id,levelList.get(i).order_level);
+	    if(levelList.get(i).id.equals(levelId)){
+	      outerLevelMap.put(innerLevelMap,true);
+	    }else{
+	      outerLevelMap.put(innerLevelMap,false);
+	    }
+	  }
 	  return outerLevelMap;
 	}
 	

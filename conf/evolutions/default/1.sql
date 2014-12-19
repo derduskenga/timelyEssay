@@ -15,12 +15,13 @@ create table client (
   f_name                    varchar(255),
   l_name                    varchar(255),
   email                     varchar(255),
+  c_email                   varchar(255),
   password                  varchar(255),
-  country_code              integer,
-  area_code                 integer,
-  phone_number              integer,
+  country_code              varchar(255),
+  area_code                 varchar(255),
+  phone_number              varchar(255),
   created_on                timestamp,
-  client_country_id         bigint,
+  country_id                bigint,
   constraint pk_client primary key (id))
 ;
 
@@ -106,7 +107,7 @@ create table order_messages (
   msg_to                    integer,
   msg_from                  integer,
   status                    boolean default TRUE,
-  orders_id                 bigint,
+  orders_order_id           bigint,
   sent_on                   timestamp not null,
   message                   varchar(255),
   constraint ck_order_messages_msg_to check (msg_to in (0,1,2)),
@@ -131,7 +132,7 @@ create table order_subject_category (
 ;
 
 create table orders (
-  id                        bigint not null,
+  order_id                  bigint not null,
   document_deadline         integer,
   topic                     varchar(255),
   order_instruction         varchar(255),
@@ -141,19 +142,19 @@ create table orders (
   operating_system          varchar(255),
   prog_language             varchar(255),
   database                  varchar(255),
-  prefered_writer           integer,
-  order_date                timestamp not null,
+  prefered_writer           varchar(255),
+  order_date                timestamp,
   order_total               float,
   amount_paid               float,
   is_paid                   boolean,
   is_writer_assigned        boolean,
   client_id                 bigint,
-  level_of_writing_id       bigint,
-  document_type_id          bigint,
-  order_currency_order_currency_id bigint,
-  page_spacing_id           bigint,
-  document_subject_id       bigint,
-  constraint pk_orders primary key (id))
+  order_level_of_writing_id bigint,
+  order_document_type_id    bigint,
+  order_currence_order_currency_id bigint,
+  spacing_id                bigint,
+  order_subject_id          bigint,
+  constraint pk_orders primary key (order_id))
 ;
 
 create table spacing (
@@ -178,9 +179,9 @@ create table order_subject_order_document_typ (
 ;
 
 create table orders_additions (
-  orders_id                      bigint not null,
+  orders_order_id                bigint not null,
   additions_id                   bigint not null,
-  constraint pk_orders_additions primary key (orders_id, additions_id))
+  constraint pk_orders_additions primary key (orders_order_id, additions_id))
 ;
 create sequence additions_seq;
 
@@ -216,8 +217,8 @@ create sequence spacing_seq;
 
 create sequence writer_support_seq;
 
-alter table client add constraint fk_client_client_country_1 foreign key (client_country_id) references countries (id);
-create index ix_client_client_country_1 on client (client_country_id);
+alter table client add constraint fk_client_country_1 foreign key (country_id) references countries (id);
+create index ix_client_country_1 on client (country_id);
 alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__2 foreign key (order_deadlines_id) references order_deadlines (id);
 create index ix_deadline_deadline_category__2 on deadline_deadline_category_association (order_deadlines_id);
 alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__3 foreign key (order_deadline_category_id) references order_deadline_category (id);
@@ -226,22 +227,22 @@ alter table order_document_type add constraint fk_order_document_type_orderDe_4 
 create index ix_order_document_type_orderDe_4 on order_document_type (order_deadline_category_id);
 alter table order_document_type add constraint fk_order_document_type_orderCp_5 foreign key (order_cpp_mode_id) references order_cpp_mode (id);
 create index ix_order_document_type_orderCp_5 on order_document_type (order_cpp_mode_id);
-alter table order_messages add constraint fk_order_messages_orders_6 foreign key (orders_id) references orders (id);
-create index ix_order_messages_orders_6 on order_messages (orders_id);
+alter table order_messages add constraint fk_order_messages_orders_6 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_messages_orders_6 on order_messages (orders_order_id);
 alter table order_subject add constraint fk_order_subject_orderSubjectC_7 foreign key (order_subject_category_id) references order_subject_category (id);
 create index ix_order_subject_orderSubjectC_7 on order_subject (order_subject_category_id);
 alter table orders add constraint fk_orders_client_8 foreign key (client_id) references client (id);
 create index ix_orders_client_8 on orders (client_id);
-alter table orders add constraint fk_orders_level_of_writing_9 foreign key (level_of_writing_id) references order_level_of_writing (id);
-create index ix_orders_level_of_writing_9 on orders (level_of_writing_id);
-alter table orders add constraint fk_orders_document_type_10 foreign key (document_type_id) references order_document_type (id);
-create index ix_orders_document_type_10 on orders (document_type_id);
-alter table orders add constraint fk_orders_order_currency_11 foreign key (order_currency_order_currency_id) references order_currence (order_currency_id);
-create index ix_orders_order_currency_11 on orders (order_currency_order_currency_id);
-alter table orders add constraint fk_orders_page_spacing_12 foreign key (page_spacing_id) references spacing (id);
-create index ix_orders_page_spacing_12 on orders (page_spacing_id);
-alter table orders add constraint fk_orders_document_subject_13 foreign key (document_subject_id) references order_subject (id);
-create index ix_orders_document_subject_13 on orders (document_subject_id);
+alter table orders add constraint fk_orders_orderLevelOfWriting_9 foreign key (order_level_of_writing_id) references order_level_of_writing (id);
+create index ix_orders_orderLevelOfWriting_9 on orders (order_level_of_writing_id);
+alter table orders add constraint fk_orders_orderDocumentType_10 foreign key (order_document_type_id) references order_document_type (id);
+create index ix_orders_orderDocumentType_10 on orders (order_document_type_id);
+alter table orders add constraint fk_orders_orderCurrence_11 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
+create index ix_orders_orderCurrence_11 on orders (order_currence_order_currency_id);
+alter table orders add constraint fk_orders_spacing_12 foreign key (spacing_id) references spacing (id);
+create index ix_orders_spacing_12 on orders (spacing_id);
+alter table orders add constraint fk_orders_orderSubject_13 foreign key (order_subject_id) references order_subject (id);
+create index ix_orders_orderSubject_13 on orders (order_subject_id);
 
 
 
@@ -249,7 +250,7 @@ alter table order_subject_order_document_typ add constraint fk_order_subject_ord
 
 alter table order_subject_order_document_typ add constraint fk_order_subject_order_docume_02 foreign key (order_document_type_id) references order_document_type (id);
 
-alter table orders_additions add constraint fk_orders_additions_orders_01 foreign key (orders_id) references orders (id);
+alter table orders_additions add constraint fk_orders_additions_orders_01 foreign key (orders_order_id) references orders (order_id);
 
 alter table orders_additions add constraint fk_orders_additions_additions_02 foreign key (additions_id) references additions (id);
 

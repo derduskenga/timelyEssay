@@ -1,4 +1,4 @@
-@(field: Field, label: String = "CHANGEME", checkboxList:Long, help:String = "",isChecked:Boolean=false,price:Double,divClass:String="col-sm-10")
+@(field: Field, label: String = "CHANGEME", checkboxList:Long, help:String = "",isChecked:Boolean,price:Double,divClass:String="col-sm-10")
 
   <div class="form-group @if(field.hasErrors) {has-error}">
     <label class="col-sm-4 control-label" for="@field.id">@label</label>

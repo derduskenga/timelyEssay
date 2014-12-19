@@ -13,7 +13,7 @@ help: String = "",default:String="Please select a value",divClass:String="col-sm
         @for((optionName, isSelected) <- optionMap) {
 	   @if(!optionName.isEmpty){
 	    @for((keys,values) <- optionName){
-	      <option id="@keys" value="@keys" @if(isSelected) {selected}>@values</option>
+	      <option id="@keys" value="@keys" @if(isSelected){selected}>@values</option>
 	    }
 	  }
         }

@@ -32,9 +32,17 @@ public class OrderDeadlines extends Model{
 	
 	//relationship fields
 	@OneToMany(mappedBy="orderDeadlines")
-	List<DeadlineDeadlineCategoryAssociation> deadlineDeadlineCategoryAssociation;
+	public List<DeadlineDeadlineCategoryAssociation> deadlineDeadlineCategoryAssociation;
 	
 	public OrderDeadlines(){}
+	
+	public static Finder<Long, OrderDeadlines> find() {
+	  return new Finder<Long, OrderDeadlines>(Long.class, OrderDeadlines.class);
+	}
+	
+	public static OrderDeadlines getOrderDeadlinesByValue(Long dValue){
+	  return OrderDeadlines.find().where().eq("seconds_elapsing_to_deadline",dValue).findUnique();
+	}
 	
 	public static Map<Map<Long,String>,Boolean> getDeadlines(OrderDeadlineCategory orderDeadlineCategory){
 	  Logger.info("in getDeadlines " + orderDeadlineCategory.order_deadline_category_name);
@@ -48,13 +56,38 @@ public class OrderDeadlines extends Model{
 				      //Logger.info("counting");
 	  }
 	  Map<Map<Long,String>,Boolean> documentDeadlinesMapOuter =  new HashMap<Map<Long,String>,Boolean>();
+	  documentDeadlinesMapOuter.put(documentDeadlinesMap,false);	 
+	  return documentDeadlinesMapOuter;	  
+	}
+	
+	public static  Map<Map<Long,String>,Boolean> getDocumentDeadlinesForErrorForm(Long selected_deadline, Long document_id){
+	  Map<Map<Long,String>,Boolean> dMap = new HashMap<Map<Long,String>,Boolean>();
+	  //OrderDocumentType orderDocument = 
+	  //Logger.info("Doc name is " + orderDocument.docugetDocumentDeadlinesForErrorFormment_type_name);
+	  OrderDeadlineCategory orderDeadlineCategory = OrderDocumentType.find().byId(document_id).orderDeadlineCategory;
+	  Long categoryId = orderDeadlineCategory.id;
 	  
+	  DeadlineDeadlineCategoryAssociation assObj = new DeadlineDeadlineCategoryAssociation();
 	  
-	  //documentDeadlinesMap = new TreeMap<Long, String>(java.util.Collections.reverseOrder());
-	  documentDeadlinesMapOuter.put(documentDeadlinesMap,false);
-	 
-	  return documentDeadlinesMapOuter;
+	  List<DeadlineDeadlineCategoryAssociation> deadline_deadline_category_association_list = assObj.getThisList(categoryId);
 	  
+	  Collections.sort(deadline_deadline_category_association_list, new DeadlineDeadlineCategoryAssociationListSort());
+	  
+	  Logger.info("deadline is " + selected_deadline);
+	  for(int i = 0; i < deadline_deadline_category_association_list.size(); i++){
+	    Map<Long,String> deadlineMap = new HashMap<Long, String>();
+	    deadlineMap.put(deadline_deadline_category_association_list.get(i).orderDeadlines.seconds_elapsing_to_deadline,
+				      String.valueOf(deadline_deadline_category_association_list.get(i).orderDeadlines.deadline_value) + " " +
+				      deadline_deadline_category_association_list.get(i).orderDeadlines.deadline_unit);
+	   
+	   if(deadline_deadline_category_association_list.get(i).orderDeadlines.seconds_elapsing_to_deadline.equals(selected_deadline)){
+	      dMap.put(OrderCppMode.orderMap(deadlineMap),true); 
+	    }else{
+	      dMap.put(OrderCppMode.orderMap(deadlineMap),false);
+	    }	
+	    Logger.info("other deadlines are " + deadline_deadline_category_association_list.get(i).orderDeadlines.seconds_elapsing_to_deadline);
+	  }
+	  return dMap;
 	}
 	
 	public static JSONArray getDeadlinesArray(OrderDeadlineCategory orderDeadlineCategory){
@@ -67,7 +100,7 @@ public class OrderDeadlines extends Model{
 	  
 	  if(deadline_deadline_category_association_list!=null){
 	    for(int i = 0; i < deadline_deadline_category_association_list.size(); i++){
-	       JSONObject jObj = new JSONObject();
+	      JSONObject jObj = new JSONObject();
 	      jObj.put("id",deadline_deadline_category_association_list.get(i).orderDeadlines.id);
 	      Logger.info("testing: " + deadline_deadline_category_association_list.get(i).orderDeadlines.deadline_value);
 	      jObj.put("time_in_seconds",deadline_deadline_category_association_list.get(i).orderDeadlines.seconds_elapsing_to_deadline);

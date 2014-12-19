@@ -1,8 +1,8 @@
-@(field: Field, label: String = "CHANGEME", buttonNameList: List[orders.OrderCurrence], help: String = "",divClass:String="col-sm-10")
+@(field: Field, label: String = "CHANGEME", buttonNameList: Map[orders.OrderCurrence,Boolean], help: String = "",divClass:String="col-sm-10")
   <div class="form-group @if(field.hasErrors) {has-error}">
     <label class="col-sm-3 control-label" for="@field.id">@label</label>
     <div id="@(field.id + "s")" class="@divClass" >
-      @for(buttonName <- buttonNameList) {
+      @for((buttonName,isSelected) <- buttonNameList) {
       <label class="radio-inline">
         <input
           type="radio"
@@ -11,8 +11,9 @@
           factor="@buttonName.convertion_rate"
           value="@buttonName.order_currency_id"
           class="currency-shared-class"
-          @if(buttonName.convertion_rate == 1) {checked} />
+          @if(isSelected) {checked} />
         @buttonName.currency_symbol
+        (@buttonName.currency_symbol_2)
       </label>
       }
       <span class="help-block">@help</span>

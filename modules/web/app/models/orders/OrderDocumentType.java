@@ -7,6 +7,7 @@ import play.db.ebean.Model;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.LinkedHashMap;
 import play.Logger;
 import java.util.Collections;
 import play.libs.Json;
@@ -30,16 +31,16 @@ public class OrderDocumentType extends Model{
 	
 	//relationship fields
 	@OneToMany(mappedBy="orderDocumentType")
-	List<Orders> orders;
+	public List<Orders> orders;
 	
 	@ManyToMany(mappedBy="orderDocumentType")
-	List<OrderSubject> orderSubject;
+	public List<OrderSubject> orderSubject;
 	
 	@ManyToOne
-	OrderDeadlineCategory orderDeadlineCategory;
+	public OrderDeadlineCategory orderDeadlineCategory;
 	
 	@ManyToOne
-	OrderCppMode orderCppMode;
+	public OrderCppMode orderCppMode;
 	
 	//default constructor
 	public OrderDocumentType(){}
@@ -49,28 +50,33 @@ public class OrderDocumentType extends Model{
 	  return new Finder<Long, OrderDocumentType>(Long.class, OrderDocumentType.class);
 	}
 	
-	public static Map<Map<Long,String>,Boolean> fetchDocumentMap(){
-	  
+	public static OrderDocumentType getDocumentObject(Long id){
+	  return OrderDocumentType.find().byId(id);
+	}
+	
+	public static Map<Map<Long,String>,Boolean> fetchDocumentMap(){	  
 	  List<OrderDocumentType> documentList = OrderDocumentType.find().orderBy("document_type_name").findList();	
 	  if(documentList.size()!=0){
 	    Map<Long,String> innerMap = new HashMap<Long,String>();  
 	    for(int i = 0; i < documentList.size(); i++){
 	      innerMap.put(documentList.get(i).id,documentList.get(i).document_type_name);
-	    //  Logger.info("here " + documentList.get(i).id);
+	      //Logger.info("here " + documentList.get(i).id);
 	    }
 	    
-	  //get subject by documennt
-	    Map<Long,String>subjectByDocumentMapInnerMap = new HashMap<Long,String>();
+	    //get subject by documennt
+	    Map<Map<Long,String>,Boolean> subjects = new HashMap<Map<Long,String>,Boolean>();
 	    List<OrderSubject> subjectsForDocument = documentList.get(0).orderSubject;
 	    if(subjectsForDocument.size() > 0){
 	      for(int j = 0 ; j<subjectsForDocument.size(); j++){
 		//Logger.info("subject " + j + ": " + subjectsForDocument.get(j).subject_name);
+		Map<Long,String>subjectByDocumentMapInnerMap = new HashMap<Long,String>();
 		subjectByDocumentMapInnerMap.put(subjectsForDocument.get(j).id, subjectsForDocument.get(j).subject_name);
+		subjects.put(subjectByDocumentMapInnerMap,false);
 	      }	     
 	    }
 	    
 	    //Logger.info("size at sending" + subjectByDocumentMapInnerMap.size());
-	    TempStore.setDocumentSubjects(new TreeMap<Long,String>(subjectByDocumentMapInnerMap));
+	    TempStore.setDocumentSubjects(subjects);
 	    //sort the list
 	    Collections.sort(documentList, new ListSort());
 	    
@@ -81,7 +87,7 @@ public class OrderDocumentType extends Model{
 	    
 	    //getcpp mode
 	    OrderCppMode.CppModes order_cpp_mode = documentList.get(0).orderCppMode.order_cpp_mode_name;
-	    Map<Map<Long,String>,String> numberOfUnitsMap = OrderCppMode.getUnitsCount(order_cpp_mode);
+	    Map<Map<Long,String>,Boolean> numberOfUnitsMap = OrderCppMode.getUnitsCount(order_cpp_mode);
 	    //store this map to TempStore so as to retrieve later
 	    TempStore.setnumberOfUnitsMap(numberOfUnitsMap);
 	    
@@ -89,13 +95,34 @@ public class OrderDocumentType extends Model{
 	    //innerMap is sorted by use of TreeMap the added to the documentMap
 	    documentMap.put(new TreeMap<Long,String>(innerMap),false);
 	    return documentMap; 
+	    
 	  }else{
-	    TempStore.setDocumentSubjects(new TreeMap<Long,String>(new HashMap<Long,String>()));
+	    TempStore.setDocumentSubjects(new TreeMap<Map<Long,String>,Boolean>(new HashMap<Map<Long,String>,Boolean>()));
 	    TempStore.setDocumentDeadlines(new HashMap<Map<Long,String>,Boolean>());
-	    TempStore.setnumberOfUnitsMap(new  HashMap<Map<Long,String>,String>());
+	    TempStore.setnumberOfUnitsMap(new  HashMap<Map<Long,String>,Boolean>());
 	    
 	    return new HashMap<Map<Long,String>,Boolean>(); 
 	  }
+	}
+	
+	
+	public static Map<Map<Long,String>,Boolean> fetchDocumentMapForErrorForm(Long document_selected){
+	  List<OrderDocumentType> documentList = OrderDocumentType.find().orderBy("document_type_name").findList(); 
+	  Collections.sort(documentList, new ListSort());
+	  Map<Map<Long,String>,Boolean> documentMap = new HashMap<Map<Long,String>,Boolean>();
+	  //innerMap is sorted by use of TreeMap the added to the documentMap   
+	  if(documentList.size()!=0){ 
+	    for(int i = 0; i < documentList.size(); i++){
+	      Map<Long,String> innerMap = new HashMap<Long,String>(); 
+	      innerMap.put(documentList.get(i).id,documentList.get(i).document_type_name);
+	      if(documentList.get(i).id == document_selected){
+		documentMap.put((innerMap),true);
+	      }else{ 
+		documentMap.put((innerMap),false);
+	      }
+	    }
+	     }
+	     return documentMap; 
 	}
 	
 	public static JSONObject getDocumentById(Long docId){
