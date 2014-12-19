@@ -34,6 +34,7 @@ object Common {
 	
 	val commonDependencies = Seq(
 		cache,
+		javaWs,
 		ws,
 		"org.webjars" % "jquery" % "2.1.1",
 		"org.webjars" % "bootstrap" % "3.2.0",
@@ -42,7 +43,8 @@ object Common {
 		"com.googlecode.json-simple"%"json-simple"%"1.1",
 		"org.codehaus.jackson"%"jackson-mapper-asl"%"1.5.0",
 		javaJdbc,
-		javaEbean
+		javaEbean,
+		"be.objectify" %% "deadbolt-java" % "2.3.2"
 		// Add here more common dependencies:
 		// jdbc,
 		// anorm,

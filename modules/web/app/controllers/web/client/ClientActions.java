@@ -6,7 +6,10 @@ import views.html.clientarea.*;
 import models.orders.OrderMessages;
 import models.orders.MessageParticipants;
 import play.data.Form;
+import models.client.PreferredWriter;
 import models.common.mailing.Mailing;
+import models.writer.FreelanceWriter;
+import models.client.Client;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -22,7 +25,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import static play.data.Form.form;
 @Security.Authenticated(Secured.class)
 public class ClientActions extends Controller{
+	
 	static Form<OrderMessages> newMessageForm = form(OrderMessages.class);
+	static Form<PreferredWriterForm> prefWriterForm = form(PreferredWriterForm.class);
+	
 	public static Result index(){
 			return ok(clienthome.render());
 	}
@@ -61,7 +67,6 @@ public class ClientActions extends Controller{
 	
 	public static Result sendInvitationEmail(){
 			Form<NewEmail> newMailForm = form(NewEmail.class).bindFromRequest();
-			
 			if(newMailForm.hasErrors()){
 				flash("client_mail_invitation_error", "Could not send email. Please correct the form below.");
 				flash("show_form", "true");
@@ -72,7 +77,34 @@ public class ClientActions extends Controller{
 			mail.sendClientInvitationMail(newMail.email);
 			flash("client_mail_invitation_success", "Thanks! Email sent successfully.");
 			flash("show_form", "true");
-			return redirect(controllers.web.client.routes.ClientActions.affiliateProgram());
+			return redirect(controllers.web.client.routes.ClientActions.affiliateProgram());		
+	}
+	
+	public static Result preferredWriters(){
+		return ok(preferredwriters.render(prefWriterForm,  Client.getPreferedWriters()));	
+	}
+	
+	public static Result savePreferredWriter(){
+		Form<PreferredWriterForm> preferredWriterForm = form(PreferredWriterForm.class).bindFromRequest();		
+		if(preferredWriterForm.hasErrors()){
+			flash("show_form","true");
+			return badRequest(preferredwriters.render(preferredWriterForm,  Client.getPreferedWriters()));	
+		}
+		PreferredWriterForm prefWriter = preferredWriterForm.get();
+		FreelanceWriter freelanceWriter = new FreelanceWriter();
+		freelanceWriter = freelanceWriter.findFreelanceWriterById(prefWriter.writer_id);
+		if(freelanceWriter == null){
+			flash("writer_not_found_error","Writer ID  "+prefWriter.writer_id+" not found");
+			flash("show_form","true");
+			prefWriterForm=preferredWriterForm;
+			return redirect(controllers.web.client.routes.ClientActions.preferredWriters());
+		}
+		PreferredWriter preferredWriter = new PreferredWriter();
+		preferredWriter.freelanceWriter = freelanceWriter;
+		preferredWriter.save();
+		flash("show_form","true");
+		flash("writer_added_success","Successfully added writer "+freelanceWriter.freelance_writer_id+" to your preferred writers.");
+		return redirect(controllers.web.client.routes.ClientActions.preferredWriters());	
 	}
 	
 	public static class NewEmail{
@@ -81,6 +113,11 @@ public class ClientActions extends Controller{
 		public String email;
 		@Constraints.Required(message="Please enter write your message.")
 		public String message;
+	}
+	
+	public static class PreferredWriterForm{
+		@Constraints.Required(message="Writer ID is required.")
+		public Long writer_id;
 	}
 	
 }

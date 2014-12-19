@@ -7,9 +7,9 @@ import com.avaje.ebean.Ebean;
 import java.util.ArrayList;
 import scala.collection.mutable.ArrayBuffer;
 
-import models.admin.adminmodels.AdminUser;
-import models.admin.userpermissions.SecurityRole;
-import models.admin.userpermissions.UserPermission;
+import models.common.userpermissions.AuthorisedUser;
+import models.common.userpermissions.SecurityRole;
+import models.common.userpermissions.UserPermission;
 
 object Global extends GlobalSettings {
 	
@@ -24,7 +24,7 @@ object Global extends GlobalSettings {
 	override def onStart(app: Application) {
 		if (SecurityRole.find.findRowCount() == 0){
 			Logger.info("Equal 0.");
-			var security_roles = Array("Super Admin", "Normal Admin", "Writer Support", "Customer Support");
+			var security_roles = Array("foo", "bar", "hurdy", "gurdy");
 			for ( i <- 0 to (security_roles.length - 1)) {
 				val role = new SecurityRole();
 				role.name = security_roles(i);
@@ -37,17 +37,14 @@ object Global extends GlobalSettings {
 		    permission.value = "printers.edit";
 		    permission.save();
 		}
-		if (AdminUser.find.findRowCount() == 0)
+		if (AuthorisedUser.find.findRowCount() == 0)
 		{
-		    val user = new AdminUser();
-		    user.email = "wambua.sam@gmail.com";
-		    user.active = true;
+		    val user = new AuthorisedUser();
+		    user.userName = "steve";
 		    user.roles = new ArrayList[SecurityRole]();
-		    user.roles.add(SecurityRole.findByName("Super Admin"));
-		    user.roles.add(SecurityRole.findByName("Normal Admin"));
-		    user.roles.add(SecurityRole.findByName("Customer Support"));
-		    user.roles.add(SecurityRole.findByName("Writer Support"));
-		    user.permissions = new ArrayList[UserPermission]();
+		    user.roles.add(SecurityRole.findByName("foo"));
+		    user.roles.add(SecurityRole.findByName("bar"));
+		    user.permissions = new ArrayList<UserPermission>();
 		    user.permissions.add(UserPermission.findByValue("printers.edit"));
 
 		    user.save();

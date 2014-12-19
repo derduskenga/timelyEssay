@@ -6,5 +6,6 @@
 GET							/status														controllers.common.Application.status()
 
 
+
 #These are the common assets
 GET  	/assets/*file		controllers.Assets.at(path="/public", file)
