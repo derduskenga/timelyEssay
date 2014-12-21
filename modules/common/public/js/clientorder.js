@@ -56,7 +56,7 @@ function detectDocumentSelect(){
 function fectDocument(documentID,type){
   var newDataRequest = $.ajax({
     type: "POST",
-    url: "/fetch/order_document/"+documentID,
+    url: "/fetch/orderdocument/"+documentID,
     timeout: 30000, // timeout after 30 seconds
     dataType: "json",
   });
@@ -237,7 +237,7 @@ function updateInitialPrice(data){
 }
 
 function fetchSpacing(){
-  $.post("/fetch/spacing/",{}, function(data){
+  $.post("/fetch/spacing",{}, function(data){
       $.order_global_vars.spacing_details = data;
   },'json'); 
 }
@@ -415,7 +415,7 @@ function detectCurrencyChange(){
 }
 
 function fetchAdditions(){
-  $.post("/fetch/additions/",{}, function(data){
+  $.post("/fetch/additions",{}, function(data){
       $.order_global_vars.additions_details = data;
   },'json'); 
 }
@@ -435,7 +435,7 @@ function updateAditionsValues(){
 }
 
 function fetchCurrency(){   
-  $.post("/fetch/currency/",{}, function(data){
+  $.post("/fetch/currency",{}, function(data){
       $.order_global_vars.currency_details = data;
   },'json'); 
 }
@@ -490,7 +490,7 @@ function getDeadlineAdditionalPrice(){
 }
 
 function fetchLevelOfWriting(){
-   $.post("/fetch/level/",{}, function(data){
+   $.post("/fetch/level",{}, function(data){
       $.order_global_vars.level_of_writing = data;
   },'json'); 
 }

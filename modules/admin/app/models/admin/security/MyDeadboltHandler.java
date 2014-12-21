@@ -39,13 +39,13 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler
 				Flash flashObject = context.flash();
 				flashObject.put("error", "Oops! You are not logged in");
 				Logger.info("Is null");
-				return F.Promise.pure(badRequest(adminlogin.render("Login")));
+				return F.Promise.pure((Result)badRequest(adminlogin.render("Login")));
 		}
 		Logger.info("Is not null"); 
 		return F.Promise.pure(null);
     }
 
-    public F.Promise<Subject> getSubject(Http.Context context)
+    public F.Promise<Subject> getSubject(final Http.Context context)
     {
         // in a real application, the user name would probably be in the session following a login process
         return F.Promise.promise(new F.Function0<Subject>()

@@ -320,16 +320,16 @@ function validateForPerPageBasis(){
 	    }
 	  }
 	},
-// 	phone_number:{
-// 	  validators:{
-// 	    notEmpty:{
-// 	      message:'Enter a valid phone number' 
-// 	    },
-// 	    digits:{
-// 	      message:'Invalid phone number'
-// 	    }
-// 	  }
-// 	},
+	phone_number:{
+	  validators:{
+	    notEmpty:{
+	      message:'Enter a valid phone number' 
+	    },
+	    digits:{
+	      message:'Invalid phone number'
+	    }
+	  }
+	},
 	document_subject:{
 	  validators:{
 	    notEmpty:{

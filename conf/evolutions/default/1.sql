@@ -149,7 +149,6 @@ create table order_subject_category (
 ;
 
 create table orders (
-<<<<<<< HEAD
   order_id                  bigint not null,
   document_deadline         integer,
   topic                     varchar(255),
@@ -166,30 +165,13 @@ create table orders (
   amount_paid               float,
   is_paid                   boolean,
   is_writer_assigned        boolean,
-=======
-  id                        bigint not null,
-  order_urgency             integer,
-  order_topic               varchar(255),
-  order_instructions        varchar(255),
-  number_of_units           integer,
-  style_of_writing          varchar(255),
-  number_of_sources         integer,
-  operating_system          varchar(255),
-  programming_language      varchar(255),
-  database_used             varchar(255),
-  prefered_writer_id        integer,
->>>>>>> b7fc03a6fd41e985d3e7b98a5213a9461cab5aec
   client_id                 bigint,
   order_level_of_writing_id bigint,
   order_document_type_id    bigint,
   order_currence_order_currency_id bigint,
   spacing_id                bigint,
   order_subject_id          bigint,
-<<<<<<< HEAD
   constraint pk_orders primary key (order_id))
-=======
-  constraint pk_orders primary key (id))
->>>>>>> b7fc03a6fd41e985d3e7b98a5213a9461cab5aec
 ;
 
 create table preferred_writer (
@@ -332,8 +314,6 @@ alter table orders add constraint fk_orders_spacing_12 foreign key (spacing_id) 
 create index ix_orders_spacing_12 on orders (spacing_id);
 alter table orders add constraint fk_orders_orderSubject_13 foreign key (order_subject_id) references order_subject (id);
 create index ix_orders_orderSubject_13 on orders (order_subject_id);
-<<<<<<< HEAD
-=======
 alter table preferred_writer add constraint fk_preferred_writer_client_14 foreign key (client_id) references client (id);
 create index ix_preferred_writer_client_14 on preferred_writer (client_id);
 alter table preferred_writer add constraint fk_preferred_writer_freelance_15 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
@@ -352,7 +332,6 @@ alter table admin_user_user_permission add constraint fk_admin_user_user_permiss
 alter table authorised_user_security_role add constraint fk_authorised_user_security_r_01 foreign key (authorised_user_id) references authorised_user (id);
 
 alter table authorised_user_security_role add constraint fk_authorised_user_security_r_02 foreign key (security_role_id) references security_role (id);
->>>>>>> b7fc03a6fd41e985d3e7b98a5213a9461cab5aec
 
 alter table authorised_user_user_permission add constraint fk_authorised_user_user_permi_01 foreign key (authorised_user_id) references authorised_user (id);
 
