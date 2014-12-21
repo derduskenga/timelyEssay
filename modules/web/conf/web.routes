@@ -9,12 +9,12 @@ GET	   						/logout															controllers.web.Application.logout()
 
 #client pages
 GET	   						/mydashboard												controllers.web.client.ClientActions.index()
-GET	   						/mydashboard/messages              				controllers.web.client.ClientActions.messages()
-POST						/mydashboard/savemessage						controllers.web.client.ClientActions.saveClientMessage()
-GET							/mydashboard/affiliateprogram					controllers.web.client.ClientActions.affiliateProgram()
-POST						/mydashboard/sendinvitationmail				controllers.web.client.ClientActions.sendInvitationEmail()
-GET							/mydashboard/preferredwriters					controllers.web.client.ClientActions.preferredWriters()
-POST						/mydashboard/savepreferredwriter			controllers.web.client.ClientActions.savePreferredWriter()
+GET	   						/mydashboard/messages           controllers.web.client.ClientActions.messages()
+POST						/mydashboard/savemessage		controllers.web.client.ClientActions.saveClientMessage()
+GET							/mydashboard/affiliateprogram	controllers.web.client.ClientActions.affiliateProgram()
+POST						/mydashboard/sendinvitationmail		controllers.web.client.ClientActions.sendInvitationEmail()
+GET							/mydashboard/preferredwriters	controllers.web.client.ClientActions.preferredWriters()
+POST						/mydashboard/savepreferredwriter	controllers.web.client.ClientActions.savePreferredWriter()
 
 
 #placing a new order 
@@ -28,7 +28,7 @@ POST						/fetch/level				controllers.web.Application.fetchLevelOfWriting()
 POST 						/fetch/spacing				controllers.web.Application.fetchSpacing()
 GET						/neworder/ordersummary/:id		controllers.web.Application.previewOrder(id:Long)
 GET						/neworder/edit/:id			controllers.web.Application.editOrder(id:Long)
-GET						/neworder/pay/:id			controllers.web.Application.payForOrder(id:Long)
+GET						/mydashboard/pay/:id			controllers.web.client.ClientActions.payForOrder(id:Long)
 
 
 

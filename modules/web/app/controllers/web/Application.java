@@ -361,10 +361,6 @@ public class Application extends Controller{
 	  spacingMap, StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));
 	}
 	
-	public static Result payForOrder(Long id){
-	  return TODO;
-	}
-	
 	public static class Login {
 		public String email;
 		public String password;

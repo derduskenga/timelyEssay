@@ -4,6 +4,7 @@ import play.*;
 import play.mvc.*;
 import views.html.clientarea.*;
 import models.orders.OrderMessages;
+import models.orders.Orders;
 import models.orders.MessageParticipants;
 import play.data.Form;
 import models.client.PreferredWriter;
@@ -118,6 +119,15 @@ public class ClientActions extends Controller{
 	public static class PreferredWriterForm{
 		@Constraints.Required(message="Writer ID is required.")
 		public Long writer_id;
+	}
+	
+	public static Result payForOrder(Long id){
+	  //Now login the user
+	  //send an email to the user containing password
+	  //let the user pay now
+	  //Orders orders  = Orders.getOrderById(id);
+	  return TODO;
+	  
 	}
 	
 }
