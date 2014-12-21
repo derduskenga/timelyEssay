@@ -63,12 +63,12 @@ function fectDocument(documentID,type){
   newDataRequest.done(function(data){
     if(type == "documentChange"){
       handleDocumentTypeChange(data);
-         
+      initializeVarsForDocument(data);  
     }else{
       //initial document load order total updating
       updateInitialPrice(data);
       updateFieldVisibility(data);
-      $.order_global_vars.document_details = data;
+      initializeVarsForDocument(data);
     }    
   });
   
@@ -92,13 +92,17 @@ function fectDocument(documentID,type){
   
 }
 
-function handleDocumentTypeChange(data){
-  $.order_global_vars.selected_units = $('#number_of_units').val();
-  if(data != null){
+function initializeVarsForDocument (data){
     $.order_global_vars.document_details = data;
     $.order_global_vars.count_units = data['count_units'];
     $.order_global_vars.document_subjects = data['document_subjects'];
     $.order_global_vars.document_deadlines = data['document_deadlines'];
+}
+
+function handleDocumentTypeChange(data){
+  $.order_global_vars.selected_units = $('#number_of_units').val();
+  if(data != null){
+    initializeVarsForDocument (data);
     //alert(data['deadline_category']);
     $('#deadline_category_tracker').val(data['cpp_mode']);
     //alert("value has been set here " + $('#deadline_category_tracker').val());
@@ -335,7 +339,7 @@ function updatePriceLabel(){
   var level_of_writing_additional_price = getLevelOfWritingAdditionalPrice();
   var number_of_units = getSelectedUnits();
   var additions_factor = $.order_global_vars.document_details['additions_factor'];
-  
+  //alert("deadline_additional_price " + deadline_additional_price);
   //currency 
   getSelectedCurrency();    
   var currency_id = $.order_global_vars.selected_currency['id'];
@@ -347,21 +351,22 @@ function updatePriceLabel(){
   getSpacingSelected();
   
   var spacing_factor = $.order_global_vars.selected_spacing['factor'];
-  
   //additions
   var total_additions = getAdditions();
-  
-  if(cpp_mode == "perpage"){ 
-  //alert(cpp_mode);
+  //alert("total_additions " + total_additions);
+  if(cpp_mode == "perpage"){   
+    //alert(cpp_mode);
   var cost_per_page = ((document_base_price + subject_additional_price + deadline_additional_price + level_of_writing_additional_price)*convertion_rate)*spacing_factor;
   var order_total = cost_per_page*number_of_units + (total_additions*additions_factor*number_of_units*convertion_rate*spacing_factor);
   var per_unit_label = "Cost per page";
   updateLabel(cost_per_page,order_total,per_unit_label,currency_symbol_2);
+  
   }else if(cpp_mode == "perquestion"){
     //no spacing factor applied here
     //alert(cpp_mode);
     var cost_per_question = ((document_base_price + subject_additional_price + deadline_additional_price + level_of_writing_additional_price)*convertion_rate);
     var order_total  = cost_per_question*number_of_units + (total_additions*additions_factor*number_of_units*convertion_rate);
+    
     var per_unit_label = "Cost per problem/question";
     updateLabel(cost_per_question,order_total,per_unit_label,currency_symbol_2);
   }else if(cpp_mode == "perassignment"){
@@ -404,10 +409,9 @@ function detectCurrencyChange(){
     var selectedCurrency = {};
     for(var i=0; i<$.order_global_vars.currency_details.length;i++){
       if($.order_global_vars.currency_details[i]['id'] == selectedValue){
-	selectedCurrency = $.order_global_vars.currency_details[i];
+	$.order_global_vars.selected_currency = $.order_global_vars.currency_details[i];
       }      
     }
-    $.order_global_vars.selected_currency = selectedCurrency;
     //update the additions values
     updateAditionsValues();
     updatePriceLabel();
@@ -480,7 +484,7 @@ function detectUrgencyChange(){
 
 function getDeadlineAdditionalPrice(){
   var selected_deadline_value = $('#document_deadline').val();
-  var deadline_additional_price = 0;
+  var deadline_additional_price = 0.0;
   for(var i=0; i<$.order_global_vars.document_deadlines.length;i++){
     if(selected_deadline_value == $.order_global_vars.document_deadlines[i]['time_in_seconds']){
       deadline_additional_price = $.order_global_vars.document_deadlines[i]['additional_price'];

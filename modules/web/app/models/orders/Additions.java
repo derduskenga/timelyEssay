@@ -70,10 +70,10 @@ public class Additions extends Model{
 	double order_additions = 0.0;
 	if(orderAdditions != null){
 	  for(Additions aList:orderAdditions){
-	    order_additions = order_additions + (aList.additional_price*newOrders.number_of_units*newOrders.orderDocumentType.additions_factor);
+	    order_additions = order_additions + aList.additional_price;
 	  }
 	}
-	return order_additions;
+	return order_additions*newOrders.number_of_units*newOrders.orderDocumentType.additions_factor;
       }
       
       public static JSONArray getAdditionsArray(){
