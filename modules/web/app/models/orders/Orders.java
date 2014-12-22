@@ -6,6 +6,7 @@ import play.db.ebean.Model;
 import models.client.Client;
 import models.utility.Utilities;
 import play.Logger;
+import com.avaje.ebean.*;
 
 
 @Entity
@@ -94,6 +95,31 @@ public class Orders extends Model{
 	public static Orders getOrderByCode(Long order_code){
 	  return Orders.find().where().eq("order_code", order_code).findUnique();
 	}
+
+	public Page<Orders> getActiveOrders(int page, int page_list_size, Long client_id){
+	  return Orders.find().where().eq("is_complete",false).eq("client_id",client_id).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	}
+	
+	public  Page<Orders> getCompletedOrders(int page, int page_list_size, Long client_id){
+	  return Orders.find().where().eq("is_complete",true).eq("client_id",client_id).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	}
+	public Page<Orders> getClosedOrders(int page, int page_list_size, Long client_id){
+	  return Orders.find().where().eq("is_closed",true).eq("client_id",client_id).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	}
+	
+	
+	public Page<Orders> getActiveOrders(int page, int page_list_size){
+	  return Orders.find().where().eq("is_complete",false).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	}
+	
+	public  Page<Orders> getCompletedOrders(int page, int page_list_size){
+	  return Orders.find().where().eq("is_complete",true).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	}
+	public Page<Orders> getClosedOrders(int page, int page_list_size){
+	  return Orders.find().where().eq("is_closed",true).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	}
+	
+	
 	public OrderDeadlines getDeadlineObject(int dValue){
 	  return OrderDeadlines.getOrderDeadlinesByValue(Long.valueOf(dValue));
 	}
