@@ -30,10 +30,15 @@ public class Orders extends Model{
 	public String prefered_writer;//if this is a returning customer
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date order_date;
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date order_deadline;
 	public double order_total;//This is given in USD
-	public double amount_paid=0.0; //This is shown in USD
+	public double amount_paid = 0.0; //This is shown in USD
 	public boolean is_paid = false;
-	public boolean is_writer_assigned = false;
+	public boolean is_writer_assigned = false;//is being worked on 
+	public boolean is_complete = false;
+	public int revision_count;
+	//Order Files and types of files (e.g for revision, additional files, reference materials, order product)
 	
 	//relationship fields
 	//@Valid
@@ -164,6 +169,14 @@ public class Orders extends Model{
 	    order_value = (cost_per_unit*number_of_units) + total_additions;
 	  }
 	  return Math.round(order_value*100)/100.00;
+	}
+	
+	public Date computeDeadline(Date date, int sec){
+	  Calendar calender = Calendar.getInstance();
+	  calender.setTimeInMillis(date.getTime());
+	  calender.add(Calendar.SECOND, sec);
+	  Date changeDate=calender.getTime();
+	  return changeDate;
 	}
 	
 } 

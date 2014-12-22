@@ -35,24 +35,24 @@ public class ClientActions extends Controller{
 	}
 	//path to messages
 	public static Result messages(){			
-				return ok(clientmessages.render(newMessageForm, OrderMessages.getReceipientsMap("CLIENT"),getOrderMessages()));
+	  return ok(clientmessages.render(newMessageForm, OrderMessages.getReceipientsMap("CLIENT"),getOrderMessages()));
 	}	
 	
 	public static Result saveClientMessage(){
-				ObjectNode result = Json.newObject();
-				Form<OrderMessages> newBoundMessageForm = form(OrderMessages.class).bindFromRequest();
-				
-				if(newBoundMessageForm.hasErrors()) {
-					flash("error", "Please correct the form below.");
-					flash("show_form", "true");
-					return badRequest(clientmessages.render(newBoundMessageForm, OrderMessages.getReceipientsMap("CLIENT"), getOrderMessages()));
-				}	
-				OrderMessages orderMessage = newBoundMessageForm.get();
-				orderMessage.msg_from = MessageParticipants.CLIENT;
-				if(orderMessage.saveClientMessage()){
-					return redirect(controllers.web.client.routes.ClientActions.messages());
-				}
-				return redirect(controllers.web.client.routes.ClientActions.messages());
+	  ObjectNode result = Json.newObject();
+	  Form<OrderMessages> newBoundMessageForm = form(OrderMessages.class).bindFromRequest();
+	  
+	  if(newBoundMessageForm.hasErrors()) {
+		  flash("error", "Please correct the form below.");
+		  flash("show_form", "true");
+		  return badRequest(clientmessages.render(newBoundMessageForm, OrderMessages.getReceipientsMap("CLIENT"), getOrderMessages()));
+	  }	
+	  OrderMessages orderMessage = newBoundMessageForm.get();
+	  orderMessage.msg_from = MessageParticipants.CLIENT;
+	  if(orderMessage.saveClientMessage()){
+		  return redirect(controllers.web.client.routes.ClientActions.messages());
+	  }
+	  return redirect(controllers.web.client.routes.ClientActions.messages());
 	}
 	
 	public static List<OrderMessages> getOrderMessages(){
@@ -121,13 +121,19 @@ public class ClientActions extends Controller{
 		public Long writer_id;
 	}
 	
-	public static Result payForOrder(Long id){
+	public static Result proceedToPay(Long id){
 	  //Now login the user
+	  Orders orders  = Orders.getOrderById(id);
 	  //send an email to the user containing password
 	  //let the user pay now
-	  //Orders orders  = Orders.getOrderById(id);
-	  return TODO;
-	  
+	  if(orders != null){
+	    return ok(payorder.render(orders));
+	  }else{
+	    return notFound("Order Was Not found");
+	  }  
 	}
-	
+
+	public static Result pay(Long id){
+	  return TODO;
+	}
 }

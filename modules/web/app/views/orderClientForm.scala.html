@@ -17,13 +17,13 @@
 		    @flash.get("clientorderformerros")
 	    </div>
 	  }
-      <div id="client-personal-info" class=" @if(clientForm("id").valueOr("") != ""){hidden}">
+      <div id="client-personal-info" class="@if(clientForm("id").valueOr("") != "" || session.get("email") != null){hidden}">
 	  @if(flash.containsKey("emailinuse")){
 	    <div class="alert alert-danger">
 		    @flash.get("emailinuse")
 	    </div>
 	  }
-	    
+	
 	<legend>Personal details</legend>
 	@text(clientForm("f_name"),
 	  label = "First Name",

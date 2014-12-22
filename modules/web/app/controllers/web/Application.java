@@ -23,8 +23,10 @@ import models.orders.Additions;
 import models.orders.StaticData;
 import models.orders.OrderSubject;
 import models.orders.OrderCppMode;
+import play.mvc.Http.Context;
 import models.utility.Utilities;
 import models.orders.OrderDeadlines;
+import controllers.web.client.*;
 import static play.data.Form.form;
 import play.Logger;
 import play.Logger.ALogger;
@@ -68,15 +70,10 @@ public class Application extends Controller{
 		session("email", email);
 		session("f_name", client.f_name);
 		session("l_name", client.l_name);
-		return redirect(routes.Application.index());	
+		return redirect(controllers.web.client.routes.ClientActions.index());	
 	}
 	
 	public static Result newOrder(){
-	  Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
-	  if(Countries.fetchCountriesMap().size()>0){
-	    mapCountries = Countries.fetchCountriesMap();
-	  }
-	    
 	  Map<Map<Long,String>,Boolean> mapDocuments = new HashMap<Map<Long,String>,Boolean>();
 	  if(OrderDocumentType.fetchDocumentMap().size()>0){
 	    mapDocuments = OrderDocumentType.fetchDocumentMap(); 
@@ -89,7 +86,7 @@ public class Application extends Controller{
 	  if(TempStore.getDocumentSubjects().size()>0){
 	    documentSubjects = TempStore.getDocumentSubjects(); 
 	  }
-	   
+	  
 	  Map<Map<Long,String>,Boolean> numberOfUnitsMap = new HashMap<Map<Long,String>,Boolean>();
 	  if(TempStore.getNumberOfUnits().size()>0){
 	    numberOfUnitsMap = TempStore.getNumberOfUnits();
@@ -114,9 +111,30 @@ public class Application extends Controller{
 	  if(Additions.getAdditionsList().size()>0){
 	    additionsList = Additions.getAdditionsList();
 	  }
-	  return ok(orderClientForm.render(orderForm,clientForm,loginForm,mapCountries,
-	  mapDocuments,documentDeadlines,documentSubjects,numberOfUnitsMap,mapLevel,currenceList,
-	  spacingMap,StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));
+	  //Session session = Scope.Session.current();
+	  if(session().get("email") == null){//a new user who is not logged/has no account
+	    Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
+	    if(Countries.fetchCountriesMap().size()>0){
+	      mapCountries = Countries.fetchCountriesMap();
+	    }
+	    return ok(orderClientForm.render(orderForm,clientForm,loginForm,mapCountries,
+	    mapDocuments,documentDeadlines,documentSubjects,numberOfUnitsMap,mapLevel,currenceList,
+	    spacingMap,StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));
+	  }else{//user is logged in and possibly is a returning customer
+	    //get Client by logged in email address
+	    Client client = Client.getClient(session().get("email"));
+	    Form<Client> filledClientForm = clientForm.fill(client);
+	    
+	    Logger.info("user logged in and email is:" + session().get("email"));
+	    Logger.info("f_name is:" + client.f_name);
+	    //Countries map
+	    Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
+	    mapCountries = Countries.fetchCountriesMapForErrorForm(client.country.id);
+	    
+	    return ok(orderClientForm.render(orderForm,filledClientForm,loginForm,mapCountries,
+	    mapDocuments,documentDeadlines,documentSubjects,numberOfUnitsMap,mapLevel,currenceList,
+	    spacingMap,StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));	    
+	  }
 	}
 	
 	public static Result fetchCountries(){
@@ -269,26 +287,34 @@ public class Application extends Controller{
 	 //order with client
 	 newOrders.client = newClient; 
 	 //save Client then the order
-	 Long returnedClientId = newClient.saveClient(); 
+	 
 	 
 	 //order date 
 	 Date  orderDate = new Date();
 	 try{
 	  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	  isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	  orderDate = isoFormat.parse(isoFormat.format(new Date()));	
+	  orderDate = isoFormat.parse(isoFormat.format(new Date()));
 	  newOrders.order_date = orderDate;
-	  //Logger.info("date date date: " + String.format(orderDate));
+	  //compute the order deadline
+	  newOrders.order_deadline = newOrders.computeDeadline(orderDate,newOrders.document_deadline);
+	  if(newClient.id == null){
+	    newClient.created_on = orderDate;
+	  }
+	 
+	 //Logger.info("date date date: " + String.format(orderDate));
 	 }catch(ParseException pe){
 	  Logger.info("parse Exception");
 	 }catch(Exception ex){
 	  Logger.info("parse Exception");
 	 }
+	 //client reg date
 	 //computer order total
 	 double order_value = newOrders.computeOrderTotal(newOrders);
 	 newOrders.order_total = order_value;
-	 
-	 Long returnedOrderId = newOrders.saveOrder();
+	
+	Long returnedClientId = newClient.saveClient(); 
+	Long returnedOrderId = newOrders.saveOrder();
 	 flash("cliet_order_success","You have placed an order");  
 	 //return redirect(controllers.web.client.routes.ClientActions.messages()); 
 	 return redirect(controllers.web.routes.Application.previewOrder(returnedOrderId));
@@ -359,6 +385,19 @@ public class Application extends Controller{
 	  return ok(orderClientForm.render(filledOrderForm,filledClientForm,loginForm,mapCountries,
 	  mapDocuments,documentDeadlines,documentSubjects,numberOfUnitsMap,mapLevel,currMap,
 	  spacingMap, StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));
+	}
+	
+	public static Result setUserSession(Long id){
+	  Orders orders  = Orders.getOrderById(id);
+	  setSession(orders);
+	  return redirect(controllers.web.client.routes.ClientActions.proceedToPay(id));
+	}
+	
+	public static void setSession(Orders orders){
+	  session().clear();
+	  session("email", orders.client.email);
+	  session("f_name", orders.client.f_name);
+	  session("l_name", orders.client.l_name);
 	}
 	
 	public static class Login {

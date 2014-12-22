@@ -11,7 +11,7 @@ import play.Logger;
 import models.client.PreferredWriter;
 
 @Entity
-public class Client extends Model{
+public class Client extends Model{ 
 	@Id
 	public Long id;
 	//fields

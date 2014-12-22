@@ -8,8 +8,8 @@ POST	   					/login															controllers.web.Application.authenticate()
 GET	   						/logout															controllers.web.Application.logout()
 
 #client pages
-GET	   						/mydashboard												controllers.web.client.ClientActions.index()
-GET	   						/mydashboard/messages           controllers.web.client.ClientActions.messages()
+GET	   					/mydashboard				controllers.web.client.ClientActions.index()
+GET	   					/mydashboard/messages           	controllers.web.client.ClientActions.messages()
 POST						/mydashboard/savemessage		controllers.web.client.ClientActions.saveClientMessage()
 GET							/mydashboard/affiliateprogram	controllers.web.client.ClientActions.affiliateProgram()
 POST						/mydashboard/sendinvitationmail		controllers.web.client.ClientActions.sendInvitationEmail()
@@ -28,7 +28,9 @@ POST						/fetch/level				controllers.web.Application.fetchLevelOfWriting()
 POST 						/fetch/spacing				controllers.web.Application.fetchSpacing()
 GET						/neworder/ordersummary/:id		controllers.web.Application.previewOrder(id:Long)
 GET						/neworder/edit/:id			controllers.web.Application.editOrder(id:Long)
-GET						/mydashboard/pay/:id			controllers.web.client.ClientActions.payForOrder(id:Long)
+GET						/mydashboard/proceedtopay/:id		controllers.web.client.ClientActions.proceedToPay(id:Long)
+GET						/mydashboard/pay/:id			controllers.web.client.ClientActions.pay(id:Long)
+GET						/user/sessuser/:id			controllers.web.Application.setUserSession(id:Long)
 
 
 
