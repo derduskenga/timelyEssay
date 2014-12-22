@@ -302,26 +302,29 @@ public class Application extends Controller{
 	    newClient.created_on = orderDate;
 	  }
 	 
-	 //Logger.info("date date date: " + String.format(orderDate));
-	 }catch(ParseException pe){
+	  //Logger.info("date date date: " + String.format(orderDate));
+	  }catch(ParseException pe){
 	  Logger.info("parse Exception");
-	 }catch(Exception ex){
+	  }catch(Exception ex){
 	  Logger.info("parse Exception");
-	 }
-	 //client reg date
-	 //computer order total
-	 double order_value = newOrders.computeOrderTotal(newOrders);
-	 newOrders.order_total = order_value;
-	
-	Long returnedClientId = newClient.saveClient(); 
-	Long returnedOrderId = newOrders.saveOrder();
-	 flash("cliet_order_success","You have placed an order");  
-	 //return redirect(controllers.web.client.routes.ClientActions.messages()); 
-	 return redirect(controllers.web.routes.Application.previewOrder(returnedOrderId));
+	  }
+	  //client reg date
+	  //computer order total
+	  double order_value = newOrders.computeOrderTotal(newOrders);
+	  newOrders.order_total = order_value;
+	  //order code
+	  Long returnedClientId = newClient.saveClient(); 
+	  Long returnedOrderId = newOrders.saveOrder();
+	  Orders forUpdate = Orders.getOrderById(returnedOrderId);
+	  forUpdate.order_code = forUpdate.order_id+ Utilities.ORDER_CODE_CONSTANT;
+	  forUpdate.saveOrder();
+	  flash("cliet_order_success","You have placed an order");  
+	  //return redirect(controllers.web.client.routes.ClientActions.messages()); 
+	  return redirect(controllers.web.routes.Application.previewOrder(forUpdate.order_code));
 	}
 	
-	public static Result previewOrder(Long id){
-	  Orders orders = Orders.getOrderById(id);
+	public static Result previewOrder(Long order_code){
+	  Orders orders = Orders.getOrderByCode(order_code);
 	  if(orders != null){
 	    return ok(orderSummary.render(orders,loginForm));
 	  }else{
@@ -329,8 +332,8 @@ public class Application extends Controller{
 	  }
 	}
 	
-	public static Result editOrder(Long id){
-	  Orders orders = Orders.getOrderById(id);
+	public static Result editOrder(Long order_code){
+	  Orders orders = Orders.getOrderByCode(order_code);
 	  if(orders == null){
 	    return notFound("Order Was Not found");	    
 	  }
@@ -387,10 +390,10 @@ public class Application extends Controller{
 	  spacingMap, StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));
 	}
 	
-	public static Result setUserSession(Long id){
-	  Orders orders  = Orders.getOrderById(id);
+	public static Result setUserSession(Long order_code){
+	  Orders orders  = Orders.getOrderByCode(order_code);
 	  setSession(orders);
-	  return redirect(controllers.web.client.routes.ClientActions.proceedToPay(id));
+	  return redirect(controllers.web.client.routes.ClientActions.proceedToPay(order_code));
 	}
 	
 	public static void setSession(Orders orders){

@@ -85,8 +85,6 @@ function fectDocument(documentID,type){
 	    alert('Time out error.');
     }else if(exception === 'abort'){
 	    alert('Sorry, Request was aborted.');
-    }else{
-	    alert('Sorry, an error occured.');
     }
   });
   

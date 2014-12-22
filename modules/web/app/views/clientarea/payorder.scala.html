@@ -4,7 +4,7 @@
 @import helper._
 
 @clientmain("Timely Essay | Pay for Order"){
-  <h5>Pay for Order</h5>
+  <h5>Pay for Order #@clientOrders.order_code</h5>
   <div id="order-summary">
     <table>
       <tr>
@@ -35,8 +35,8 @@
     </table>     
     <table>
       <tr>
-      	<td><p align="right"><a href="@controllers.web.routes.Application.editOrder(clientOrders.order_id)" class="btn btn-primary">&lt;&lt; Edit Order</a></p></td>
-	<td><p><a href="@controllers.web.client.routes.ClientActions.pay(clientOrders.order_id)" class="btn btn-primary">Pay for order&gt;&gt;</a></p></td>
+      	<td><p align="right"><a href="@controllers.web.routes.Application.editOrder(clientOrders.order_code)" class="btn btn-primary">&lt;&lt; Edit Order</a></p></td>
+	<td><p><a href="@controllers.web.client.routes.ClientActions.pay(clientOrders.order_code)" class="btn btn-primary">Pay for order&gt;&gt;</a></p></td>
       </tr>        
     </table>      
   </div>

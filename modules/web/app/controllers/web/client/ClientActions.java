@@ -31,7 +31,15 @@ public class ClientActions extends Controller{
 	static Form<PreferredWriterForm> prefWriterForm = form(PreferredWriterForm.class);
 	
 	public static Result index(){
-			return ok(clienthome.render());
+	  List<Orders> allClientOrders = new ArrayList<Orders>();
+	  if(session().get("email") != null){  
+	    allClientOrders = Client.getClient(session().get("email")).orders;
+	    if(allClientOrders!=null){
+	      return ok(clienthome.render(allClientOrders));
+	    }
+	    return ok(clienthome.render(new ArrayList<Orders>()));
+	  }
+	  return ok(clienthome.render(new ArrayList<Orders>()));
 	}
 	//path to messages
 	public static Result messages(){			
@@ -60,7 +68,9 @@ public class ClientActions extends Controller{
 			orderMessages = OrderMessages.getClientOrderMessages();
 			return orderMessages;
 	}
-	
+	public static Result orderMessages(Long order_code){
+	  return TODO;
+	}
 	public static Result affiliateProgram(){
 			Form<NewEmail> newMailForm = form(NewEmail.class);
 			return ok(affiliateprogram.render(newMailForm));
@@ -106,24 +116,20 @@ public class ClientActions extends Controller{
 		flash("show_form","true");
 		flash("writer_added_success","Successfully added writer "+freelanceWriter.freelance_writer_id+" to your preferred writers.");
 		return redirect(controllers.web.client.routes.ClientActions.preferredWriters());	
-	}
-	
+	}	
 	public static class NewEmail{
 		@Constraints.Required(message="Please enter email.")
 		@Constraints.Email(message="The email you entered does not look valid.")
 		public String email;
 		@Constraints.Required(message="Please enter write your message.")
 		public String message;
-	}
-	
+	}	
 	public static class PreferredWriterForm{
 		@Constraints.Required(message="Writer ID is required.")
 		public Long writer_id;
-	}
-	
-	public static Result proceedToPay(Long id){
-	  //Now login the user
-	  Orders orders  = Orders.getOrderById(id);
+	}	
+	public static Result proceedToPay(Long order_code){
+	  Orders orders  = Orders.getOrderByCode(order_code);
 	  //send an email to the user containing password
 	  //let the user pay now
 	  if(orders != null){
@@ -132,8 +138,10 @@ public class ClientActions extends Controller{
 	    return notFound("Order Was Not found");
 	  }  
 	}
-
-	public static Result pay(Long id){
+	public static Result clientViewOrder(Long order_code){
+	  return TODO;
+	}
+	public static Result pay(Long order_code){
 	  return TODO;
 	}
 }

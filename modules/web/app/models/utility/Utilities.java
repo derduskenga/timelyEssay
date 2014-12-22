@@ -10,4 +10,5 @@ public class Utilities{
 						    "Play java/scala framework","Spring","Yii PHP framework","Code PHP Ignitor",
 						    "Peanuts PHP framework"};
   public static String DATABASE [] = {"MySQL","Postgres","Oracle","Mongo Non-SQL DB","MS Access","DB2","SQL Server","couchDB","SQLite","Sybase","None","Any","Other"};
+  public static Long ORDER_CODE_CONSTANT = 30000L;
 }

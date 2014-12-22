@@ -4,6 +4,7 @@ import play.data.validation.*;
 import javax.persistence.*;
 import play.db.ebean.Model;
 import models.client.Client;
+import models.utility.Utilities;
 import play.Logger;
 
 
@@ -12,6 +13,7 @@ public class Orders extends Model{
 	//fields
 	@Id
 	public Long order_id;
+	public Long order_code;
 	@Constraints.Required(message="Urgency required")
 	public int document_deadline;//this is the period given to do the order; it is given in seconds
 	@Constraints.Required(message="Order topic required")
@@ -37,8 +39,9 @@ public class Orders extends Model{
 	public boolean is_paid = false;
 	public boolean is_writer_assigned = false;//is being worked on 
 	public boolean is_complete = false;
+	public boolean is_closed = false;
 	public int revision_count;
-	//Order Files and types of files (e.g for revision, additional files, reference materials, order product)
+	//Order Files and types of files (e.g for revision, additional files, reference materials, order product,draft)
 	
 	//relationship fields
 	//@Valid
@@ -55,7 +58,7 @@ public class Orders extends Model{
 	@ManyToOne
 	public OrderCurrence orderCurrence;
 	@OneToMany(mappedBy="orders")
-	public List<OrderMessages> OrderMessages;
+	public List<OrderMessages> orderMessages;
 	@ManyToOne
 	public Spacing spacing;
 	@ManyToMany
@@ -79,6 +82,7 @@ public class Orders extends Model{
 	    return order_id;
 	  }else{
 	    Logger.info("updating");
+	    this.order_code = order_id + Utilities.ORDER_CODE_CONSTANT;
 	    update();
 	    return order_id;
 	  }
@@ -87,7 +91,9 @@ public class Orders extends Model{
 	public static Orders getOrderById(Long id){
 	  return Orders.find().byId(id);
 	} 
-	
+	public static Orders getOrderByCode(Long order_code){
+	  return Orders.find().where().eq("order_code", order_code).findUnique();
+	}
 	public OrderDeadlines getDeadlineObject(int dValue){
 	  return OrderDeadlines.getOrderDeadlinesByValue(Long.valueOf(dValue));
 	}

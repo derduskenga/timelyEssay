@@ -1,3 +1,4 @@
+@(clientOrderList: List[models.orders.Orders])
 @clientmain("My Orders"){
 <h3>Active</h3>
 <hr/>
@@ -15,22 +16,22 @@
             </tr>
         </thead>
         <tbody>
-	  <tr>
-	    <td>81285520 </td>
-	    <td>transfer to word </td>
-	    <td>Not Paid</td>
-	    <td>28.10.14    05:17</td>
-	    <td>0</td>
-	    <td>Complete Payment here</td>
-          </tr>
-	  <tr>
-	    <td>81221520 </td>
-	    <td>When Music Was Music</td>
-	    <td>Awaiting Writers</td>
-	    <td>28.10.14   05:17</td>
-	    <td>0</td>
-	    <td>Completely Paid</td>
-	  </tr>
+	  @if(!clientOrderList.isEmpty){
+	    @for(order_ <-clientOrderList){
+	      @if(order_.is_complete == false && order_.is_closed == false){
+		<tr>
+		  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.order_code</a></td>
+		  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.topic</a></td>
+		  <td>@if(order_.is_writer_assigned == false){Awaiting writer}else{Worked on}</td>
+		  <td>@order_.order_deadline</td>
+		  <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@order_.orderMessages.size() (0 Unread)</a></td>
+		  <td>@if(order_.is_paid == false){Not paid <a href="@controllers.web.client.routes.ClientActions.pay(order_.order_code)">(Pay now)</a>}else{Paid}</td>
+		</tr>
+	      }
+	    }    
+	  }else{
+	    <td>No orders to view </td>
+	  }	  
         </tbody>
       </table>
       <hr/>
@@ -38,8 +39,7 @@
 
       <h3>Completed</h3>
       <hr/>
-      <div class="order-row-listing">
-      
+      <div class="order-row-listing">      
 	<table class="table table-bordered">
 	  <thead>
 	    <tr>
@@ -51,22 +51,22 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <td>81285520</td>
-	      <td>Write Synopsis</td>
-	      <td>28.10.14  05:17</td>
-	      <td>2</td>
-	      <td>Download AskForRev</td>
-	    </tr>
-	    <tr>
-	      <td>81285519 </td>
-	      <td>transfer to word </td>
-	      <td>28.10.14   05:14</td>
-	      <td> 0 </td>
-	      <td> Complete Payment</td>
-	    </tr>
+	    @if(!clientOrderList.isEmpty){
+	      @for(order_ <-clientOrderList){
+		@if(order_.is_complete == true && order_.is_closed == false){
+		  <tr>
+		    <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.order_code</a></td>
+		    <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.topic</a></td>
+		    <td>@order_.order_deadline</td>
+		    <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@order_.orderMessages.size() (0 Unread)</a></td>
+		    <td></td>
+		  </tr>
+		}
+	      }    
+	    }else{
+	      <td>No orders to view </td>
+	    }
 	  </tbody>
-	</table>
-	
+	</table>	
       </div>
 }

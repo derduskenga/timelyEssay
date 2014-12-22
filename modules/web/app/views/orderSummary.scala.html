@@ -1,7 +1,7 @@
 @(clientOrders: orders.Orders)(loginForm: Form[web.Application.Login])
 @import models.orders._
 @main("Timely Essay | Order summary")(loginForm){
-  <h5>Order Summary</h5>
+  <h5>Order Summary for Order #@clientOrders.order_code</h5>
   <div id="order-summary">
     <table>
       <tr>
@@ -20,7 +20,6 @@
 	<td>Topic</td>
 	<td>@clientOrders.topic</td>
       </tr>
-      @clientOrders.order_date
       
       <tr>
 	<td>Style</td>
@@ -34,7 +33,7 @@
            
       <tr>
       	<td>Want order after</td>
-	<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> </td>
+	<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(On @clientOrders.order_deadline)</span> </td>
       </tr>
       
       @if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perassignment.toString()){
@@ -106,8 +105,8 @@
     
     <table>
       <tr>
-      	<td><p align="right"><a href="@controllers.web.routes.Application.editOrder(clientOrders.order_id)" class="btn btn-primary">&lt;&lt; Edit Order</a></p></td>
-	<td><p><a href="@controllers.web.routes.Application.setUserSession(clientOrders.order_id)" class="btn btn-primary">Proceed to pay&gt;&gt;</a></p></td>
+      	<td><p align="right"><a href="@controllers.web.routes.Application.editOrder(clientOrders.order_code)" class="btn btn-primary">&lt;&lt; Edit Order</a></p></td>
+	<td><p><a href="@controllers.web.routes.Application.setUserSession(clientOrders.order_code)" class="btn btn-primary">Proceed to pay&gt;&gt;</a></p></td>
       </tr>        
     </table>
     

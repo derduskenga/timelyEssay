@@ -150,6 +150,7 @@ create table order_subject_category (
 
 create table orders (
   order_id                  bigint not null,
+  order_code                bigint,
   document_deadline         integer,
   topic                     varchar(255),
   order_instruction         varchar(255),
@@ -167,6 +168,7 @@ create table orders (
   is_paid                   boolean,
   is_writer_assigned        boolean,
   is_complete               boolean,
+  is_closed                 boolean,
   revision_count            integer,
   client_id                 bigint,
   order_level_of_writing_id bigint,
