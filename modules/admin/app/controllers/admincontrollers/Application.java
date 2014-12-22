@@ -29,6 +29,7 @@ public class Application extends Controller{
 	public static Result authenticate() {	
 		Form<Login> loginForm = form(Login.class).bindFromRequest();
 		if(loginForm.hasErrors()) {
+				Logger.info("Inside has errors.");
 				flash("error", "Wrong email/password");
 				return redirect(controllers.admincontrollers.routes.Application.login());	
 		}
