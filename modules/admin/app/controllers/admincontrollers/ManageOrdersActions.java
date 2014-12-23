@@ -35,12 +35,18 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import models.admin.security.NoUserDeadboltHandler;
 
+import com.avaje.ebean.Page;
+
 @Security.Authenticated(AdminSecured.class)
 @Restrict({@Group({"Writer Support"})})
 public class ManageOrdersActions extends Controller{
 	
 	public static Result manageOrders(){
-			return ok(manageorders.render());
+			Orders orders = new Orders();
+			Page<Orders> activeOrders = orders.getActiveOrders(1,10);
+			Page<Orders> completedOrders = orders.getCompletedOrders(1,10);
+			Page<Orders> closedOrders = orders.getClosedOrders(1,10);
+ 			return ok(manageorders.render(activeOrders, completedOrders, closedOrders));
 	}
 
 }

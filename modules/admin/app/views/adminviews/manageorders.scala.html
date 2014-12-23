@@ -1,3 +1,4 @@
+@(activeOrders:com.avaje.ebean.Page[models.orders.Orders])(completedOrders:com.avaje.ebean.Page[models.orders.Orders])(closedOrders:com.avaje.ebean.Page[models.orders.Orders])
 @adminmain("Manage Orders"){
 <div class="col-md-10" id="mainbody"><!-- start of main body -->
     <ul class="nav nav-tabs">
@@ -7,6 +8,8 @@
     </ul>
     <div class="tab-content"><!--start tab content div -->
     <div id="new-orders" class="tab-pane fade in active"><!--Start writer assigned orders div -->
+			@if(activeOrders !=null){
+			@if(activeOrders.getList().size()>0){
 			<table class="table table-hover">
 				<thead>
 					<tr>
@@ -41,8 +44,20 @@
 					</tr>
 				</tbody>
 			</table>
-    </div><!--End writer assigned orders div -->
+			}else{
+			<div class="alert alert-success">
+					No active orders found.
+			</div>
+			}
+			}else{
+			<div class="alert alert-success">
+					No active orders found.
+			</div>
+			}
+    </div><!--End writer assigned orders div -->   
     <div id="writer-assigned-orders" class="tab-pane fade"><!--Start new orders div -->
+    @if(completedOrders!=null){
+    @if(completedOrders.getList().size()>0){
 			<table class="table table-hover">
 				<thead>
 					<tr>
@@ -77,8 +92,22 @@
 					</tr>
 				</tbody>
 			</table>
-    </div><!--End new orders div -->
+  
+    }else{
+			<div class="alert alert-success">
+					No completed orders found.
+			</div>
+	}
+    }else{
+    		<div class="alert alert-success">
+					No completed orders found.
+			</div>
+    }  
+    </div><!--End new orders div --> 
     <div id="completed-orders" class="tab-pane fade"><!--Start completed orders div -->
+    @if(closedOrders!=null){
+    @if(closedOrders.getList().size()>0){
+   
 			<table class="table table-hover">
 				<thead>
 					<tr>
@@ -113,6 +142,17 @@
 					</tr>
 				</tbody>
 			</table>
+    
+    }else{
+			<div class="alert alert-success">
+					No closed orders found.
+			</div>
+    }
+    }else{
+			<div class="alert alert-success">
+					No closed orders found.
+			</div>
+    }
     </div><!--End completed orders div -->
     </div><!--end tab content -->
 </div><!-- end of main body column -->
