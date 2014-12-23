@@ -96,18 +96,18 @@ public class Orders extends Model{
 	  return Orders.find().where().eq("order_code", order_code).findUnique();
 	}
 
-	public Page<Orders> getActiveOrders(int page, int page_list_size, Long client_id){
-	  return Orders.find().where().eq("is_complete",false).eq("client_id",client_id).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	public List<Orders> getActiveOrders(Long client_id){
+	  return Orders.find().where().eq("is_complete",false).eq("client_id",client_id).orderBy("order_deadline asc").findList();
 	}
 	
-	public  Page<Orders> getCompletedOrders(int page, int page_list_size, Long client_id){
-	  return Orders.find().where().eq("is_complete",true).eq("client_id",client_id).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	public  List<Orders> getCompletedOrders(Long client_id){
+	  return Orders.find().where().eq("is_complete",true).eq("is_closed",false).eq("client_id",client_id).orderBy("order_deadline asc").findList();
 	}
-	public Page<Orders> getClosedOrders(int page, int page_list_size, Long client_id){
-	  return Orders.find().where().eq("is_closed",true).eq("client_id",client_id).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	public List<Orders> getClosedOrders(Long client_id){
+	  return Orders.find().where().eq("is_closed",true).eq("client_id",client_id).orderBy("order_deadline asc").findList();
 	}
 	
-	
+	//Method overloading
 	public Page<Orders> getActiveOrders(int page, int page_list_size){
 	  return Orders.find().where().eq("is_complete",false).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
 	}

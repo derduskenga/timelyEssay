@@ -31,15 +31,16 @@ public class ClientActions extends Controller{
 	static Form<PreferredWriterForm> prefWriterForm = form(PreferredWriterForm.class);
 	
 	public static Result index(){
-	  List<Orders> allClientOrders = new ArrayList<Orders>();
-	  if(session().get("email") != null){  
-	    allClientOrders = Client.getClient(session().get("email")).orders;
-	    if(allClientOrders!=null){
-	      return ok(clienthome.render(allClientOrders));
-	    }
-	    return ok(clienthome.render(new ArrayList<Orders>()));
-	  }
-	  return ok(clienthome.render(new ArrayList<Orders>()));
+	  List<Orders> activeOrders = new ArrayList<Orders>();
+	  List<Orders> completeOrders = new ArrayList<Orders>();
+	  List<Orders> closedOrders = new ArrayList<Orders>();	  
+	  if(session().get("email") != null){
+	    Long client_id = Client.getClient(session().get("email")).id;
+	    activeOrders = new Orders().getActiveOrders(client_id);
+	    completeOrders = new Orders().getCompletedOrders(client_id);
+	    closedOrders = new Orders().getClosedOrders(client_id);
+	  } 
+	  return(ok(clienthome.render(activeOrders,completeOrders,closedOrders)));
 	}
 	//path to messages
 	public static Result messages(){			
