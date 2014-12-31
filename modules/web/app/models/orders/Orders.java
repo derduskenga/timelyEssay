@@ -19,6 +19,7 @@ public class Orders extends Model{
 	public int document_deadline;//this is the period given to do the order; it is given in seconds
 	@Constraints.Required(message="Order topic required")
 	public String topic;
+	@Lob
 	@Constraints.Required(message="Order description required")
 	public String order_instruction; 
 	@Constraints.Required(message="Number of assignments/pages/questions required")
@@ -41,8 +42,12 @@ public class Orders extends Model{
 	public boolean is_writer_assigned = false;//is being worked on 
 	public boolean is_complete = false;
 	public boolean is_closed = false;
-	public int revision_count;
+	public boolean on_revision = false;
+	public int client_feedback;
 	//Order Files and types of files (e.g for revision, additional files, reference materials, order product,draft)
+	//Order fines is an entity(id,date,amount,reason,removed)
+	//order revisions (id,revision instructions)
+	//fine categories (plagiarism, low quality, late reassignment, late submission, dissapper from order, late revision submission)
 	
 	//relationship fields
 	//@Valid
@@ -66,6 +71,14 @@ public class Orders extends Model{
 	public List<Additions> additions;
 	@ManyToOne
 	public OrderSubject orderSubject;
+	@OneToMany(mappedBy="orders")
+	public List<OrderFiles> orderFiles;
+	@OneToMany(mappedBy="orders")
+	public List<OrderProductFiles> orderProductFiles;	
+	@OneToMany(mappedBy="orders")
+	public List<OrderFines> orderFines;
+	@OneToMany(mappedBy="orders")
+	public List<OrderRevision> orderRevision;
 	
 	
 	@PrePersist
@@ -201,14 +214,25 @@ public class Orders extends Model{
 	    order_value = (cost_per_unit*number_of_units) + total_additions;
 	  }
 	  return Math.round(order_value*100)/100.00;
-	}
-	
+	}	
 	public Date computeDeadline(Date date, int sec){
 	  Calendar calender = Calendar.getInstance();
 	  calender.setTimeInMillis(date.getTime());
+	 
 	  calender.add(Calendar.SECOND, sec);
 	  Date changeDate=calender.getTime();
 	  return changeDate;
+	}
+	
+	public String getStringDeadline(Date date){
+	  Calendar calender = Calendar.getInstance();
+	  calender.setTimeInMillis(date.getTime());
+	  String date_ = calender.DATE + "";
+	  String year = calender.YEAR + "";
+	  String month = (calender.MONTH + 1) + "";
+	  String hour = calender.HOUR_OF_DAY + "";
+	  String minute = calender.MINUTE + "";
+	  return "";
 	}
 	
 } 

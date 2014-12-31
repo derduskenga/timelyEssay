@@ -44,7 +44,8 @@ object Common {
 		"org.codehaus.jackson"%"jackson-mapper-asl"%"1.5.0",
 		javaJdbc,
 		javaEbean,
-		"be.objectify" %% "deadbolt-java" % "2.3.2"
+		"be.objectify" %% "deadbolt-java" % "2.3.2",
+		"commons-io" % "commons-io" % "2.3"
 		// Add here more common dependencies:
 		// jdbc,
 		// anorm,

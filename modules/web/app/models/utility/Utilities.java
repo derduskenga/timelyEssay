@@ -11,4 +11,5 @@ public class Utilities{
 						    "Peanuts PHP framework"};
   public static String DATABASE [] = {"MySQL","Postgres","Oracle","Mongo Non-SQL DB","MS Access","DB2","SQL Server","couchDB","SQLite","Sybase","None","Any","Other"};
   public static Long ORDER_CODE_CONSTANT = 30000L;
+  public static  Long FILE_UPLOAD_SIZE_LIMIT = 25L * 1024L * 1024L;//unit in MegaBytes expressed in bytes
 }

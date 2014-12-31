@@ -331,3 +331,13 @@ insert into order_subject_order_document_typ (order_subject_id,order_document_ty
 (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,9),(1,10),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),(2,7),(2,9),(2,10),(3,1),(3,2),(3,3),
 (3,4),(3,5),(3,6),(3,7),(3,9),(3,10),(4,1),(4,2),(4,3),(4,4),(4,5),(4,6),(4,7),(4,9),(4,10),(5,1),(5,2),(5,3),(5,4),(5,5),(5,6),
 (5,7),(5,9),(5,10),(6,8);
+
+insert into fine_type(id,fine_name,fine_percentage,fine_description) values
+(1,'Plagiarism',100,''), 
+(2,'Low quality product',50,''),
+(3,'Late order reassignment',20,''),
+(4,'Late order submission',10,''),
+(5,'Late revision submission',10,''),
+(6,'Dissapperance from project',5,'The order is manually reassigned and then a fine 5% of order total applied');
+
+

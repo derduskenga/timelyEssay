@@ -123,17 +123,27 @@ public class Application extends Controller{
 	  }else{//user is logged in and possibly is a returning customer
 	    //get Client by logged in email address
 	    Client client = Client.getClient(session().get("email"));
-	    Form<Client> filledClientForm = clientForm.fill(client);
-	    
-	    Logger.info("user logged in and email is:" + session().get("email"));
-	    Logger.info("f_name is:" + client.f_name);
-	    //Countries map
-	    Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
-	    mapCountries = Countries.fetchCountriesMapForErrorForm(client.country.id);
-	    
-	    return ok(orderClientForm.render(orderForm,filledClientForm,loginForm,mapCountries,
-	    mapDocuments,documentDeadlines,documentSubjects,numberOfUnitsMap,mapLevel,currenceList,
-	    spacingMap,StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));	    
+	    if(client != null){
+	      Form<Client> filledClientForm = clientForm.fill(client);    
+	      Logger.info("user logged in and email is:" + session().get("email"));
+	      Logger.info("f_name is:" + client.f_name);
+	      //Countries map
+	      Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
+	      mapCountries = Countries.fetchCountriesMapForErrorForm(client.country.id);
+	      
+	      return ok(orderClientForm.render(orderForm,filledClientForm,loginForm,mapCountries,
+	      mapDocuments,documentDeadlines,documentSubjects,numberOfUnitsMap,mapLevel,currenceList,
+	      spacingMap,StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));	    
+	    }else{
+	      session().clear();
+	      Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
+	      if(Countries.fetchCountriesMap().size()>0){
+		mapCountries = Countries.fetchCountriesMap();
+	      }
+	      return ok(orderClientForm.render(orderForm,clientForm,loginForm,mapCountries,
+	      mapDocuments,documentDeadlines,documentSubjects,numberOfUnitsMap,mapLevel,currenceList,
+	      spacingMap,StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));
+	    }
 	  }
 	}
 	
@@ -328,14 +338,14 @@ public class Application extends Controller{
 	  if(orders != null){
 	    return ok(orderSummary.render(orders,loginForm));
 	  }else{
-	    return notFound("Order Was Not found");
+	    return redirect(controllers.web.routes.Application.newOrder());
 	  }
 	}
 	
 	public static Result editOrder(Long order_code){
 	  Orders orders = Orders.getOrderByCode(order_code);
 	  if(orders == null){
-	    return notFound("Order Was Not found");	    
+	    return redirect(controllers.web.routes.Application.newOrder());	    
 	  }
 	  //refill the order form and render orderClientForm for editing
 	  //Order form

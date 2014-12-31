@@ -4,40 +4,44 @@
 @import helper._
 
 @clientmain("Timely Essay | Pay for Order"){
-  <h5>Pay for Order #@clientOrders.order_code</h5>
-  <div id="order-summary">
-    <table>
-      <tr>
-	<td>@clientOrders.orderDocumentType.document_type_name</td>
-      </tr>      
-      <tr>
-	<td>Topic: @clientOrders.topic</td>
-      </tr>      
-      @if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perassignment.toString()){	     
+  @if(clientOrders.order_id!=null){
+    <h5>Pay for Order #@clientOrders.order_code</h5>
+    <div id="order-summary">
+      <table>
 	<tr>
-	  <td>@clientOrders.number_of_units assignment(s)</td>
+	  <td>@clientOrders.orderDocumentType.document_type_name</td>
 	</tr>      
-      }      
-      @if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perpage.toString()){
 	<tr>
-	  <td>@clientOrders.number_of_units page(s) @clientOrders.spacing.spacing</td>
-	</tr>
-      }      
-      @if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perquestion.toString()){
+	  <td>Topic: @clientOrders.topic</td>
+	</tr>      
+	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perassignment.toString()){	     
+	  <tr>
+	    <td>@clientOrders.number_of_units assignment(s)</td>
+	  </tr>      
+	}      
+	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perpage.toString()){
+	  <tr>
+	    <td>@clientOrders.number_of_units page(s) @clientOrders.spacing.spacing</td>
+	  </tr>
+	}      
+	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perquestion.toString()){
+	  <tr>
+	    <td>@clientOrders.number_of_units questions</td>
+	    <td></td>
+	  </tr>
+	}      
 	<tr>
-	  <td>@clientOrders.number_of_units questions</td>
-	  <td></td>
-	</tr>
-      }      
-      <tr>
-	<td colspan="2"><h3 align="center">Order Total: @clientOrders.orderCurrence.currency_symbol_2 @(Math.round(clientOrders.order_total*clientOrders.orderCurrence.convertion_rate*100)/100.00)</h3></td>
-      </tr>      
-    </table>     
-    <table>
-      <tr>
-      	<td><p align="right"><a href="@controllers.web.routes.Application.editOrder(clientOrders.order_code)" class="btn btn-primary">&lt;&lt; Edit Order</a></p></td>
-	<td><p><a href="@controllers.web.client.routes.ClientActions.pay(clientOrders.order_code)" class="btn btn-primary">Pay for order&gt;&gt;</a></p></td>
-      </tr>        
-    </table>      
-  </div>
+	  <td colspan="2"><h3 align="center">Order Total: @clientOrders.orderCurrence.currency_symbol_2 @(Math.round(clientOrders.order_total*clientOrders.orderCurrence.convertion_rate*100)/100.00)</h3></td>
+	</tr>      
+      </table>     
+      <table>
+	<tr>
+	  <td><p align="right"><a href="@controllers.web.routes.Application.editOrder(clientOrders.order_code)" class="btn btn-primary">&lt;&lt; Edit Order</a></p></td>
+	  <td><p><a href="@controllers.web.client.routes.ClientActions.pay(clientOrders.order_code)" class="btn btn-primary">Pay for order&gt;&gt;</a></p></td>
+	</tr>        
+      </table>      
+    </div>
+  }else{
+    <strong>No order found </strong>
+  }
 }

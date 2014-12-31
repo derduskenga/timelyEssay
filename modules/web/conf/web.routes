@@ -19,21 +19,27 @@ POST					/mydashboard/savepreferredwriter	controllers.web.client.ClientActions.s
 
 
 #placing a new order 
-GET					/neworder					controllers.web.Application.newOrder()	
-POST					/submitorder					controllers.web.Application.saveClientOrder()
-POST					/fetch/countriesjson				controllers.web.Application.fetchCountries()
-POST					/fetch/orderdocument/:docId			controllers.web.Application.fetchDocument(docId:Long)
-POST					/fetch/currency					controllers.web.Application.fetchCurrency()
-POST					/fetch/additions				controllers.web.Application.fetchAdditions()
-POST					/fetch/level					controllers.web.Application.fetchLevelOfWriting()
-POST 					/fetch/spacing					controllers.web.Application.fetchSpacing()
-GET					/neworder/ordersummary/:order_code		controllers.web.Application.previewOrder(order_code:Long)
-GET					/neworder/edit/:order_code			controllers.web.Application.editOrder(order_code:Long)
-GET					/mydashboard/order/proceedtopay/:order_code	controllers.web.client.ClientActions.proceedToPay(order_code:Long)
-GET					/mydashboard/order/pay/:order_code		controllers.web.client.ClientActions.pay(order_code:Long)
-GET					/user/sessuser/:order_code			controllers.web.Application.setUserSession(order_code:Long)
-GET					/mydashboard/order/view/:order_code		controllers.web.client.ClientActions.clientViewOrder(order_code:Long)
-
+GET			/neworder					   controllers.web.Application.newOrder()	
+POST			/submitorder					   controllers.web.Application.saveClientOrder()
+POST			/fetch/countriesjson				   controllers.web.Application.fetchCountries()
+POST			/fetch/orderdocument/:docId			   controllers.web.Application.fetchDocument(docId:Long)
+POST			/fetch/currency					   controllers.web.Application.fetchCurrency()
+POST			/fetch/additions				   controllers.web.Application.fetchAdditions()
+POST			/fetch/level					   controllers.web.Application.fetchLevelOfWriting()
+POST 			/fetch/spacing					   controllers.web.Application.fetchSpacing()
+GET			/neworder/ordersummary/:order_code		   controllers.web.Application.previewOrder(order_code:Long)
+GET			/neworder/edit/:order_code			   controllers.web.Application.editOrder(order_code:Long)
+GET			/mydashboard/order/proceedtopay/:order_code	   controllers.web.client.ClientActions.proceedToPay(order_code:Long)
+GET			/mydashboard/order/pay/:order_code		   controllers.web.client.ClientActions.pay(order_code:Long)
+GET			/user/sessuser/:order_code			   controllers.web.Application.setUserSession(order_code:Long)
+GET			/mydashboard/order/view/:order_code		   controllers.web.client.ClientActions.clientViewOrder(order_code:Long)
+POST			/mydashboard/order/file/upload/:order_code	   controllers.web.client.ClientActions.saveOrderFile(order_code:Long)
+GET			/mydashboard/order/file/downloadorderfile/:file_id controllers.web.client.ClientActions.downloadOrderFile(file_id:Long)		
+GET			/mydashboard/order/file/downloadproductfile/:file_id	controllers.web.client.ClientActions.downloadProductFile(file_id:Long)
+POST 			/mydashboard/order/volunteerdeadlineextension/:new_date/:order_code	controllers.web.client.ClientActions.VoluntaryDeadlineExtension(new_date:String,order_code:Long)
+POST			/mydashboard/order/fetchdeadline/:order_code			controllers.web.client.ClientActions.fetchDeadline(order_code:Long)
+POST			/mydashboard/order/askforrevision/:order_code/:revision_deadline			controllers.web.client.ClientActions.askForRevision(order_code:Long,revision_deadline:String)
+POST			/mydashboard/order/surveyfeedback/:order_code/:rating		controllers.web.client.ClientActions.surveyFeedback(order_code:Long,rating:Int)
 
 
 

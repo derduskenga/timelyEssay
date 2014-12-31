@@ -61,6 +61,23 @@ create table deadline_deadline_category_association (
   constraint pk_deadline_deadline_category_as primary key (id))
 ;
 
+create table file_type (
+  id                        bigint not null,
+  product_file_type         integer,
+  description               varchar(255),
+  test                      varchar(255),
+  constraint ck_file_type_product_file_type check (product_file_type in (0,1,2,3,4,5)),
+  constraint pk_file_type primary key (id))
+;
+
+create table fine_type (
+  id                        bigint not null,
+  fine_name                 varchar(255) not null,
+  fine_percentage           integer,
+  fine_description          varchar(255),
+  constraint pk_fine_type primary key (id))
+;
+
 create table freelance_writer (
   freelance_writer_id       bigint not null,
   f_name                    varchar(255),
@@ -111,6 +128,32 @@ create table order_document_type (
   constraint pk_order_document_type primary key (id))
 ;
 
+create table order_files (
+  id                        bigint not null,
+  owner                     integer not null,
+  file_size                 bigint not null,
+  file_name                 varchar(255) not null,
+  file_sent_to              integer not null,
+  storage_path              varchar(255) not null,
+  content_type              varchar(255) not null,
+  upload_date               timestamp not null,
+  order_file                bytea,
+  orders_order_id           bigint,
+  constraint ck_order_files_owner check (owner in (0,1,2)),
+  constraint ck_order_files_file_sent_to check (file_sent_to in (0,1,2)),
+  constraint pk_order_files primary key (id))
+;
+
+create table order_fines (
+  id                        bigint not null,
+  fine_date                 timestamp,
+  amount                    float,
+  removed                   boolean,
+  fine_type_id              bigint,
+  orders_order_id           bigint,
+  constraint pk_order_fines primary key (id))
+;
+
 create table order_level_of_writing (
   id                        bigint not null,
   order_level               varchar(255),
@@ -130,6 +173,33 @@ create table order_messages (
   constraint ck_order_messages_msg_to check (msg_to in (0,1,2)),
   constraint ck_order_messages_msg_from check (msg_from in (0,1,2)),
   constraint pk_order_messages primary key (id))
+;
+
+create table order_product_files (
+  id                        bigint not null,
+  owner                     integer not null,
+  file_size                 bigint not null,
+  file_name                 varchar(255) not null,
+  file_sent_to              integer not null,
+  storage_path              varchar(255),
+  content_type              varchar(255) not null,
+  upload_date               timestamp not null,
+  download_date             timestamp,
+  product_file_type         integer,
+  has_been_downloaded       boolean,
+  plagiarism                integer not null,
+  orders_order_id           bigint,
+  constraint ck_order_product_files_owner check (owner in (0,1,2)),
+  constraint ck_order_product_files_file_sent_to check (file_sent_to in (0,1,2)),
+  constraint ck_order_product_files_product_file_type check (product_file_type in (0,1,2,3,4,5)),
+  constraint pk_order_product_files primary key (id))
+;
+
+create table order_revision (
+  id                        bigint not null,
+  revision_instruction      text not null,
+  orders_order_id           bigint,
+  constraint pk_order_revision primary key (id))
 ;
 
 create table order_subject (
@@ -153,7 +223,7 @@ create table orders (
   order_code                bigint,
   document_deadline         integer,
   topic                     varchar(255),
-  order_instruction         varchar(255),
+  order_instruction         text,
   number_of_units           integer,
   writing_style             varchar(255),
   no_of_references          integer,
@@ -169,7 +239,8 @@ create table orders (
   is_writer_assigned        boolean,
   is_complete               boolean,
   is_closed                 boolean,
-  revision_count            integer,
+  on_revision               boolean,
+  client_feedback           integer,
   client_id                 bigint,
   order_level_of_writing_id bigint,
   order_document_type_id    bigint,
@@ -261,6 +332,10 @@ create sequence countries_seq;
 
 create sequence deadline_deadline_category_association_seq;
 
+create sequence file_type_seq;
+
+create sequence fine_type_seq;
+
 create sequence freelance_writer_seq;
 
 create sequence order_cpp_mode_seq;
@@ -273,9 +348,17 @@ create sequence order_deadlines_seq;
 
 create sequence order_document_type_seq;
 
+create sequence order_files_seq;
+
+create sequence order_fines_seq;
+
 create sequence order_level_of_writing_seq;
 
 create sequence order_messages_seq;
+
+create sequence order_product_files_seq;
+
+create sequence order_revision_seq;
 
 create sequence order_subject_seq;
 
@@ -303,26 +386,36 @@ alter table order_document_type add constraint fk_order_document_type_orderDe_4 
 create index ix_order_document_type_orderDe_4 on order_document_type (order_deadline_category_id);
 alter table order_document_type add constraint fk_order_document_type_orderCp_5 foreign key (order_cpp_mode_id) references order_cpp_mode (id);
 create index ix_order_document_type_orderCp_5 on order_document_type (order_cpp_mode_id);
-alter table order_messages add constraint fk_order_messages_orders_6 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_messages_orders_6 on order_messages (orders_order_id);
-alter table order_subject add constraint fk_order_subject_orderSubjectC_7 foreign key (order_subject_category_id) references order_subject_category (id);
-create index ix_order_subject_orderSubjectC_7 on order_subject (order_subject_category_id);
-alter table orders add constraint fk_orders_client_8 foreign key (client_id) references client (id);
-create index ix_orders_client_8 on orders (client_id);
-alter table orders add constraint fk_orders_orderLevelOfWriting_9 foreign key (order_level_of_writing_id) references order_level_of_writing (id);
-create index ix_orders_orderLevelOfWriting_9 on orders (order_level_of_writing_id);
-alter table orders add constraint fk_orders_orderDocumentType_10 foreign key (order_document_type_id) references order_document_type (id);
-create index ix_orders_orderDocumentType_10 on orders (order_document_type_id);
-alter table orders add constraint fk_orders_orderCurrence_11 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
-create index ix_orders_orderCurrence_11 on orders (order_currence_order_currency_id);
-alter table orders add constraint fk_orders_spacing_12 foreign key (spacing_id) references spacing (id);
-create index ix_orders_spacing_12 on orders (spacing_id);
-alter table orders add constraint fk_orders_orderSubject_13 foreign key (order_subject_id) references order_subject (id);
-create index ix_orders_orderSubject_13 on orders (order_subject_id);
-alter table preferred_writer add constraint fk_preferred_writer_client_14 foreign key (client_id) references client (id);
-create index ix_preferred_writer_client_14 on preferred_writer (client_id);
-alter table preferred_writer add constraint fk_preferred_writer_freelance_15 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
-create index ix_preferred_writer_freelance_15 on preferred_writer (freelance_writer_freelance_writer_id);
+alter table order_files add constraint fk_order_files_orders_6 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_files_orders_6 on order_files (orders_order_id);
+alter table order_fines add constraint fk_order_fines_fineType_7 foreign key (fine_type_id) references fine_type (id);
+create index ix_order_fines_fineType_7 on order_fines (fine_type_id);
+alter table order_fines add constraint fk_order_fines_orders_8 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_fines_orders_8 on order_fines (orders_order_id);
+alter table order_messages add constraint fk_order_messages_orders_9 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_messages_orders_9 on order_messages (orders_order_id);
+alter table order_product_files add constraint fk_order_product_files_orders_10 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_product_files_orders_10 on order_product_files (orders_order_id);
+alter table order_revision add constraint fk_order_revision_orders_11 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_revision_orders_11 on order_revision (orders_order_id);
+alter table order_subject add constraint fk_order_subject_orderSubject_12 foreign key (order_subject_category_id) references order_subject_category (id);
+create index ix_order_subject_orderSubject_12 on order_subject (order_subject_category_id);
+alter table orders add constraint fk_orders_client_13 foreign key (client_id) references client (id);
+create index ix_orders_client_13 on orders (client_id);
+alter table orders add constraint fk_orders_orderLevelOfWriting_14 foreign key (order_level_of_writing_id) references order_level_of_writing (id);
+create index ix_orders_orderLevelOfWriting_14 on orders (order_level_of_writing_id);
+alter table orders add constraint fk_orders_orderDocumentType_15 foreign key (order_document_type_id) references order_document_type (id);
+create index ix_orders_orderDocumentType_15 on orders (order_document_type_id);
+alter table orders add constraint fk_orders_orderCurrence_16 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
+create index ix_orders_orderCurrence_16 on orders (order_currence_order_currency_id);
+alter table orders add constraint fk_orders_spacing_17 foreign key (spacing_id) references spacing (id);
+create index ix_orders_spacing_17 on orders (spacing_id);
+alter table orders add constraint fk_orders_orderSubject_18 foreign key (order_subject_id) references order_subject (id);
+create index ix_orders_orderSubject_18 on orders (order_subject_id);
+alter table preferred_writer add constraint fk_preferred_writer_client_19 foreign key (client_id) references client (id);
+create index ix_preferred_writer_client_19 on preferred_writer (client_id);
+alter table preferred_writer add constraint fk_preferred_writer_freelance_20 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
+create index ix_preferred_writer_freelance_20 on preferred_writer (freelance_writer_freelance_writer_id);
 
 
 
@@ -374,6 +467,10 @@ drop table if exists countries cascade;
 
 drop table if exists deadline_deadline_category_association cascade;
 
+drop table if exists file_type cascade;
+
+drop table if exists fine_type cascade;
+
 drop table if exists freelance_writer cascade;
 
 drop table if exists order_cpp_mode cascade;
@@ -388,9 +485,17 @@ drop table if exists order_document_type cascade;
 
 drop table if exists order_subject_order_document_typ cascade;
 
+drop table if exists order_files cascade;
+
+drop table if exists order_fines cascade;
+
 drop table if exists order_level_of_writing cascade;
 
 drop table if exists order_messages cascade;
+
+drop table if exists order_product_files cascade;
+
+drop table if exists order_revision cascade;
 
 drop table if exists order_subject cascade;
 
@@ -420,6 +525,10 @@ drop sequence if exists countries_seq;
 
 drop sequence if exists deadline_deadline_category_association_seq;
 
+drop sequence if exists file_type_seq;
+
+drop sequence if exists fine_type_seq;
+
 drop sequence if exists freelance_writer_seq;
 
 drop sequence if exists order_cpp_mode_seq;
@@ -432,9 +541,17 @@ drop sequence if exists order_deadlines_seq;
 
 drop sequence if exists order_document_type_seq;
 
+drop sequence if exists order_files_seq;
+
+drop sequence if exists order_fines_seq;
+
 drop sequence if exists order_level_of_writing_seq;
 
 drop sequence if exists order_messages_seq;
+
+drop sequence if exists order_product_files_seq;
+
+drop sequence if exists order_revision_seq;
 
 drop sequence if exists order_subject_seq;
 
