@@ -6,6 +6,7 @@ import views.html.adminviews.manageusers;
 import views.html.adminviews.adminerror;
 import views.html.adminviews.adminroles;
 import views.html.adminviews.manageorders;
+import views.html.adminviews.manageorder;
 import views.html.adminviews.addrole;
 
 import play.*;
@@ -49,8 +50,7 @@ public class ManageOrdersActions extends Controller{
  			return ok(manageorders.render(activeOrders, completedOrders, closedOrders));
 	}
 	
-	public static Result orderDetails(String order_code){
-			return TODO;
+	public static Result manageOrder(String order_code){
+			return ok(manageorder.render());
 	}
-
 }
