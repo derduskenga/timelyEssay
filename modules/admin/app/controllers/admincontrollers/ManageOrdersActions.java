@@ -43,10 +43,14 @@ public class ManageOrdersActions extends Controller{
 	
 	public static Result manageOrders(){
 			Orders orders = new Orders();
-			Page<Orders> activeOrders = orders.getActiveOrders(1,10);
-			Page<Orders> completedOrders = orders.getCompletedOrders(1,10);
-			Page<Orders> closedOrders = orders.getClosedOrders(1,10);
+			Page<Orders> activeOrders = orders.getActiveOrders(0,10);
+			Page<Orders> completedOrders = orders.getCompletedOrders(0,10);
+			Page<Orders> closedOrders = orders.getClosedOrders(0,10);
  			return ok(manageorders.render(activeOrders, completedOrders, closedOrders));
+	}
+	
+	public static Result orderDetails(String order_code){
+			return TODO;
 	}
 
 }

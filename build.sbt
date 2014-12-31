@@ -16,7 +16,8 @@ libraryDependencies ++= Seq(
   javaJdbc,
   javaEbean,
   cache,
-  javaWs	
+  javaWs,
+  "be.objectify" %% "deadbolt-java" % "2.3.2"
 )
 	
 
