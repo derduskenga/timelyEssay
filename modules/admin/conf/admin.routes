@@ -16,7 +16,8 @@ POST											/adminroles			    					controllers.admincontrollers.AdminActions.
 
 #manage orders
 GET												/manageorders			    			controllers.admincontrollers.ManageOrdersActions.manageOrders()
-GET								/manageorder/:order_id			    controllers.admincontrollers.ManageOrdersActions.manageOrder(order_id: String)
+GET				/manageorder/:order_code			    			controllers.admincontrollers.ManageOrdersActions.manageOrder(order_code: Long)
+POST			/manageorder/uploadfile/:order_code			controllers.admincontrollers.ManageOrdersActions.uploadProductFile(order_code: Long)
 
 #admin login logout actions
 GET												/login											controllers.admincontrollers.Application.login()

@@ -29,7 +29,7 @@
 				<tbody>
 						@for(order <- activeOrders.getList()){
 								<tr>
-									<td>@order.order_code</td>
+									<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a></td>
 									<td>@order.topic</td>
 									<td>@order.number_of_units</td>
 									<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
@@ -77,7 +77,7 @@
 				<tbody>
 					@for(order <- completedOrders.getList()){
 							<tr>
-								<td>@order.order_code</td>
+								<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a></td>
 								<td>@order.topic</td>
 								<td>@order.number_of_units</td>
 								<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
@@ -127,7 +127,7 @@
 				<tbody>
 					@for(order <- closedOrders.getList()){
 						<tr>
-							<td>@order.order_code</td>
+							<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a></td>
 							<td>@order.topic</td>
 							<td>@order.number_of_units</td>
 							<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
