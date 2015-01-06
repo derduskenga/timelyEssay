@@ -139,7 +139,7 @@
 	    </div>
 	  }
 	  @for(orderList <- clientOrders.orderFiles){
-	    @orderList.file_name <a href="#" class="file-shared-class" id="order-file-@orderList.id" title="download @orderList.file_name file"> download</a><br>
+	    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> @orderList.file_name (@(Math.round((orderList.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB) <a href="#" class="file-shared-class" id="order-file-@orderList.id" title="click to download @orderList.file_name file">  <span class="glyphicon glyphicon-download" aria-hidden="true"></span></a><br>
 	  }
 	</div>
       }
@@ -203,8 +203,8 @@
 	  }	  
 	</table>
 	      <a href="#" title="extend deadline" id="extend-deadline-link"> <img height="25" width="25" src="@routes.Assets.at("images/extend-deadline.png")"/>&nbsp;&nbsp;Extend deadline</a> &nbsp;&nbsp;&nbsp;
-	      @if(clientOrders.is_complete){<a href="#" title="Ask for revision" id="ask-for-revision-link"> <img height="25" width="25" src="@routes.Assets.at("images/revise.png")"/>&nbsp;&nbsp;Ask for revision</a> &nbsp;&nbsp;&nbsp;
-	      <a href="#" title="Fill feedback survey" id="fill-feedback-survey-link"> <img height="25" width="25" src="@routes.Assets.at("images/feedback.jpg")"/>&nbsp;&nbsp;Fill feedback survey</a>&nbsp;&nbsp;&nbsp;}
+	      @if(clientOrders.is_complete){<a href="#" class='' title="Ask for revision" id="ask-for-revision-link"> <img height="25" width="25" src="@routes.Assets.at("images/revise.png")"/>&nbsp;&nbsp;Ask for revision</a> &nbsp;&nbsp;&nbsp;
+	      <a href="#" class='' title="Fill feedback survey" id="fill-feedback-survey-link"> <img height="25" width="25" src="@routes.Assets.at("images/feedback.jpg")"/>&nbsp;&nbsp;Fill feedback survey</a>&nbsp;&nbsp;&nbsp;}
 	      <a href="#" title="Send message to writer" id="message-to-writer-link"> <img height="25" width="25" src="@routes.Assets.at("images/message.png")"/>&nbsp;&nbsp;Send message to writer</a>	      
       </div>
       

@@ -38,7 +38,9 @@ function detectCountrySelect(){
 }
 
 function setDocument(){
-  fectDocument($('#document_type').val(),"xx")
+  if($('#order-additions').length != 0){  
+    fectDocument($('#document_type').val(),"xx");
+  }
 }
 
 function detectDocumentSelect(){
@@ -48,8 +50,10 @@ function detectDocumentSelect(){
     //$('#clientorderform').data('bootstrapValidator').resetForm(true);
     //var validator = $('#clientorderform').validate();
     //validator.resetForm();
-    var selectedValue = $('#document_type').val();
-    fectDocument(selectedValue,"documentChange");
+    if($('#order-additions').length != 0){
+      var selectedValue = $('#document_type').val();
+      fectDocument(selectedValue,"documentChange");
+    }
   });
 }
 

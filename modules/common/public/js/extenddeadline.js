@@ -10,8 +10,8 @@ $(document).ready(function(event){
 
 function handleFormSubmit(){
   $(function(){
-    $("#extend_deadline_form").submit(function(e) {       
-      e.preventDefault();
+    $("#btn-deadline-extension").click(function(event) {       
+      event.preventDefault();
       var extended_deadline = $("#datetimepicker").val();
       var order_code = $('#order-code').text();
       $("#extend_deadline_form").data('bootstrapValidator').resetForm();

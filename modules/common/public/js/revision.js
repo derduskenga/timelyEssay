@@ -25,7 +25,7 @@ function handleLinkClickAskRevision(){
 
 
 function handleRevisionFormSubmit(){
-  $("#ask_revision_form").submit(function(event) {
+  $("#btn-ask-for-revision").click(function(event) {
     event.preventDefault();
     var revision_deadline = $('#revision_deadline').val();
     var revision_instructions = $('#revision_instructions').val();
@@ -37,6 +37,8 @@ function handleRevisionFormSubmit(){
 	  $('#loading-gif-revision').addClass("hidden");
 	  $('#extended_deadline_response').html("<div id='d-response' class='alert alert-success'>" + data['message'] + "</div>");
 	  $('#revision-form').addClass('hidden');
+	  $('#ask-for-revision-link').addClass('hidden');
+	  $('#fill-feedback-survey-link').addClass('hidden');
 	  $("#d-response").show().delay(5000).fadeOut("slow");
       }else{
 	  $('#loading-gif-revision').addClass("hidden");

@@ -341,3 +341,6 @@ insert into fine_type(id,fine_name,fine_percentage,fine_description) values
 (6,'Dissapperance from project',5,'The order is manually reassigned and then a fine 5% of order total applied');
 
 
+----Additinal qurries 
+insert into order_product_files (id,owner,file_size,file_name,file_sent_to,storage_path,content_type,upload_date,download_date,product_file_type,has_been_downloaded,plagiarism,orders_order_id) values
+(1,1,76456123,'play for java book.pdf',0,'/home/derdus/orderfiles/multipartBody230397776683012302asTemporaryFile','application/pdf','2014-12-28 21:27:32.483','2014-12-28 22:31:41.247',1,true,0,1);

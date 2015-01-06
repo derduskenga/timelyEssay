@@ -29,6 +29,8 @@ POST			/fetch/level					   controllers.web.Application.fetchLevelOfWriting()
 POST 			/fetch/spacing					   controllers.web.Application.fetchSpacing()
 GET			/neworder/ordersummary/:order_code		   controllers.web.Application.previewOrder(order_code:Long)
 GET			/neworder/edit/:order_code			   controllers.web.Application.editOrder(order_code:Long)
+GET			/forgotpassword					   controllers.web.Application.forgotPassword()
+POST			/recoverpassword				   controllers.web.Application.recoverPassword()
 GET			/mydashboard/order/proceedtopay/:order_code	   controllers.web.client.ClientActions.proceedToPay(order_code:Long)
 GET			/mydashboard/order/pay/:order_code		   controllers.web.client.ClientActions.pay(order_code:Long)
 GET			/user/sessuser/:order_code			   controllers.web.Application.setUserSession(order_code:Long)
@@ -40,6 +42,9 @@ POST 			/mydashboard/order/volunteerdeadlineextension/:new_date/:order_code	cont
 POST			/mydashboard/order/fetchdeadline/:order_code			controllers.web.client.ClientActions.fetchDeadline(order_code:Long)
 POST			/mydashboard/order/askforrevision/:order_code/:revision_deadline			controllers.web.client.ClientActions.askForRevision(order_code:Long,revision_deadline:String)
 POST			/mydashboard/order/surveyfeedback/:order_code/:rating		controllers.web.client.ClientActions.surveyFeedback(order_code:Long,rating:Int)
+GET			/mydashboard/profile					controllers.web.client.ClientActions.myProfile()
+POST			/mydashboard/profile/changepassword			controllers.web.client.ClientActions.changePassword()
+POST			/mydashboard/profile/editprofile			controllers.web.client.ClientActions.editProfile()
 
 
 

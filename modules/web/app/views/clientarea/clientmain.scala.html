@@ -18,7 +18,7 @@
 	<link href="@routes.Assets.at("fontawesome/css/font-awesome.min.css")" rel="stylesheet" media="screen"> 
 	<link href="@routes.Assets.at("bootstrap-datepicker/css/datepicker.css")" rel="stylesheet" media="screen"> 
 	<link href="@routes.Assets.at("bootstrap-datepicker/css/datepicker3.css")" rel="stylesheet" media="screen"> 
-	<link href="@routes.Assets.at("datetimepicker-master/jquery.datetimepicker.css")" rel="stylesheet" media="screen">
+	<link href="@routes.Assets.at("datetimepicker-master/jquery.datetimepicker.css")" rel="stylesheet" media="screen"> 
     <!-- fonts -->
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     </head>
@@ -33,7 +33,7 @@
 	<div class="list-group">
 			<a href="@controllers.web.client.routes.ClientActions.index()" class="list-group-item"><span class=""></span>My Orders</a>
 			<a href="@controllers.web.client.routes.ClientActions.preferredWriters()" class="list-group-item"><span class=""></span> My preferred writers </a>
-			<a href="#" class="list-group-item"><span class=""></span>My Profile </a>
+			<a href="@controllers.web.client.routes.ClientActions.myProfile()" class="list-group-item"><span class=""></span>My Profile </a>
 			<a href="#" class="list-group-item"><span class=""></span>My discounts </a>
             <a href="#" class="list-group-item"><span class=""></span>Identity Verification </a>
             <a href="#" class="list-group-item"><span class=""></span>My Store Credit </a>
@@ -96,6 +96,9 @@
 <script src="@routes.Assets.at("datetimepicker-master/jquery.datetimepicker.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("js/revision.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("js/feedbacksurvey.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("js/changepassword.js")" type="text/javascript"></script> 
+<script src="@routes.Assets.at("js/editprofile.js")" type="text/javascript"></script>
+
 <!--Scripts --> 
 </body>
 	<!-- Pure Chat Snippet -->

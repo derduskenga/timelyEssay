@@ -37,6 +37,9 @@ create table client (
   country_code              varchar(255),
   area_code                 varchar(255),
   phone_number              varchar(255),
+  alternative_phone         varchar(255),
+  receive_company_mail      boolean,
+  client_time_zone          varchar(255),
   created_on                timestamp,
   country_id                bigint,
   constraint pk_client primary key (id))

@@ -7,7 +7,6 @@
 @import java.util.HashMap
 
 @main("Timely Essay | New Order")(loginForm){
-
   @helper.form(action=controllers.web.routes.Application.saveClientOrder(),'class->"form-horizontal",'id->"clientorderform", 'name->"clientorderform"){
     <fieldset>
       @priceLabel(orderForm)(currenceList)

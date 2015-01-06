@@ -14,8 +14,10 @@ import models.client.PreferredWriter;
 import models.common.mailing.Mailing;
 import models.writer.FreelanceWriter;
 import models.client.Client;
+import models.client.Countries;
 import models.utility.Utilities;
 import java.io.*;
+import play.data.validation.ValidationError;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -43,6 +45,8 @@ public class ClientActions extends Controller{
 	static Form<OrderMessages> newMessageForm = form(OrderMessages.class);
 	static Form<PreferredWriterForm> prefWriterForm = form(PreferredWriterForm.class);
 	static Form<OrderFiles> orderFilesForm = form(OrderFiles.class);
+	static Form<Client> profileForm = form(Client.class);
+	static Map<String,List<ValidationError>> error = new LinkedHashMap<String,List<ValidationError>>();
 	
 	
 	public static Result index(){
@@ -165,6 +169,9 @@ public class ClientActions extends Controller{
 	public static Result saveOrderFile(Long order_code){
 	  //get the order by order_code
 	  Orders orders = Orders.getOrderByCode(order_code);
+	  if(orders == null){
+	    return redirect(controllers.web.client.routes.ClientActions.clientViewOrder(order_code));
+	  }
 	  Form<OrderFiles> orderFileBoundForm = orderFilesForm.bindFromRequest();
 	  if(orderFileBoundForm.hasErrors()) {
 	    flash("fileuploadresponseerror","There was an error.");
@@ -210,7 +217,7 @@ public class ClientActions extends Controller{
 		flash("fileuploadresponsesuccess","Your file has been uploaded");
 		orderFiles.saveOrderFile();
 		return redirect(controllers.web.client.routes.ClientActions.clientViewOrder(order_code));
-	      }catch (IOException ioe) {
+	      }catch (IOException ioe){
 		Logger.error("Server error on file upload:");
 		flash("fileuploadresponseerror","Server error. Please try again");
 		return badRequest(clientvieworder.render(orders,orderFileBoundForm)); 
@@ -313,10 +320,13 @@ public class ClientActions extends Controller{
 	  
 	  Logger.info("revision_instructions:" + revision_intructions + " revision_deadline:" + revision_deadline);
 	  Orders orders = Orders.getOrderByCode(order_code);
+	  if(orders == null){
+	    return redirect(controllers.web.client.routes.ClientActions.clientViewOrder(order_code));
+	  }
 	  OrderRevision orderRevision = new OrderRevision();
 	  Date newDeadline = new Date(); 
 	  orders.on_revision = true;
-	  orders.on_revision = false;
+	  orders.is_complete = false;
 	  try{
 	    SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	    isoFormat.setTimeZone(TimeZone.getDefault());
@@ -326,26 +336,28 @@ public class ClientActions extends Controller{
 	    orderRevision.orders = orders;
 	    orderRevision.saveOrderRevision();
 	    orders.saveOrder();
+	    Logger.info("working");
 	    jobject.put("success",1);
 	    jobject.put("message","Revision has been placed");
 	    return ok(Json.parse(jobject.toString()));
 	  }catch(ParseException pe){
+	    Logger.error("ParseException:" + pe.getMessage().toString());
 	    jobject.put("success",0);
-	    jobject.put("message","An error occured");
+	    jobject.put("message","An error occured. Please try again");
 	    return ok(Json.parse(jobject.toString()));
 	  }catch(Exception ex){
+	    Logger.error("blanket Exception:" + ex.getMessage().toString());
 	    jobject.put("success",0);
-	    jobject.put("message","An error occured");
+	    jobject.put("message","An error occured. Please try again");
 	    return ok(Json.parse(jobject.toString()));
 	  } 
 	}
 	public static Result surveyFeedback(Long order_code, int rating){
-	  String d = "";
 	  Orders orders = Orders.getOrderByCode(order_code);
 	  JSONObject jobject = new JSONObject();
 	  if(orders == null){
 	    jobject.put("success",0);
-	    jobject.put("message","An error occured");
+	    jobject.put("message","An error occured. Please try again");
 	    return ok(Json.parse(jobject.toString()));
 	  }    
 	  orders.client_feedback = rating;
@@ -354,6 +366,54 @@ public class ClientActions extends Controller{
 	  jobject.put("message","Thank you for your feedback");
 	  return ok(Json.parse(jobject.toString()));
 	}
+	public static Result myProfile(){
+	  if(session().get("email") == null){
+	    session().clear();
+	    return redirect(controllers.web.client.routes.ClientActions.index());
+	  }
+	  String user_email = session().get("email");
+	  Client client = Client.getClient(user_email);
+	  Form<Client> filledClientForm = profileForm.fill(client);
+	  Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
+	  mapCountries = Countries.fetchCountriesMapForErrorForm(client.country.id);  
+	  return ok(clientprofile.render(client,filledClientForm,mapCountries));
+	}
+	public static Result editProfile(){
+	  Form<Client> clientBoundForm = profileForm.bindFromRequest();
+	  Map<String,String> clientFormDataMap = new HashMap<String,String>();
+	  clientFormDataMap = clientBoundForm.data();
+	  if(clientBoundForm.hasErrors()){
+	    error = clientBoundForm.errors();
+	    if(!error.isEmpty()){				
+	      for(Map.Entry<String,List<ValidationError>> entry : error.entrySet()){
+		String key = entry.getKey();					
+		Logger.info("main key:" + key);				
+							  
+		List<ValidationError> errorKeyValue = entry.getValue();
+							    
+		for(ValidationError mainVal : errorKeyValue){
+		  Logger.info("key:" + mainVal.key() + " message:" + mainVal.message());
+							    
+		}
+	      }
+	    }
+	  }
+	  Logger.info("id:" + clientFormDataMap.get("id"));
+	  Client client = clientBoundForm.get();
+	  String send_company_mail = clientFormDataMap.get("receive_company_mail");
+	  if(send_company_mail.equals("yes")){
+	    client.receive_company_mail = true;
+	  }else{
+	    client.receive_company_mail = false;
+	  }
+	  client.saveClient();
+	  return redirect(controllers.web.client.routes.ClientActions.myProfile());
+	}
+	
+	public static Result changePassword(){
+	  return TODO;
+	}
+	
 	public static Result pay(Long order_code){
 	  return TODO;
 	}

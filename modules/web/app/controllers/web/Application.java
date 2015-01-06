@@ -9,6 +9,7 @@ import play.mvc.*;
 import play.data.validation.ValidationError;
 import views.html.home;
 import views.html.orderSummary;
+import views.html.forgotpassword;
 import views.html.orderClientForm;
 import models.client.Client;
 import play.data.validation.Constraints;
@@ -302,14 +303,19 @@ public class Application extends Controller{
 	 //order date 
 	 Date  orderDate = new Date();
 	 try{
+	  Calendar calender = Calendar.getInstance();
 	  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	  isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 	  orderDate = isoFormat.parse(isoFormat.format(new Date()));
 	  newOrders.order_date = orderDate;
 	  //compute the order deadline
+	  calender.setTimeInMillis(orderDate.getTime());
+	  TimeZone tz = calender.getTimeZone();
+	  
 	  newOrders.order_deadline = newOrders.computeDeadline(orderDate,newOrders.document_deadline);
 	  if(newClient.id == null){
 	    newClient.created_on = orderDate;
+	    newClient.client_time_zone = tz.getDisplayName();
 	  }
 	 
 	  //Logger.info("date date date: " + String.format(orderDate));
@@ -406,6 +412,13 @@ public class Application extends Controller{
 	  return redirect(controllers.web.client.routes.ClientActions.proceedToPay(order_code));
 	}
 	
+	public static Result forgotPassword(){
+	  return ok(forgotpassword.render(loginForm));
+	}
+	public static Result recoverPassword(){
+	  //you will extract email from the post form
+	  return TODO;
+	}
 	public static void setSession(Orders orders){
 	  session().clear();
 	  session("email", orders.client.email);

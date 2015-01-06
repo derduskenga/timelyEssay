@@ -34,6 +34,9 @@ public class Client extends Model{
 	public String area_code; 
 	@Constraints.Required(message="Phone number is required - Phone number is invalid or empty")
 	public String phone_number;
+	public String alternative_phone;
+	public boolean receive_company_mail=true;
+	public String client_time_zone;
 	
 	
 	@Column(name="created_on")
