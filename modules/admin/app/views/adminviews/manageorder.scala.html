@@ -3,87 +3,84 @@
 @import fieldtemplates._
 @adminmain("Title"){
 <div class="col-md-10" id="mainbody">
+ @if(clientOrders!=null){
  @if(clientOrders.order_id!=null){
     <h3>Order details</h3>
     <div>
       <table>
-	<tr>
-		<td><p class="phone-number">Payment Status</p></td>
-		<td><p>@if(clientOrders.is_paid == false){<strong class="text-danger">NOT PAID</strong>}else{Paid}</p></td>
-	</tr>
-	<tr>
-	  <td>Order code</td>
-	  <td>@clientOrders.order_code</td>
-	</tr>
-
-	<tr>
-	  <td>Order status</td>
-	  <td>@if(clientOrders.is_writer_assigned == false){Awaiting writer}else{Worked on}</td>
-	</tr>
-	 
-	<tr>
-	  <td>Document type</td>
-	  <td>@clientOrders.orderDocumentType.document_type_name</td>
-	</tr>      
-	  
+		<tr>
+			<td><p class="phone-number">Payment Status</p></td>
+			<td><p>@if(clientOrders.is_paid == false){<strong class="text-danger">NOT PAID</strong>}else{Paid}</p></td>
+		</tr>
+		<tr>
+		<td>Order code</td>
+		<td>@clientOrders.order_code</td>
+		</tr>
+		<tr>
+		<td>Order status</td>
+		<td>@if(clientOrders.is_writer_assigned == false){Awaiting writer}else{Worked on}</td>
+		</tr> 
+		<tr>
+		<td>Document type</td>
+		<td>@clientOrders.orderDocumentType.document_type_name</td>
+		</tr>      
 	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() != OrderCppMode.CppModes.perassignment.toString()){
-	  <tr>      
-	    <td>Subject area</td>
-	    <td>@clientOrders.orderSubject.subject_name</td>
-	  </tr>
+		<tr>      
+			<td>Subject area</td>
+			<td>@clientOrders.orderSubject.subject_name</td>
+		</tr>
 	}
+		<tr>
+		<td>Topic</td>
+		<td>@clientOrders.topic</td>
+		</tr>
 	
-	<tr>
-	  <td>Topic</td>
-	  <td>@clientOrders.topic</td>
-	</tr>
+		<tr>
+		<td>Style</td>
+		<td>@clientOrders.writing_style</td>
+		</tr>
 	
-	<tr>
-	  <td>Style</td>
-	  <td>@clientOrders.writing_style</td>
-	</tr>
-	
-	<tr>
-	  <td>No. of sources/references</td>
-	  <td>@clientOrders.no_of_references</td>
-	</tr>
+		<tr>
+		<td>No. of sources/references</td>
+		<td>@clientOrders.no_of_references</td>
+		</tr>
 	    
-	<tr>
-	  <td>Want order after</td>
-	  <td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(Approx deadline @(clientOrders.order_deadline.getYear()+1900)/@(clientOrders.order_deadline.getMonth()+1)/@clientOrders.order_deadline.getDate() @clientOrders.order_deadline.getHours():@if(clientOrders.order_deadline.getMinutes()<10){0@clientOrders.order_deadline.getMinutes()}else{@clientOrders.order_deadline.getMinutes()})</span> </td>
-	</tr>
+		<tr>
+		<td>Want order after</td>
+		<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(Approx deadline @(clientOrders.order_deadline.getYear()+1900)/@(clientOrders.order_deadline.getMonth()+1)/@clientOrders.order_deadline.getDate() @clientOrders.order_deadline.getHours():@if(clientOrders.order_deadline.getMinutes()<10){0@clientOrders.order_deadline.getMinutes()}else{@clientOrders.order_deadline.getMinutes()})</span> </td>
+		</tr>
 	
 	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perassignment.toString()){
-	  <tr>
-	    <td>Operating system</td>
-	    <td>@clientOrders.operating_system</td>
-	  </tr>
-	  
-	  <tr>
-	    <td>Programming language</td>
-	    <td>@clientOrders.prog_language</td>
-	  </tr>
-	  
-	  <tr>
-	    <td>Database</td>
-	    <td>@clientOrders.database</td>
-	  </tr>
-	      
-	  <tr>
-	    <td>Number of assignments</td>
-	    <td>@clientOrders.number_of_units</td>
-	  </tr>      
-	}
-	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perpage.toString()){
-	  <tr>
-	    <td>Number of pages</td>
-	    <td>@clientOrders.number_of_units</td>
-	  </tr>
-	  
-	  <tr>
-	    <td>Spacing</td>
-	    <td>@clientOrders.spacing.spacing</td>
-	  </tr>
+		<tr>
+			<td>Operating system</td>
+			<td>@clientOrders.operating_system</td>
+		</tr>
+		
+		<tr>
+			<td>Programming language</td>
+			<td>@clientOrders.prog_language</td>
+		</tr>
+		
+		<tr>
+			<td>Database</td>
+			<td>@clientOrders.database</td>
+		</tr>
+			
+		<tr>
+			<td>Number of assignments</td>
+			<td>@clientOrders.number_of_units</td>
+		</tr>      
+		}
+		@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perpage.toString()){
+		<tr>
+			<td>Number of pages</td>
+			<td>@clientOrders.number_of_units</td>
+		</tr>
+		
+		<tr>
+			<td>Spacing</td>
+			<td>@clientOrders.spacing.spacing</td>
+		</tr>
 	}
 	
 	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perquestion.toString()){
@@ -103,7 +100,7 @@
 	      @for(aList<-clientOrders.additions){
 		@aList.ui_label
 		(+ @clientOrders.orderCurrence.currency_symbol_2 @( Math.round(aList.additional_price*clientOrders.number_of_units*clientOrders.orderDocumentType.additions_factor*100)/100.00))
-		<br><br>
+		<!--<br><br> -->
 	      }
 	    </td>
 	  </tr> 	
@@ -156,9 +153,8 @@
 		      @flash.get("fileuploadresponsesuccess")
 	      </div>
 	    }
-	    <legend>Upload New Order Files</legend>
-	    <div>
-		
+	    <legend>Upload Order Product Files</legend>
+	 <div>
 		@adminorderfileupload(orderFilesForm("file_name"),
 		  label = "Upload order File",
 		  divClass="col-sm-5")
@@ -179,7 +175,7 @@
 		<div class="col-sm-2 form-group">
 		  <input type="submit" class="btn btn-primary" value="Upload file" id = "order-file-form-submit">
 		</div>
-	      </div>
+	 </div>
 	      
 	  </fieldset>
 	}
@@ -194,7 +190,6 @@
 		  @flash.get("orderproductfiledownloaderror")
 	  </div>
 	}
-      <div id="product-uploads">
 	<table>
 	  <tr>
 	    <td><strong> Type </strong></td>
@@ -211,13 +206,16 @@
 	    <td> @productFiles.file_name  <a href="#" title="download" class="product-file-shared-class" id="product-file-@productFiles.id"><img src="@routes.Assets.at("images/downloadimg.png")"/></a></td>
 	    <td> @(Math.round((productFiles.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB</td>
 	    <td> @(productFiles.upload_date.getYear()+1900)/@(productFiles.upload_date.getMonth()+1)/@productFiles.upload_date.getDate() 		@productFiles.upload_date.getHours():@productFiles.upload_date.getMinutes()</td>
-	
 	  </tr>
 	  }	  
-	</table>
+	 </table>
 	}
 	}else{
-		<div></div>
+		<div class="alert alert-danger">Order not found.</div>
 	}
-	</div>
+
+}else{
+		<div class="alert alert-danger">Order not found.</div>
+}	
+</div>
 }
