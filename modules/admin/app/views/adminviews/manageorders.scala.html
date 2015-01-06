@@ -13,35 +13,35 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>Title</th>
-						<th>Description</th>
-						<th>No. Of Pages</th>
-						<th>Order Category</th>
-						<th>Order Type</th>
-						<th>Order Subject</th>
-						<th>Spacing</th>
-						<th>no. Of references</th>
-						<th>Writing Style</th>
-						<th>Additional Files</th>
+						<th>#</th>
+						<th>Topic</th>
+						<th>Qs/Pgs</th>
+						<th>Date</th>
 						<th>Deadline</th>
+						<th>Spacing</th>
+						<th>Refs</th>
+						<th>Style</th>
+						<th>Files</th>
+						<th>Status</th>
 						<th>Assigned Writer Id </th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>Essay</td>
-						<td>2</td>
-						<td>Urgent</td>
-						<td></td>
-						<td>History</td>
-						<td>1.0</td>
-						<td>10</td>
-						<td>Harvard</td>
-						<td>032</td>
-						<td>1-8-2014</td>
-						<td>Finance</td>
-						<td>1F031</td>
-					</tr>
+						@for(order <- activeOrders.getList()){
+								<tr>
+									<td>@order.order_code</td>
+									<td>@order.topic</td>
+									<td>@order.number_of_units</td>
+									<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
+									<td>@(new models.orders.Orders().computeDeadline(order.order_date, order.document_deadline).format("dd-MM-YYYY HH:mm"))</td>
+									<td>@order.spacing.spacing</td>
+									<td>@order.no_of_references</td>
+									<td>@order.writing_style</td>
+									<td>Files</td>
+									<td>Status</td>
+									<td>Writer</td>
+								</tr>
+						}
 				</tbody>
 			</table>
 			}else{
@@ -61,35 +61,35 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>Title</th>
-						<th>Description</th>
-						<th>No. Of Pages</th>
-						<th>Order Category</th>
-						<th>Order Type</th>
-						<th>Order Subject</th>
-						<th>Spacing</th>
-						<th>no. Of references</th>
-						<th>Writing Style</th>
-						<th>Additional Files</th>
+						<th>#</th>
+						<th>Topic</th>
+						<th>Qs/Pgs</th>
+						<th>Date</th>
 						<th>Deadline</th>
+						<th>Spacing</th>
+						<th>Refs</th>
+						<th>Style</th>
+						<th>Files</th>
+						<th>Status</th>
 						<th>Assigned Writer Id </th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>Music</td>
-						<td>2</td>
-						<td>Urgent</td>
-						<td></td>
-						<td>History</td>
-						<td>1.0</td>
-						<td>10</td>
-						<td>Harvard</td>
-						<td>032</td>
-						<td>1-8-2014</td>
-						<td>Finance</td>
-						<td>2F031</td>
-					</tr>
+					@for(order <- completedOrders.getList()){
+							<tr>
+								<td>@order.order_code</td>
+								<td>@order.topic</td>
+								<td>@order.number_of_units</td>
+								<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
+								<td>@(new models.orders.Orders().computeDeadline(order.order_date, order.document_deadline).format("dd-MM-YYYY HH:mm"))</td>
+								<td>@order.spacing.spacing</td>
+								<td>@order.no_of_references</td>
+								<td>@order.writing_style</td>
+								<td>Files</td>
+								<td>Status</td>
+								<td>Writer</td>
+							</tr>
+					}
 				</tbody>
 			</table>
   
@@ -111,38 +111,37 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>Title</th>
-						<th>Description</th>
-						<th>No. Of Pages</th>
-						<th>Order Category</th>
-						<th>Order Type</th>
-						<th>Order Subject</th>
-						<th>Spacing</th>
-						<th>no. Of references</th>
-						<th>Writing Style</th>
-						<th>Additional Files</th>
+						<th>#</th>
+						<th>Topic</th>
+						<th>Qs/Pgs</th>
+						<th>Date</th>
 						<th>Deadline</th>
+						<th>Spacing</th>
+						<th>Refs</th>
+						<th>Style</th>
+						<th>Files</th>
+						<th>Status</th>
 						<th>Assigned Writer Id </th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>Art</td>
-						<td>2</td>
-						<td>Urgent</td>
-						<td></td>
-						<td>History</td>
-						<td>1.0</td>
-						<td>10</td>
-						<td>Harvard</td>
-						<td>032</td>
-						<td>1-8-2014</td>
-						<td>Finance</td>
-						<td>3F031</td>
-					</tr>
+					@for(order <- closedOrders.getList()){
+						<tr>
+							<td>@order.order_code</td>
+							<td>@order.topic</td>
+							<td>@order.number_of_units</td>
+							<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
+							<td>@(new models.orders.Orders().computeDeadline(order.order_date, order.document_deadline).format("dd-MM-YYYY HH:mm"))</td>
+							<td>@order.spacing.spacing</td>
+							<td>@order.no_of_references</td>
+							<td>@order.writing_style</td>
+							<td>Files</td>
+							<td>Status</td>
+							<td>Writer</td>
+						</tr>
+					}
 				</tbody>
-			</table>
-    
+			</table>    
     }else{
 			<div class="alert alert-success">
 					No closed orders found.
