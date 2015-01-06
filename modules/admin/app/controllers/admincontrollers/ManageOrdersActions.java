@@ -114,6 +114,10 @@ public class ManageOrdersActions extends Controller{
 				orderFiles.file_sent_to = FileOwner.OrderFileOwner.CLIENT;
 				orderFiles.owner = FileOwner.OrderFileOwner.SUPPORT;
 				String product_file_type = form().bindFromRequest().get("product_file_type");
+				if(product_file_type.equals("")){
+					flash("fileuploadresponseerror","Could not upload file. Select File type.");
+					return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
+				}
 				if(product_file_type.equals("PRODUCT"))
 					orderFiles.product_file_type=FileType.ProductFileType.PRODUCT;
 				else if(product_file_type.equals("DRAFT"))
