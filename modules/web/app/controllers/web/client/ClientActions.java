@@ -49,47 +49,43 @@ public class ClientActions extends Controller{
 	static Map<String,List<ValidationError>> error = new LinkedHashMap<String,List<ValidationError>>();
 	
 	
-	public static Result index(){
-	  List<Orders> activeOrders = new ArrayList<Orders>();
-	  List<Orders> completeOrders = new ArrayList<Orders>();
-	  List<Orders> closedOrders = new ArrayList<Orders>();	  
+	public static Result index(){  
 	  if(session().get("email") != null){
+	    Orders order = new Orders();
 	    Long client_id = Client.getClient(session().get("email")).id;
-	    activeOrders = new Orders().getActiveOrders(client_id);
-	    completeOrders = new Orders().getCompletedOrders(client_id);
-	    closedOrders = new Orders().getClosedOrders(client_id);
+	    return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
 	  } 
-	  return(ok(clienthome.render(activeOrders,completeOrders,closedOrders)));
-	}
-	//path to messages
-	public static Result messages(){			
-	  return ok(clientmessages.render(newMessageForm, OrderMessages.getReceipientsMap("CLIENT"),getOrderMessages()));
+	  return(ok(clienthome.render(null,null,null)));
 	}	
 	
-	public static Result saveClientMessage(){
+	public static Result saveClientMessage(Long order_code){
 	  ObjectNode result = Json.newObject();
 	  Form<OrderMessages> newBoundMessageForm = form(OrderMessages.class).bindFromRequest();
-	  
+	  Orders orders = Orders.getOrderByCode(order_code);
+	  if(orders == null){
+	    return badRequest(clientmessages.render(orders,newBoundMessageForm, OrderMessages.getReceipientsMap("CLIENT"), getOrderMessages(order_code)));
+	  }
 	  if(newBoundMessageForm.hasErrors()) {
 		  flash("error", "Please correct the form below.");
 		  flash("show_form", "true");
-		  return badRequest(clientmessages.render(newBoundMessageForm, OrderMessages.getReceipientsMap("CLIENT"), getOrderMessages()));
+		  return badRequest(clientmessages.render(orders,newBoundMessageForm, OrderMessages.getReceipientsMap("CLIENT"), getOrderMessages(order_code)));
 	  }	
 	  OrderMessages orderMessage = newBoundMessageForm.get();
 	  orderMessage.msg_from = MessageParticipants.CLIENT;
+	  orderMessage.orders = orders;
 	  if(orderMessage.saveClientMessage()){
-		  return redirect(controllers.web.client.routes.ClientActions.messages());
+		  return redirect(controllers.web.client.routes.ClientActions.orderMessages(order_code));
 	  }
-	  return redirect(controllers.web.client.routes.ClientActions.messages());
+	  return redirect(controllers.web.client.routes.ClientActions.orderMessages(order_code));
 	}
 	
-	public static List<OrderMessages> getOrderMessages(){
+	public static List<OrderMessages> getOrderMessages(Long order_code){
 			List<OrderMessages> orderMessages = new ArrayList<OrderMessages>();
-			orderMessages = OrderMessages.getClientOrderMessages();
+			orderMessages = OrderMessages.getClientOrderMessages(order_code);
 			return orderMessages;
 	}
 	public static Result orderMessages(Long order_code){
-	  return TODO;
+	   return ok(clientmessages.render(Orders.getOrderByCode(order_code),newMessageForm, OrderMessages.getReceipientsMap("CLIENT"),getOrderMessages(order_code)));
 	}
 	public static Result affiliateProgram(){
 			Form<NewEmail> newMailForm = form(NewEmail.class);
@@ -161,9 +157,9 @@ public class ClientActions extends Controller{
 	public static Result clientViewOrder(Long order_code){
 	  Orders orders = Orders.getOrderByCode(order_code);
 	  if(orders == null){
-	    return ok(clientvieworder.render(new Orders(),orderFilesForm));
+	    return ok(clientvieworder.render(new Orders(),orderFilesForm,new OrderMessages().getUnreadMessages(order_code)));
 	  }
-	  return ok(clientvieworder.render(orders,orderFilesForm));
+	  return ok(clientvieworder.render(orders,orderFilesForm,new OrderMessages().getUnreadMessages(order_code)));
 	}
 	
 	public static Result saveOrderFile(Long order_code){
@@ -175,7 +171,7 @@ public class ClientActions extends Controller{
 	  Form<OrderFiles> orderFileBoundForm = orderFilesForm.bindFromRequest();
 	  if(orderFileBoundForm.hasErrors()) {
 	    flash("fileuploadresponseerror","There was an error.");
-	    return badRequest(clientvieworder.render(orders,orderFileBoundForm));
+	    return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
 	  }
 	  OrderFiles orderFiles = orderFileBoundForm.get();
 	  MultipartFormData body = request().body().asMultipartFormData();
@@ -185,12 +181,12 @@ public class ClientActions extends Controller{
 	    
 	    if(order_file.length() > Utilities.FILE_UPLOAD_SIZE_LIMIT){
 	      flash("fileuploadresponseerror","Please attach a file not exceeding 25 MB");
-	      return badRequest(clientvieworder.render(orders,orderFileBoundForm));
+	      return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
 	    }   
 	    
 	    if(part.getContentType().equals("application/x-ms-dos-executable")){
 	      flash("fileuploadresponseerror","File not allowed!");
-	      return badRequest(clientvieworder.render(orders,orderFileBoundForm));
+	      return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
 	    }
 	      try{
 		//orderFiles.order_file = Files.toByteArray(order_file);
@@ -220,16 +216,16 @@ public class ClientActions extends Controller{
 	      }catch (IOException ioe){
 		Logger.error("Server error on file upload:");
 		flash("fileuploadresponseerror","Server error. Please try again");
-		return badRequest(clientvieworder.render(orders,orderFileBoundForm)); 
+		return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code))); 
 	      }catch(Exception ex){
 		Logger.error("Server error on file upload:");
 		flash("fileuploadresponseerror","Server error. Please try again");
-		return badRequest(clientvieworder.render(orders,orderFileBoundForm)); 
+		return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code))); 
 	      }
 	      
 	  }
 	  flash("fileuploadresponseerror","No file was selected");
-	  return badRequest(clientvieworder.render(orders,orderFileBoundForm));
+	  return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
 	}
 	
 	public static Result downloadOrderFile(Long file_id){
@@ -408,6 +404,23 @@ public class ClientActions extends Controller{
 	  }
 	  client.saveClient();
 	  return redirect(controllers.web.client.routes.ClientActions.myProfile());
+	}
+	
+	public static Result viewOrderMessage(Long order_code, Long message_id){
+	  Logger.info("order_code:" + order_code + "message_id:" + message_id);
+	  JSONObject jo = new JSONObject();
+	  OrderMessages message = OrderMessages.getMessageById(message_id);
+	  if(message == null){
+	    jo.put("success",0);
+	    jo.put("message","Request was unsuccessiful");
+	    return ok(Json.parse(jo.toString()));
+	  }
+	  message.status = true;
+	  message.saveClientMessage();
+	  Logger.info("message status updated");
+	  jo.put("success",1);
+	  jo.put("message","Request was successfully");
+	  return ok(Json.parse(jo.toString()));
 	}
 	
 	public static Result changePassword(){

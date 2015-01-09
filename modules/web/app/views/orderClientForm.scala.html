@@ -11,6 +11,7 @@
     <fieldset>
       @priceLabel(orderForm)(currenceList)
       <input type="hidden"  value="@clientForm("id").valueOr("")" name="id"/>
+      <input type="hidden" id="client_time_zone_offset" value="@clientForm("client_time_zone_offset").valueOr("")" name="client_time_zone_offset"/>
       @if(flash.containsKey("clientorderformerros")){
 	    <div class="alert alert-danger">
 		    @flash.get("clientorderformerros")
@@ -95,6 +96,8 @@
       
       
       <input type="hidden" id="deadline_category_tracker" name ="deadline_category_tracker" value="">
+      
+      <input type="hidden" value="" id="client_local_time" name="client_local_time"/>
       
       <div id="order-info">
 	<legend>Order details</legend>

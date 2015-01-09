@@ -1,8 +1,8 @@
-@(activeOrders: List[models.orders.Orders])(completeOrders: List[models.orders.Orders])(closedOrders: List[models.orders.Orders])
+@(activeOrders: Map[models.orders.Orders,Integer])(completeOrders: Map[models.orders.Orders,Integer])(closedOrders: Map[models.orders.Orders,Integer])
 @clientmain("My Orders"){
-    @if(!(activeOrders.isEmpty() && completeOrders.isEmpty() && closedOrders.isEmpty())){
-      @if(!activeOrders.isEmpty()){
-	<h3>Active Orders</h3>
+    @if(!(activeOrders == null && completeOrders == null && closedOrders == null)){
+      @if(activeOrders != null){
+	<h3>Active Order(s)</h3>
 	<hr/>
 	<div class="order-row-listing">
 	      <table class="table table-bordered">
@@ -17,13 +17,13 @@
 		    </tr>
 		</thead>
 		<tbody>
-		      @for(order_ <-activeOrders){
+		      @for((order_,message) <-activeOrders){
 			<tr>
 			  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.order_code</a></td>
 			  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.topic</a></td>
 			  <td>@if(order_.is_writer_assigned == false){Awaiting writer}else{Worked on}</td>
-			  <td>@order_.order_deadline</td>
-			  <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@order_.orderMessages.size() (0 Unread)</a></td>
+			  <td>@order_.order_deadline.format("YYYY-MM-dd HH:mm")</td>
+			  <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@order_.orderMessages.size() (<span class="phone-number">@message Unread</span>)</a></td>
 			  <td>@if(order_.is_paid == false){Not paid <a href="@controllers.web.client.routes.ClientActions.pay(order_.order_code)">(Pay now)</a>}else{Paid}</td>
 			</tr>
 		      }
@@ -32,8 +32,8 @@
 	      <hr/>
 	</div>
       }
-      @if(!completeOrders.isEmpty()){
-	<h3>Completed Orders</h3>
+      @if(completeOrders != null){
+	<h3>Completed Order(s)</h3>
 	<hr/>
 	<div class="order-row-listing">      
 	  <table class="table table-bordered">
@@ -47,12 +47,12 @@
 	      </tr>
 	    </thead>
 	    <tbody>
-	      @for(order_ <-completeOrders){
+	      @for((order_,message) <-completeOrders){
 		<tr>
 		  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.order_code</a></td>
 		  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.topic</a></td>
 		  <td>@order_.order_deadline</td>
-		  <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@order_.orderMessages.size() (0 Unread)</a></td>
+		  <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@order_.orderMessages.size() (<span class="phone-number">@message Unread</span>)</a></td>
 		  <td></td>
 		}
 		</tr>
@@ -61,8 +61,8 @@
 	</div>
       }
       
-      @if(!closedOrders.isEmpty()){
-	<h3>Closed Orders</h3>
+      @if(closedOrders != null){
+	<h3>Closed Order(s)</h3>
 	<hr/>
 	<div class="order-row-listing">      
 	  <table class="table table-bordered">
@@ -75,12 +75,12 @@
 	      </tr>
 	    </thead>
 	    <tbody>
-	      @for(order_ <-closedOrders){
+	      @for((order_,message) <-closedOrders){
 		<tr>
 		  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.order_code</a></td>
 		  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.topic</a></td>
 		  <td>@order_.order_deadline</td>
-		  <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@order_.orderMessages.size() (0 Unread)</a></td>
+		  <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@order_.orderMessages.size() (<span class="phone-number">@message Unread</span>)</a></td>
 		</tr>
 	      }
 	    </tbody>

@@ -120,6 +120,32 @@ public class Orders extends Model{
 	  return Orders.find().where().eq("is_closed",true).eq("client_id",client_id).orderBy("order_deadline asc").findList();
 	}
 	
+	public Map<Orders,Integer> activeOrdersUnreadMessages( List<Orders> ordersList){
+	  Map<Orders,Integer> ordersMap = new LinkedHashMap<Orders,Integer>();
+	  if(ordersList.isEmpty()){
+	    return null;
+	  }
+	  for(Orders order: ordersList){
+	    List<OrderMessages> messagesList = order.orderMessages;
+	    int i = 0;
+	    for(OrderMessages messages: messagesList){
+	      if(!messages.status && messages.msg_to == MessageParticipants.CLIENT){
+		i = i+1;//count of unread messages
+	      }
+	    }
+	    ordersMap.put(order,i);
+	  }
+	  return ordersMap;
+	}
+	
+	public Map<Orders,Integer> completeOrdersUnreadMessages(List<Orders> ordersList){
+	  return null;
+	}
+	
+	public Map<Orders,Integer> closedOrdersUnreadMessages( List<Orders> ordersList){
+	  return null;
+	}
+	
 	//Method overloading
 	public Page<Orders> getActiveOrders(int page, int page_list_size){
 	  return Orders.find().where().eq("is_complete",false).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
@@ -217,8 +243,7 @@ public class Orders extends Model{
 	}	
 	public Date computeDeadline(Date date, int sec){
 	  Calendar calender = Calendar.getInstance();
-	  calender.setTimeInMillis(date.getTime());
-	 
+	  calender.setTimeInMillis(date.getTime()); 
 	  calender.add(Calendar.SECOND, sec);
 	  Date changeDate=calender.getTime();
 	  return changeDate;

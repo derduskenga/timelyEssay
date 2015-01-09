@@ -5,7 +5,11 @@ import java.util.*;
 import java.text.*;
 import play.db.ebean.Model;
 import play.*;
+
 import play.mvc.*;
+import play.mvc.Http.Request;
+import play.api.mvc.Cookie;
+import play.api.mvc.DiscardingCookie;
 import play.data.validation.ValidationError;
 import views.html.home;
 import views.html.orderSummary;
@@ -196,7 +200,9 @@ public class Application extends Controller{
 	  String number_of_references_selected = orderFormDataMap.get("no_of_references");
 	  String cpp_mode  = form().bindFromRequest().get("deadline_category_tracker");
 	  String style_selected = orderFormDataMap.get("writing_style");
-	    
+	  String client_time_zone_offset = orderFormDataMap.get("client_time_zone_offset");
+	  String client_local_time = orderFormDataMap.get("client_local_time");
+	  
 	  //Logger.info("orders form " + ordersBoundForm.errorsAsJson().toString());
 	  //Logger.info("client form " + clientBoundForm.errorsAsJson().toString());
 	  
@@ -291,6 +297,7 @@ public class Application extends Controller{
 	  newOrders.operating_system = "";
 	  newOrders.prog_language = "";
 	 }
+	 newClient.alternative_phone= "";
 	 //order and Additions
 	 if(checkedAdditions!=null){
 	   newOrders.additions = Additions.getListOfAdditionsObjects(checkedAdditions);
@@ -301,26 +308,52 @@ public class Application extends Controller{
 	 
 	 
 	 //order date 
-	 Date  orderDate = new Date();
+	 //Date  orderDate = new Date(); 
 	 try{
+	  int timezone_offset = Integer.parseInt(client_time_zone_offset);
+	  int hours = Math.abs(timezone_offset)/60;
+	  int minutes = Math.abs(timezone_offset)%60;
+	  String minutes_str = "";
+	  String str_from_client = "";
+	  if(minutes<10){
+	    minutes_str = "0" + minutes; 
+	  }else{
+	    minutes_str = minutes + "";
+	  }
+	  String time_zone_string = "";
+	  
+	 if(timezone_offset*(-1) >= 0){  
+            time_zone_string = "GMT+" + hours + ":" + minutes_str;
+            //client_time_zone_offset = "+" + timezone_offset;
+	  }else{
+	    time_zone_string = "GMT-" + hours + ":" + minutes_str;  
+	  }
+	  TimeZone tz = TimeZone.getTimeZone(time_zone_string);
+	  
+	  Logger.info("time_zone_string:" + time_zone_string + " time zone getDisplayName:" + tz.getDisplayName() + " offset:" + tz.getRawOffset());
+	  Logger.info("client_local_time:" + client_local_time);
+	  
 	  Calendar calender = Calendar.getInstance();
 	  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-	  isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	  orderDate = isoFormat.parse(isoFormat.format(new Date()));
-	  newOrders.order_date = orderDate;
+	  isoFormat.setTimeZone(tz); 
+	  Date orderDate = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(client_local_time))));
 	  //compute the order deadline
 	  calender.setTimeInMillis(orderDate.getTime());
-	  TimeZone tz = calender.getTimeZone();
-	  
-	  newOrders.order_deadline = newOrders.computeDeadline(orderDate,newOrders.document_deadline);
+	  calender.add(Calendar.MINUTE,timezone_offset);//get UTC time to be stored
+	  //Logger.info("zone ID or getDisplayName:" + calender.getTimeZone().getDisplayName());
+	  newOrders.order_date = calender.getTime();
+	  newOrders.order_deadline = newOrders.computeDeadline(calender.getTime(),newOrders.document_deadline);
 	  if(newClient.id == null){
-	    newClient.created_on = orderDate;
-	    newClient.client_time_zone = tz.getDisplayName();
+	    newClient.created_on = calender.getTime();
+	    newClient.client_time_zone = time_zone_string;
+	    newClient.client_time_zone_offset= client_time_zone_offset;
+	    newClient.client_time_zone_real = tz;
 	  }
 	 
 	  //Logger.info("date date date: " + String.format(orderDate));
 	  }catch(ParseException pe){
 	  Logger.info("parse Exception");
+	  Logger.error("parse error:" + pe.getMessage().toString());
 	  }catch(Exception ex){
 	  Logger.info("parse Exception");
 	  }

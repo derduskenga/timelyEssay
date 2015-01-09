@@ -1,4 +1,4 @@
-@(clientOrders: models.orders.Orders)(orderFilesForm: Form[models.orders.OrderFiles])
+@(clientOrders: models.orders.Orders)(orderFilesForm: Form[models.orders.OrderFiles])(unread_messages:Int)
 @import models.orders._
 @import helper._
 @clientmain("My Orders"){
@@ -50,8 +50,8 @@
 	</tr>
 	    
 	<tr>
-	  <td>Want order after</td>
-	  <td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(Approx deadline @(clientOrders.order_deadline.getYear()+1900)/@(clientOrders.order_deadline.getMonth()+1)/@clientOrders.order_deadline.getDate() @clientOrders.order_deadline.getHours():@if(clientOrders.order_deadline.getMinutes()<10){0@clientOrders.order_deadline.getMinutes()}else{@clientOrders.order_deadline.getMinutes()})</span> </td>
+	  <td>Order deadline</td>
+	  <td><span><span><strong>Approx deadline</strong> @clientOrders.order_deadline.format("E YYYY-MM-dd HH:mm z")</span> </td>
 	</tr>
 	
 	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perassignment.toString()){
@@ -115,7 +115,7 @@
 	</tr>
 	  <tr>
 	    <td>Messages</td>
-	    <td><a href="#">0 (0 Unread)</a></td>
+	    <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)">@clientOrders.orderMessages.size() (<span class="phone-number">@unread_messages Unread</span>)</a> <a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)" class="btn btn-primary btn-sm"> Send message for this order </a></td>
 	  </tr>
       </table>
     </div>
@@ -124,9 +124,9 @@
     <h3>Order description and files</h3>
     <div id="order-description-files" class="order-files-bg">
       <div>
-	<textarea rows="3" cols="70" class="asd textareadiv" readonly>
-	  @clientOrders.order_instruction
-	</textarea><br><br>
+
+	  <pre>@clientOrders.order_instruction</pre>
+	
       </div>
       
       @if(clientOrders.orderFiles.size()>0){
@@ -197,7 +197,7 @@
 	    <td> @productFiles.owner.name()</td>
 	    <td> @productFiles.file_name  <a href="#" title="download" class="product-file-shared-class" id="product-file-@productFiles.id"><img src="@routes.Assets.at("images/downloadimg.png")"/></a></td>
 	    <td> @(Math.round((productFiles.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB</td>
-	    <td> @(productFiles.upload_date.getYear()+1900)/@(productFiles.upload_date.getMonth()+1)/@productFiles.upload_date.getDate() 		@productFiles.upload_date.getHours():@productFiles.upload_date.getMinutes()</td>
+	    <td> @(productFiles.upload_date.format("YYYY-MM-dd HH:mm"))</td>
 	
 	  </tr>
 	  }	  
@@ -205,7 +205,7 @@
 	      <a href="#" title="extend deadline" id="extend-deadline-link"> <img height="25" width="25" src="@routes.Assets.at("images/extend-deadline.png")"/>&nbsp;&nbsp;Extend deadline</a> &nbsp;&nbsp;&nbsp;
 	      @if(clientOrders.is_complete){<a href="#" class='' title="Ask for revision" id="ask-for-revision-link"> <img height="25" width="25" src="@routes.Assets.at("images/revise.png")"/>&nbsp;&nbsp;Ask for revision</a> &nbsp;&nbsp;&nbsp;
 	      <a href="#" class='' title="Fill feedback survey" id="fill-feedback-survey-link"> <img height="25" width="25" src="@routes.Assets.at("images/feedback.jpg")"/>&nbsp;&nbsp;Fill feedback survey</a>&nbsp;&nbsp;&nbsp;}
-	      <a href="#" title="Send message to writer" id="message-to-writer-link"> <img height="25" width="25" src="@routes.Assets.at("images/message.png")"/>&nbsp;&nbsp;Send message to writer</a>	      
+	      <a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)" title="Send message to writer" id="message-to-writer-link"> <img height="25" width="25" src="@routes.Assets.at("images/message.png")"/>&nbsp;&nbsp;Send message to writer</a>	      
       </div>
       
      <br>
@@ -218,11 +218,11 @@
 	    <legend>Extend deadline</legend> <br>	
 	    <div class="row">							
 									    
-		<div class='col-sm-4'>
+		<div class='col-sm-5'>
 		    <div class="form-group">					
 			<div class='input-group date' id='extend-to-date-input'>
-			    <span class="input-group-addon" id="sizing-addon1">Date/Time</span>
-			    <input type="text" value="@(clientOrders.order_deadline.getYear()+1900)-@(clientOrders.order_deadline.getMonth()+1)-@clientOrders.order_deadline.getDate() @clientOrders.order_deadline.getHours():@if(clientOrders.order_deadline.getMinutes()<10){0@clientOrders.order_deadline.getMinutes()}else{@clientOrders.order_deadline.getMinutes()}" class="form-control" name ="datetimepicker" id="datetimepicker"/> 
+			    <span class="input-group-addon" id="sizing-addon1">Current deadline</span>
+			    <input type="text" value="@clientOrders.order_deadline.format("YYYY-MM-dd HH:mm")" class="form-control" name ="datetimepicker" id="datetimepicker"/> 
 			</div>								
 		    </div>								
 		</div>									
@@ -267,7 +267,7 @@
 		    <div class="form-group">					
 			<div class='input-group date' id='extend-to-date-input'>
 			    <span class="input-group-addon" id="sizing-addon1">Revision deadline&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-			    <input type="text" value="@(clientOrders.order_deadline.getYear()+1900)-@(clientOrders.order_deadline.getMonth()+1)-@clientOrders.order_deadline.getDate() @clientOrders.order_deadline.getHours():@if(clientOrders.order_deadline.getMinutes()<10){0@clientOrders.order_deadline.getMinutes()}else{@clientOrders.order_deadline.getMinutes()}" class="form-control" name ="revision_deadline" id="revision_deadline"/> 
+			    <input type="text" value="@clientOrders.order_deadline.format("YYYY-MM-dd HH:mm")" class="form-control" name ="revision_deadline" id="revision_deadline"/> 
 			</div>								
 		    </div>								
 		</div>		

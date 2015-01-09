@@ -33,7 +33,7 @@
            
       <tr>
       	<td>Want order after</td>
-	<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(On @clientOrders.order_deadline)</span> </td>
+	<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(On @clientOrders.order_deadline.format("YYYY-MM-dd HH:mm"))</span> </td>
       </tr>
       
       @if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perassignment.toString()){

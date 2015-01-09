@@ -1,7 +1,7 @@
 $(document).ready(function(event){
   $('#deadline-form').addClass('hidden');
   jQuery('#datetimepicker').datetimepicker({
-    format:'Y-m-d H:i'     
+    format:'Y-m-d H:i'
   });
   validateDeadlineExtension();
   handleFormSubmit();
@@ -38,7 +38,7 @@ function handleLinkClickDeadline(){
     if($('#deadline-form').hasClass('hidden')){
       $('#deadline-form').removeClass('hidden');
       $('#revision-form').addClass("hidden");
-      ('#feedback-form').addClass("hidden");
+      $('#feedback-form').addClass("hidden");
     }else{
       $('#deadline-form').addClass('hidden');
     }

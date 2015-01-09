@@ -6,7 +6,8 @@ $(document).ready(function(){
   
   $('#change-password').click(function(event){
     event.preventDefault();
-  });   
+  });
+  
 });
 
 function validateChangePasswordForm(){

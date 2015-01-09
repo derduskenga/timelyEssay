@@ -29,19 +29,19 @@ public class OrderMessages extends Model{
 		
 		public MessageParticipants msg_from;
 		
-		@Column(columnDefinition="boolean default TRUE")
-		public Boolean status; 
+		@Column(columnDefinition="boolean default false")
+		public Boolean status = false; 
 		//relationship fields
 		@ManyToOne
-		public Orders orders;
-		
-		
+		public Orders orders;		
 		@Column(nullable=false)
 		@Temporal(TemporalType.TIMESTAMP)
 		public Date sent_on=new Date();
 		
 		@Constraints.Required(message = "Please select message receipient")
 		public String message;
+		
+		public OrderMessages(){}
 		
 		public static Map<String, Boolean> getReceipientsMap(String exclude) {
 				Map<String, Boolean> 	receipientsMap = new HashMap<String, Boolean>();
@@ -54,16 +54,40 @@ public class OrderMessages extends Model{
 		}	
 		
 		public Boolean saveClientMessage(){
-				save();
-				return true;
+		      if(this.id == null){
+			save();
+			return true;
+		      }
+		      update();
+		      return true;
 		}
 		
 		public static Finder<Long, OrderMessages> orderMessagesFinder = 
-									new Finder<Long, OrderMessages>(Long.class, OrderMessages.class);
+						new Finder<Long, OrderMessages>(Long.class, OrderMessages.class);
+						
+		public static OrderMessages getMessageById(Long id){
+			return orderMessagesFinder.byId(id);
+		}
 		
-		public static List<OrderMessages> getClientOrderMessages(){
+		public static List<OrderMessages> getClientOrderMessages(Long order_code){
 					return  orderMessagesFinder.where()
-										.or(Expr.eq("msg_to", MessageParticipants.CLIENT),Expr.eq("msg_from", MessageParticipants.CLIENT))
-										.orderBy("sent_on").findList();
+							.eq("orders.order_code",order_code)
+							.or(Expr.eq("msg_to", MessageParticipants.CLIENT),Expr.eq("msg_from", MessageParticipants.CLIENT))
+							.orderBy("sent_on").findList();
+		}
+		
+		public int getUnreadMessages(Long order_code){
+		  Orders order = Orders.getOrderByCode(order_code);
+		  if(order == null){
+		    return 0;
+		  }  
+		  List<OrderMessages> orderList = order.orderMessages;		  
+		  int unread = 0;
+		  for(OrderMessages messages:orderList){
+		    if(!messages.status && messages.msg_to == MessageParticipants.CLIENT){//unread messages
+		      unread = unread + 1;
+		    }
+		  }
+		  return unread;
 		}
 }

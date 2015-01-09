@@ -1,7 +1,5 @@
 package models.client;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import play.data.validation.Constraints;
 import javax.persistence.*;
 import play.db.ebean.Model;
@@ -34,10 +32,12 @@ public class Client extends Model{
 	public String area_code; 
 	@Constraints.Required(message="Phone number is required - Phone number is invalid or empty")
 	public String phone_number;
+	
 	public String alternative_phone;
 	public boolean receive_company_mail=true;
 	public String client_time_zone;
-	
+	public String client_time_zone_offset;
+	public TimeZone client_time_zone_real;
 	
 	@Column(name="created_on")
 	@Temporal(TemporalType.TIMESTAMP)

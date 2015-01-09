@@ -28,7 +28,7 @@
 	      <td>
 		* * * * * 
 		<a href="#" tabindex="0" class="btn btn-sm btn-primary" role="button" data-toggle="popover" id="change-password"
-		  data-trigger="click focus" title="<strong>Change password</strong>" data-content="<form id='change_password_form' name='change_password_form' method='post' action=''>  
+		  data-trigger="click focus" title="<strong>Change password</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span align='right'><a href='#' id='close-popover'>x</></span>" data-content="<form id='change_password_form' name='change_password_form' method='post' action=''>  
 		  <script>$('#change_password_form').bootstrapValidator({
 		    message: 'This value is not valid',
 		    live: 'enabled',
@@ -79,7 +79,12 @@
 	    },'json');
 	    
 	  });
-		</script>
+	  
+	  $('#close-popover').click(function(event){
+	    event.preventDefault();
+	    $('#change-password').popover('hide');
+	  });
+	</script>
 		  <div>Current password:<input type='password' id='r_password' class='form-control input-sm' name='r_password'/> </div> <div>New password:<input class='form-control input-sm' type='password' id='new_password' name='new_password'/> </div> <div>Confirm password:<input class='form-control input-sm' type='password' id='confirm_password' name='confirm_password'/></div><br><div class='form-group'><button type='submit' class='btn btn-primary' id='change-password-btn'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Submit password &nbsp;&nbsp;&nbsp;</button> </div></form>">
 		  Change password
 		</a>
@@ -194,7 +199,7 @@
 		  label = "Receive company information via mail",
 		  divClass="col-sm-4",
 		  clientobject = client,
-		  fieldsizing="input-sm")	    
+		  fieldsizing="input-sm")    
 	      </td>
 	    </tr>   
 	    

@@ -1,4 +1,6 @@
 $(document).ready(function(e){  
+  setClientLocalTime();
+  setTimeZoneCookie();
   $('#client-order-form-submit').click(function(e){
     var cpp_mode = $('#deadline_category_tracker').val();
     if(cpp_mode == "perpage"){
@@ -360,4 +362,18 @@ function validateForPerPageBasis(){
 	}
     }
   });
+}
+
+
+function setTimeZoneCookie(){
+    var order_date = new Date();
+    var timezone_offset = order_date.getTimezoneOffset();
+    
+    $("#client_time_zone_offset").val(timezone_offset);
+}
+
+function setClientLocalTime(){
+  $("#client_local_time").val(new Date().getTime());
+  //alert(moment().format("YYYY-MM-DD HH:mm:ss"));
+  //alert(new Date().getTime());
 }

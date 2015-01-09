@@ -18,3 +18,18 @@
      -moz-box-sizing: border-box;    /* Firefox, other Gecko */
      box-sizing: border-box;         /* Opera/IE 8+ */
 }
+
+
+#sticky {
+    padding: 0.009ex;
+    width: 600px;
+    font-size: 2em;
+    border-radius: 0.5ex;
+    background-color: #b0e0e6;
+}
+#sticky.stick {
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    border-radius: 0 0 0.5em 0.5em;
+}
