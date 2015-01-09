@@ -25,6 +25,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import models.admin.adminmodels.AdminUser;
+import models.common.security.PasswordHash;
+import models.common.security.RandomString;
+import models.admin.adminmodels.AdminMails;
 import controllers.admincontrollers.AdminSecured;
 import models.admin.userpermissions.SecurityRole;
 import be.objectify.deadbolt.java.actions.SubjectNotPresent;
@@ -82,8 +85,22 @@ public class AdminActions extends Controller{
 					 }
 			}
 			
+			RandomString randomString = new RandomString(8);
+			String random = randomString.nextString();
+			
+			try{
+					String hashedPassword =PasswordHash.createHash(random);
+					String[] params = hashedPassword.split(":");
+					adminUser.password = params[0];
+					adminUser.salt = params[1];
+			}catch(Exception e){
+					Logger.error("Error creating hashed password",e);
+			}
+			
 			if(adminUser.saveAdminUser()){
 				Ebean.saveManyToManyAssociations(adminUser,"roles");
+				AdminMails am = new AdminMails();
+				am.sendRegisteredAdminFirstEmail(adminUser,random);
 				flash("success", "Admin user successfully saved.");
 				return redirect(controllers.admincontrollers.routes.AdminActions.createNewAdminUser());
 			}

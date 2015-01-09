@@ -16,6 +16,7 @@ create table admin_user (
   last_name                 varchar(255),
   email                     varchar(255),
   password                  varchar(255),
+  salt                      varchar(255),
   active                    boolean default 'true',
   constraint uq_admin_user_email unique (email),
   constraint pk_admin_user primary key (admin_user_id))
@@ -33,7 +34,8 @@ create table client (
   l_name                    varchar(255),
   email                     varchar(255),
   c_email                   varchar(255),
-  password                  varchar(255),
+  password                  varchar(64),
+  salt                      varchar(64),
   country_code              varchar(255),
   area_code                 varchar(255),
   phone_number              varchar(255),

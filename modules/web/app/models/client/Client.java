@@ -5,6 +5,7 @@ import javax.persistence.*;
 import play.db.ebean.Model;
 import models.orders.Orders;
 import models.orders.OrderMessages;
+import models.common.security.PasswordHash;
 import play.Logger;
 import models.client.PreferredWriter;
 
@@ -24,7 +25,10 @@ public class Client extends Model{
 	
 	public String c_email;
 	
+	@Column(columnDefinition="varchar(64)")
 	public String password;
+	@Column(columnDefinition="varchar(64)")
+	public String salt;
 	
 	@Constraints.Required(message="Country code is required - Phone number is invalid or empty")
 	public String country_code; 
@@ -75,7 +79,21 @@ public class Client extends Model{
 	}
 	
 	public static Client authenticate(String email, String password) {
-	    return finder.where().eq("email", email).eq("password", password).findUnique();
+			try{
+				Client client = finder.where().eq("email", email).findUnique();
+				if(client==null)
+					return null;
+				else{
+					Boolean valid = PasswordHash.validatePassword(password, client.password+":"+client.salt);	
+					if(valid)
+						return client;
+					else
+						return null;
+				}
+			}catch(Exception e){
+				Logger.error("Error authenticating client:"+email,e);
+			}
+			return null;
 	}
 	
 	public Long saveClient(){

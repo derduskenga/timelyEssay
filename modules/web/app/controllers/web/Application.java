@@ -21,6 +21,7 @@ import models.orders.Orders;
 import models.orders.OrderDocumentType;
 import models.orders.TempStore;
 import models.client.Countries;
+import models.client.ClientMails;
 import models.orders.OrderLevelOfWriting;
 import models.orders.OrderCurrence;
 import models.orders.Spacing;
@@ -28,6 +29,8 @@ import models.orders.Additions;
 import models.orders.StaticData;
 import models.orders.OrderSubject;
 import models.orders.OrderCppMode;
+import models.common.security.PasswordHash;
+import models.common.security.RandomString;
 import play.mvc.Http.Context;
 import models.utility.Utilities;
 import models.orders.OrderDeadlines;
@@ -441,6 +444,21 @@ public class Application extends Controller{
 	
 	public static Result setUserSession(Long order_code){
 	  Orders orders  = Orders.getOrderByCode(order_code);
+	  RandomString randomString = new RandomString(8);
+	  String random = randomString.nextString();
+	  
+	  try{
+			String hashedPassword =PasswordHash.createHash(random);
+			String[] params = hashedPassword.split(":");
+			Client client = orders.client;
+			client.password = params[0];
+			client.salt = params[1];
+			client.saveClient();
+			ClientMails cm = new ClientMails();
+			cm.sendRegisteredClientFirstEmail(client,random);
+	  }catch(Exception e){
+			Logger.error("Error creating hashed password",e);
+	  }
 	  setSession(orders);
 	  return redirect(controllers.web.client.routes.ClientActions.proceedToPay(order_code));
 	}

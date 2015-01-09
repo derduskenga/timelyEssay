@@ -6,6 +6,8 @@ import views.html.*;
 import views.html.securityview.adminlogin;
 import models.admin.userpermissions.AuthorisedUser;
 import models.admin.adminmodels.AdminUser;
+import models.common.security.PasswordHash;
+import models.common.security.RandomString;
 import play.data.Form;
 import static play.data.Form.form;
 

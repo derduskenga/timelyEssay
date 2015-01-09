@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import scala.collection.mutable.ArrayBuffer;
 
 import models.admin.adminmodels.AdminUser;
+import models.admin.adminmodels.AdminMails;
 import models.admin.userpermissions.SecurityRole;
 import models.admin.userpermissions.UserPermission;
+import models.common.security.PasswordHash;
+import models.common.security.RandomString;
 
 object Global extends GlobalSettings {
 	
@@ -20,7 +23,7 @@ object Global extends GlobalSettings {
 		case _ => web.Routes.routes.lift(request)
 	}
 
-
+	@throws(classOf[Exception])
 	override def onStart(app: Application) {
 		if (SecurityRole.find.findRowCount() == 0){
 			Logger.info("Equal 0.");
@@ -37,11 +40,20 @@ object Global extends GlobalSettings {
 		    permission.value = "printers.edit";
 		    permission.save();
 		}
+		var random : String = "";
 		if (AdminUser.find.findRowCount() == 0)
 		{
-		    val user = new AdminUser();
+		    var user = new AdminUser();
 		    user.email = "wambua.sam@gmail.com";
+		    user.first_name = "Sam";
+		    user.last_name = "Wambua";
 		    user.active = true;
+		    var randomString = new RandomString(8);
+			random = randomString.nextString();
+			var hashedPassword =PasswordHash.createHash(random);
+			var params = hashedPassword.split(":");
+			user.password = params(0);
+			user.salt = params(1);
 		    user.roles = new ArrayList[SecurityRole]();
 		    user.roles.add(SecurityRole.findByName("Super Admin"));
 		    user.roles.add(SecurityRole.findByName("Normal Admin"));
@@ -55,7 +67,11 @@ object Global extends GlobalSettings {
 		                                     "roles");
 		    Ebean.saveManyToManyAssociations(user,
 		                                     "permissions");
+		    var am = new AdminMails();
+			am.sendRegisteredAdminFirstEmail(user,random);
+			Logger.info("Password: "+random);
 		}
+		
 	    Logger.info("Application has started")
 	}  
 	

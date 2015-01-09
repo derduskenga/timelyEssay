@@ -20,6 +20,8 @@ import be.objectify.deadbolt.core.models.Role;
 import be.objectify.deadbolt.core.models.Subject;
 import play.db.ebean.Model;
 
+import models.common.security.PasswordHash;
+
 import models.admin.userpermissions.SecurityRole;
 import models.admin.userpermissions.UserPermission;
 
@@ -39,9 +41,10 @@ public class AdminUser extends Model implements Subject{
 		@Constraints.Email(message="The email you entered does not seem valid.")
 		public String email;
 		
-		@Constraints.Required(message="Password is required.")
 		public String password;
 		
+		public String salt;
+
 		@Column(columnDefinition = "boolean default 'true'")
 		public Boolean active;
 		
@@ -93,10 +96,24 @@ public class AdminUser extends Model implements Subject{
 		 }
 		 
 		public  AdminUser authenticate(String email, String password) {
-					return adminUserFinder.where().eq("email", email).eq("password", password).findUnique();
+			try{
+				AdminUser adminUser = adminUserFinder.where().eq("email", email).findUnique();
+				if(adminUser==null)
+					return null;
+				else{
+					Boolean valid = PasswordHash.validatePassword(password, adminUser.password+":"+adminUser.salt);	
+					if(valid)
+						return adminUser;
+					else
+						return null;
+				}
+			}catch(Exception e){
+				Logger.error("Error authenticating admin user:"+email,e);
+			}
+			return null;
 		}
 		 
-		 public boolean deactivate(){
+		public boolean deactivate(){
 				this.active = false;
 				if(saveAdminUser())
 					return true;
