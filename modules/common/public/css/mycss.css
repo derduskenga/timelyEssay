@@ -23,6 +23,9 @@ h6 {
   margin-bottom: 0px;
   margin-top: 10px;
 }
+#left-column{
+	padding:0px;
+}
 
 
 
@@ -145,3 +148,9 @@ footer .footer-below {
    label{
      font-weight:normal;
   }
+  html body div.container{
+	  padding-right:0px;
+}
+#mainbody{
+	padding-top:00px;
+}
