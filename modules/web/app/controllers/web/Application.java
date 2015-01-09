@@ -443,23 +443,25 @@ public class Application extends Controller{
 	}
 	
 	public static Result setUserSession(Long order_code){
-	  Orders orders  = Orders.getOrderByCode(order_code);
-	  RandomString randomString = new RandomString(8);
-	  String random = randomString.nextString();
-	  
-	  try{
-			String hashedPassword =PasswordHash.createHash(random);
-			String[] params = hashedPassword.split(":");
-			Client client = orders.client;
-			client.password = params[0];
-			client.salt = params[1];
-			client.saveClient();
-			ClientMails cm = new ClientMails();
-			cm.sendRegisteredClientFirstEmail(client,random);
-	  }catch(Exception e){
-			Logger.error("Error creating hashed password",e);
-	  }
-	  setSession(orders);
+	    if(session().get("email") == null){
+		Orders orders  = Orders.getOrderByCode(order_code);
+		RandomString randomString = new RandomString(8);
+		String random = randomString.nextString();
+		
+		try{
+			      String hashedPassword =PasswordHash.createHash(random);
+			      String[] params = hashedPassword.split(":");
+			      Client client = orders.client;
+			      client.password = params[0];
+			      client.salt = params[1];
+			      client.saveClient();
+			      ClientMails cm = new ClientMails();
+			      cm.sendRegisteredClientFirstEmail(client,random);
+		}catch(Exception e){
+			      Logger.error("Error creating hashed password",e);
+		}
+		setSession(orders);
+	    }
 	  return redirect(controllers.web.client.routes.ClientActions.proceedToPay(order_code));
 	}
 	

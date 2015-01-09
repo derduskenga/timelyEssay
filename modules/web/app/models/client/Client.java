@@ -79,21 +79,21 @@ public class Client extends Model{
 	}
 	
 	public static Client authenticate(String email, String password) {
-			try{
-				Client client = finder.where().eq("email", email).findUnique();
-				if(client==null)
+		try{
+			Client client = finder.where().eq("email", email).findUnique();
+			if(client==null)
+				return null;
+			else{
+				Boolean valid = PasswordHash.validatePassword(password, client.password+":"+client.salt);	
+				if(valid)
+					return client;
+				else
 					return null;
-				else{
-					Boolean valid = PasswordHash.validatePassword(password, client.password+":"+client.salt);	
-					if(valid)
-						return client;
-					else
-						return null;
-				}
-			}catch(Exception e){
-				Logger.error("Error authenticating client:"+email,e);
 			}
-			return null;
+		}catch(Exception e){
+			Logger.error("Error authenticating client:"+email,e);
+		}
+		return null;
 	}
 	
 	public Long saveClient(){
