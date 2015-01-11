@@ -5,6 +5,41 @@
 <div class="col-md-10" id="mainbody">
  @if(clientOrders!=null){
  @if(clientOrders.order_id!=null){
+	 <h3>Client details</h3>
+     <div>
+      <table>
+		<tr>
+			<td>Name</td>
+			<td>@clientOrders.client.f_name  @clientOrders.client.l_name</td>
+		</tr>
+		<tr>
+			<td>Phone Number</td>
+			<td>@clientOrders.client.country_code-@clientOrders.client.area_code-@clientOrders.client.phone_number</td>
+		</tr>
+		<tr>
+			<td>Email</td>
+			<td>@clientOrders.client.email</td>
+		</tr>
+		<tr>
+			<td>Time Zone</td>
+			<td>@clientOrders.client.client_time_zone_real.getDisplayName().toString()</td>
+		</tr>
+		<tr>
+			<td>Current Time</td>
+			<td>@(models.admin.adminutils.AdminUtils.getCurrentClientTime(clientOrders.client.client_time_zone_real))</td>
+		</tr>
+		<tr>
+			<td>Country</td>
+			<td>@clientOrders.client.country.nicename</td>
+		</tr>
+		@if(clientOrders.client.orders.size()>1){
+			<tr>
+				<td>Other Orders</td>
+				<td>@for(order<-clientOrders.client.orders){@if(order.order_code != clientOrders.order_code){ <a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a> }}</td>
+			</tr>
+		}
+	  </table>
+	 </div>
     <h3>Order details</h3>
     <div>
       <table>
@@ -48,6 +83,10 @@
 		<tr>
 		<td>Want order after</td>
 		<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(Approx deadline @(clientOrders.order_deadline.getYear()+1900)/@(clientOrders.order_deadline.getMonth()+1)/@clientOrders.order_deadline.getDate() @clientOrders.order_deadline.getHours():@if(clientOrders.order_deadline.getMinutes()<10){0@clientOrders.order_deadline.getMinutes()}else{@clientOrders.order_deadline.getMinutes()})</span> </td>
+		</tr>
+		<tr>
+			<td>Order deadline</td>
+			<td>@models.admin.adminutils.AdminUtils.getTimeRemaining(clientOrders.order_deadline)</td>
 		</tr>
 	
 	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perassignment.toString()){
