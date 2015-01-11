@@ -80,7 +80,6 @@ public class Orders extends Model{
 	@OneToMany(mappedBy="orders")
 	public List<OrderRevision> orderRevision;
 	
-	
 	@PrePersist
 	protected void onCreate(){
 	  order_date = new Date();

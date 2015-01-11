@@ -58,7 +58,7 @@ public class ManageOrdersActions extends Controller{
 			Page<Orders> activeOrders = orders.getActiveOrders(0,10);
 			Page<Orders> completedOrders = orders.getCompletedOrders(0,10);
 			Page<Orders> closedOrders = orders.getClosedOrders(0,10);
- 			return ok(manageorders.render(activeOrders, completedOrders, closedOrders));
+			return ok(manageorders.render(activeOrders, completedOrders, closedOrders));
 	}
 	
 	public static Result manageOrder(Long order_code){
@@ -66,7 +66,6 @@ public class ManageOrdersActions extends Controller{
 			Orders order = new Orders().getOrderByCode(order_code);
 			return ok(manageorder.render(order,orderFilesForm));
 	}
-	
 		
 	public static Result uploadProductFile(Long order_code){
 				//get the order by order_code
@@ -118,13 +117,15 @@ public class ManageOrdersActions extends Controller{
 					flash("fileuploadresponseerror","Could not upload file. Select File type.");
 					return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
 				}
-				if(product_file_type.equals("PRODUCT"))
+				if(product_file_type.equals("PRODUCT")){
 					orderFiles.product_file_type=FileType.ProductFileType.PRODUCT;
-				else if(product_file_type.equals("DRAFT"))
+					orders.is_complete = true;
+				}else if(product_file_type.equals("DRAFT"))
 					orderFiles.product_file_type=FileType.ProductFileType.DRAFT;
-				else if(product_file_type.equals("REVISION"))
+				else if(product_file_type.equals("REVISION")){
+					orders.is_complete = true;
 					orderFiles.product_file_type=FileType.ProductFileType.REVISION;
-				else if(product_file_type.equals("REFERENCE_MATERIAL"))
+				}else if(product_file_type.equals("REFERENCE_MATERIAL"))
 					orderFiles.product_file_type=FileType.ProductFileType.REFERENCE_MATERIAL;
 				else if(product_file_type.equals("ADDITIONAL_FILE"))
 					orderFiles.product_file_type=FileType.ProductFileType.ADDITIONAL_FILE;
@@ -135,13 +136,14 @@ public class ManageOrdersActions extends Controller{
 				Logger.info("File path:" + destination.toPath().toString());
 				flash("fileuploadresponsesuccess","Your file has been uploaded");
 				orderFiles.saveProductFile();
+				orders.saveOrder();
 				return redirect(controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(orders.order_code));
 				}catch (IOException ioe) {
-				Logger.error("Server error on file upload:");
+				Logger.error("Server error on file upload: " + ioe.getMessage().toString());
 				flash("fileuploadresponseerror","Server error. Please try again");
 				return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
 				}catch(Exception ex){
-				Logger.error("Server error on file upload:");
+				Logger.error("Server error on file upload: " + ex.getMessage().toString());
 				flash("fileuploadresponseerror","Server error. Please try again");
 				return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
 				}

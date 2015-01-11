@@ -111,12 +111,99 @@
 	</tr>
 	  <tr>
 	    <td>Messages</td>
-	    <td><a href="#">0 (0 Unread)</a></td>
+	    <td><a href="#">0(all Messages) (0 Unread (those sent to support by writers and client))</a></td>
 	  </tr>
       </table>
     </div>
-   
-    <hr>  
+      <!--..........................................................................................................-->
+	@if(!clientOrders.is_complete){
+	   <div id="deadline-form-admin"> 
+	      <form id="extend_deadline_form_admin" name="extend_deadline_form_admin" method="post" action="">		
+		<div id="order-code-admin" class="hidden">@clientOrders.order_code</div>
+		<div class="">							
+		    <legend>Ask for deadline extension</legend> <br>	
+		    <div class="row">							
+										    
+			<div class='col-sm-4'>
+			    <div class="form-group">					
+				<div class='input-group date' id=''>
+				    <span class="input-group-addon" id="sizing-addon1">Date/Time</span>
+				    <input type="text" value="@clientOrders.order_deadline.format("YYYY-MM-dd HH:mm")" class="form-control input-sm" 		name="order_deadline_admin" id="order_deadline_admin"/> 
+				</div>								
+			    </div>								
+			</div>									
+				    
+			<div class="col-sm-4">
+			  <div class="form-group">
+			    <div class='input-group date' id=''>
+			      <span class="input-group-addon" id="sizing-addon1">Reason</span>
+				<select class="form-control input-sm" name="deadline_extension_reason">
+					<option value="">--Select Reason--</option>
+					<option value="USING_SOFTWARE"> Using some software </option>
+					<option value="EXTENSIVE_RESEARCH"> Extensive research </option>
+					<option value="CLOSE_TO_DEADLINE"> Close to deadline </option>
+					<option value="LIMITED_MATERIAL"> Limited reference material </option>
+				</select>
+			    </div>
+			  </div>
+			</div>
+				    
+			<div class='col-sm-3'>						
+			    <div class="form-group">						
+				<div id='extend-to-date-admin-btn'>				
+				    <button type="submit" id="btn-deadline-extension-admin" class="btn btn-primary btn-sm">
+				      &nbsp;&nbsp;&nbsp;&nbsp; Submit &nbsp;&nbsp;&nbsp;&nbsp;					
+				    </button>	
+				    <span id="loading-gif-extend-admin" class="hidden">
+				      <img src="@routes.Assets.at("images/loading.gif")"/>Submiting...
+				    </span>
+				</div>						
+			    </div>							
+			</div>							
+										    
+		    </div>							
+		</div>									
+	      </form>
+	    </div>
+	}
+	  @if(!clientOrders.is_complete){
+	    <hr> <!--.........................................................................--> 
+	    <div id="deadline-form-admin"> 
+	      <form id="extra_pages_form" name="extra_pages_form" method="post" action="">		
+		<div class="">							
+		    <legend>Request for additional pages</legend> <br>	
+		    <div class="row">							
+										    
+			<div class='col-sm-3'>
+			    <div class="form-group">					
+				<div class='input-group' id=''>
+				    <span class="input-group-addon" id="sizing-addon1">Extra pages</span>
+				    <input type="number" value="" data-fv-integer-message="The value is not an integer" class="form-control input-sm" name="extra_pages" id="extra_pages"/>
+				</div>								
+			    </div>								
+			</div>
+				    
+			<div class="col-sm-3">						
+			    <div class="form-group">						
+				<div id="">				
+				    <button type="submit" id="extra-pages-btn" class="btn btn-primary btn-sm">
+				      &nbsp;&nbsp;&nbsp;&nbsp; Submit &nbsp;&nbsp;&nbsp;&nbsp;					
+				    </button>	
+				    <span id="loading-gif-extra-pages" class="hidden">
+				      <img src="@routes.Assets.at("images/loading.gif")"/>Submiting...
+				    </span>
+				</div>						
+			    </div>							
+			</div>							
+									    
+		    </div>
+		    Note that asking additional pages from the client does not change the client's instructions 
+		</div>									
+	      </form>
+	    </div>
+	    <hr><!--.........................................................................--> 
+	  }
+    
     <h3><legend>Order instructions and files</legend></h3>
     <div id="order-description-files" class="order-files-bg">
       <div>
@@ -157,9 +244,9 @@
 	 <div>
 		@adminorderfileupload(orderFilesForm("file_name"),
 		  label = "Upload order File",
-		  divClass="col-sm-5")
+		  divClass="col-sm-3")
 		  <div class="col-sm-3">
-				<select class="form-control" name="product_file_type">
+				<select class="form-control input-sm" name="product_file_type">
 					<option value="">--Select Type--</option>
 					@if(!clientOrders.on_revision){
 						<option value="PRODUCT">Product</option>
@@ -173,7 +260,7 @@
 				</select>
 		  </div>
 		<div class="col-sm-2 form-group">
-		  <input type="submit" class="btn btn-primary" value="Upload file" id = "order-file-form-submit">
+		  <input type="submit" class="btn btn-primary btn-sm" value="Upload file" id = "order-file-form-submit">
 		</div>
 	 </div>
 	      

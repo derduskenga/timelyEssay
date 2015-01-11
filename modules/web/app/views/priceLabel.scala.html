@@ -2,8 +2,9 @@
 <div id="sticky-anchor"></div>
 <div class="stick col-sm-12" id="sticky">
     <h3 align="center">
-	  <span id="order-total-label">Order Total</span>   
-	  <input id="order-total-value" type="text" class="asd" name="order_total" value="@for((ke,value)<-currenceList){@if(value==true){@ke.currency_symbol_2 0.00}}@orderForm("order_total").valueOr("")" disabled/>
-      </h3></td>
-  
+	  <span id="order-total-label"> Order Total @for((ke,value)<-currenceList){@if(value==true){@ke.currency_symbol_2}}</span>   
+	  <input id="order_total" type="text" class="asd" name="order_total" value="@orderForm("order_total").valueOr("0. 00")" readonly/>
+    </h3>  
 </div>
+
+<!--@for((ke,value)<-currenceList){@if(value==true){@ke.currency_symbol_2 0.00 }} @orderForm("order_total").valueOr("")-->

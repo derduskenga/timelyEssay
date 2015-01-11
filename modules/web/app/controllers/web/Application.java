@@ -204,7 +204,7 @@ public class Application extends Controller{
 	  String cpp_mode  = form().bindFromRequest().get("deadline_category_tracker");
 	  String style_selected = orderFormDataMap.get("writing_style");
 	  String client_time_zone_offset = orderFormDataMap.get("client_time_zone_offset");
-	  String client_local_time = orderFormDataMap.get("client_local_time");
+	  String client_local_time = orderFormDataMap.get("client_local_time");	  
 	  
 	  //Logger.info("orders form " + ordersBoundForm.errorsAsJson().toString());
 	  //Logger.info("client form " + clientBoundForm.errorsAsJson().toString());

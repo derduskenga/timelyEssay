@@ -383,9 +383,10 @@ function updatePriceLabel(){
 
 function updateLabel(cost_per_page,order_total,per_unit_label,currency_symbol_2){
   //update the price region
-  $('#per-unit-label').html(per_unit_label);
-  $('#per-unit-value').html(currency_symbol_2 + "" + cost_per_page.toFixed(2));
-  $('#order-total-value').val(currency_symbol_2 + "" + order_total.toFixed(2));  
+  //$('#per-unit-label').html(per_unit_label);
+  //$('#per-unit-value').html(currency_symbol_2 + "" + cost_per_page.toFixed(2));
+  $('#order-total-label').html("Order Total " + currency_symbol_2 + "");
+  $('#order_total').val(order_total.toFixed(2));  
 }
 
 function getAdditions(){

@@ -139,7 +139,7 @@
 	    </div>
 	  }
 	  @for(orderList <- clientOrders.orderFiles){
-	    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> @orderList.file_name (@(Math.round((orderList.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB) <a href="#" class="file-shared-class" id="order-file-@orderList.id" title="click to download @orderList.file_name file">  <span class="glyphicon glyphicon-download" aria-hidden="true"></span></a><br>
+	    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> @orderList.file_name (@(Math.round((orderList.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB) <a href="#" class="file-shared-class" id="order-file-@orderList.id" title="click to download @orderList.file_name file">  <span class="fa fa-download file-download-icon" aria-hidden="true"></span></a><br>
 	  }
 	</div>
       }
@@ -186,7 +186,7 @@
 	  <tr>
 	    <td><strong> Type </strong></td>
 	    <td><strong> From </strong></td>
-	    <td><strong> Name </strong>(Click <img src="@routes.Assets.at("images/downloadimg.png")"/> to download)</td>
+	    <td><strong> Name </strong></td>
 	    <td><strong> Size </strong></td>
 	    <td><strong> Upload date </strong></td>
 	  </tr>
@@ -195,7 +195,7 @@
 	  <!--width="28" height="22"  -->
 	    <td> @productFiles.product_file_type.name() </td>
 	    <td> @productFiles.owner.name()</td>
-	    <td> @productFiles.file_name  <a href="#" title="download" class="product-file-shared-class" id="product-file-@productFiles.id"><img src="@routes.Assets.at("images/downloadimg.png")"/></a></td>
+	    <td> @productFiles.file_name  <a href="#" title="download" class="product-file-shared-class" id="product-file-@productFiles.id"><span class="fa fa-download file-download-icon"> </span></a></td>
 	    <td> @(Math.round((productFiles.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB</td>
 	    <td> @(productFiles.upload_date.format("YYYY-MM-dd HH:mm"))</td>
 	
@@ -266,7 +266,7 @@
 		<div class='col-sm-9'>
 		    <div class="form-group">					
 			<div class='input-group date' id='extend-to-date-input'>
-			    <span class="input-group-addon" id="sizing-addon1">Revision deadline&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			    <span class="input-group-addon" id="sizing-addon1">Revision deadline &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			    <input type="text" value="@clientOrders.order_deadline.format("YYYY-MM-dd HH:mm")" class="form-control" name ="revision_deadline" id="revision_deadline"/> 
 			</div>								
 		    </div>								

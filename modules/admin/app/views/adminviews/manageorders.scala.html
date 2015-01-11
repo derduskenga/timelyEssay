@@ -28,19 +28,19 @@
 				</thead>
 				<tbody>
 						@for(order <- activeOrders.getList()){
-								<tr>
-									<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a></td>
-									<td>@order.topic</td>
-									<td>@order.number_of_units</td>
-									<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
-									<td>@(new models.orders.Orders().computeDeadline(order.order_date, order.document_deadline).format("dd-MM-YYYY HH:mm"))</td>
-									<td>@order.spacing.spacing</td>
-									<td>@order.no_of_references</td>
-									<td>@order.writing_style</td>
-									<td>Files</td>
-									<td>Status</td>
-									<td>Writer</td>
-								</tr>
+						    <tr>
+							<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a></td>
+							<td>@order.topic</td>
+							<td>@order.number_of_units</td>
+							<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
+							<td>@(new models.orders.Orders().computeDeadline(order.order_date, order.document_deadline).format("dd-MM-YYYY HH:mm"))</td>
+							<td>@order.spacing.spacing</td>
+							<td>@order.no_of_references</td>
+							<td>@order.writing_style</td>
+							<td>Files</td>
+							<td>Status</td>
+							<td>Writer</td>
+						    </tr>
 						}
 				</tbody>
 			</table>
