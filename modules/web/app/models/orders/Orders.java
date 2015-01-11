@@ -44,6 +44,7 @@ public class Orders extends Model{
 	public boolean is_closed = false;
 	public boolean on_revision = false;
 	public int client_feedback;
+	public int additional_pages;
 	//Order Files and types of files (e.g for revision, additional files, reference materials, order product,draft)
 	//Order fines is an entity(id,date,amount,reason,removed)
 	//order revisions (id,revision instructions)

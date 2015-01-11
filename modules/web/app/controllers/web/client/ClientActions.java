@@ -424,7 +424,26 @@ public class ClientActions extends Controller{
 	}
 	
 	public static Result changePassword(){
-	  return TODO;
+	  JSONObject jobject = new JSONObject();
+	  Map<String, String[]> change_password_values = new HashMap<String,String[]>();
+	  change_password_values = request().body().asFormUrlEncoded();
+	  if(change_password_values.isEmpty()){
+	    jobject.put("success",0);
+	    jobject.put("message","An error occured. Try again");
+	    return ok(Json.parse(jobject.toString()));
+	  }
+	  String c_password_details[] = change_password_values.get("current_password");
+	  //current password
+	  String c_password = c_password_details[0];
+	  
+	  String n_password_details[] = change_password_values.get("new_password");
+	  //new password
+	  String n_password = n_password_details[0];
+	  
+	  //do you code here; if password change is successful, return the JSONObject as shoen belo
+	  jobject.put("success",1);
+	  jobject.put("message","Password has been changed");
+	  return ok(Json.parse(jobject.toString()));  
 	}
 	
 	public static Result pay(Long order_code){

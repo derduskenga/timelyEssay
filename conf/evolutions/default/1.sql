@@ -248,6 +248,7 @@ create table orders (
   is_closed                 boolean,
   on_revision               boolean,
   client_feedback           integer,
+  additional_pages          integer,
   client_id                 bigint,
   order_level_of_writing_id bigint,
   order_document_type_id    bigint,

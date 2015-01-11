@@ -205,7 +205,7 @@
 	      </form>
 	    </div>
 	}
-	  @if(!clientOrders.is_complete){
+	  @if(!clientOrders.is_complete && clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name == OrderCppMode.CppModes.perpage){
 	    <hr> <!--.........................................................................--> 
 	    <div id="deadline-form-admin"> 
 	      <form id="extra_pages_form" name="extra_pages_form" method="post" action="">		

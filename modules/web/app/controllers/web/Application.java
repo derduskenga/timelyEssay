@@ -5,6 +5,8 @@ import java.util.*;
 import java.text.*;
 import play.db.ebean.Model;
 import play.*;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 import play.mvc.*;
 import play.mvc.Http.Request;
@@ -443,22 +445,26 @@ public class Application extends Controller{
 	}
 	
 	public static Result setUserSession(Long order_code){
-	  Orders orders  = Orders.getOrderByCode(order_code);
-	  RandomString randomString = new RandomString(8);
-	  String random = randomString.nextString();
-	  try{
-			String hashedPassword =PasswordHash.createHash(random);
-			String[] params = hashedPassword.split(":");
-			Client client = orders.client;
-			client.password = params[0];
-			client.salt = params[1];
-			client.saveClient();
-			ClientMails cm = new ClientMails();
-			cm.sendRegisteredClientFirstEmail(client,random);
-	  }catch(Exception e){
-			Logger.error("Error creating hashed password",e);
+	  if(session().get("email") == null){/*if user is not logged in, create session, else, redirect to proceedToPay*/
+	    Orders orders  = Orders.getOrderByCode(order_code);
+	    RandomString randomString = new RandomString(8);
+	    String random = randomString.nextString();
+	    try{
+			  String hashedPassword = PasswordHash.createHash(random);
+			  String[] params = hashedPassword.split(":");
+			  Client client = orders.client;
+			  client.password = params[0];
+			  client.salt = params[1];
+			  client.saveClient();
+			  ClientMails cm = new ClientMails();
+			  cm.sendRegisteredClientFirstEmail(client,random);
+	    }catch(Exception e){
+			  Logger.error("Error creating hashed password",e);
+	    }
+	    setSession(orders);
+	    Logger.info("Created session for new user !");
 	  }
-	  setSession(orders);
+	  Logger.info("No need of session !");
 	  return redirect(controllers.web.client.routes.ClientActions.proceedToPay(order_code));
 	}
 	
@@ -466,8 +472,20 @@ public class Application extends Controller{
 	  return ok(forgotpassword.render(loginForm));
 	}
 	public static Result recoverPassword(){
-	  //you will extract email from the post form
-	  return TODO;
+	  //here we receive the client email for password recovery
+	  Map<String, String[]> recover_password_values = new HashMap<String,String[]>();
+	  recover_password_values = request().body().asFormUrlEncoded();
+	  if(recover_password_values.isEmpty()){
+	      flash("emailnotreceived","Your email may have been lost");
+	      return ok(forgotpassword.render(loginForm));
+	  }
+	 
+	  String recoverDetails[] = recover_password_values.get("recover_password_email");
+	  String email = recoverDetails[0];
+	  Logger.info("email is: " + email);
+	  //recove password and send to mail return this
+	  flash("recoveremailreceived","If we find this email in our database, we will send details to your email on how to change password");
+	  return ok(forgotpassword.render(loginForm));
 	}
 	public static void setSession(Orders orders){
 	  session().clear();
