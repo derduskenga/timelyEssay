@@ -48,6 +48,8 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import models.admin.security.NoUserDeadboltHandler;
 
 import com.avaje.ebean.Page;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 @Security.Authenticated(AdminSecured.class)
 @Restrict({@Group({"Writer Support"})})
@@ -85,71 +87,89 @@ public class ManageOrdersActions extends Controller{
 				File order_file = part.getFile();    
 				
 				if(order_file.length() > Utilities.FILE_UPLOAD_SIZE_LIMIT){
-				flash("fileuploadresponseerror","Please attach a file not exceeding 25 MB");
-				return badRequest(manageorder.render(orders,orderProductFileBoundForm));
+				  flash("fileuploadresponseerror","Please attach a file not exceeding 25 MB");
+				  return badRequest(manageorder.render(orders,orderProductFileBoundForm));
 				}   
 				
 				if(part.getContentType().equals("application/x-ms-dos-executable")){
-				flash("fileuploadresponseerror","File type not allowed!");
-				return badRequest(manageorder.render(orders,orderProductFileBoundForm));
+				  flash("fileuploadresponseerror","File type not allowed!");
+				  return badRequest(manageorder.render(orders,orderProductFileBoundForm));
 				}
 				try{
-				//orderFiles.order_file = Files.toByteArray(order_file);
-				orderFiles.orders = orders;
-				String file_name  = part.getFilename();
-				String file_key = part.getKey();
-				String contentType = part.getContentType();
-				Logger.info("file name:" + file_name + " file key:" + file_key + " content type:" + contentType);	      
-				//String myUploadPath = Play.application().configuration().getString("myUploadPath");
-				String uploadPath = Play.application().configuration().getString("orderfilespath", "/tmp/");
-				//order_file.renameTo(order_file,);
-				//order_file.renameTo(new File(uploadPath + file_name));
-				orderFiles.file_name = file_name;
-				orderFiles.content_type = contentType;
-				orderFiles.upload_date = new Date();
-				File destination = new File(uploadPath, order_file.getName());
-				orderFiles.file_size = order_file.length();
-				orderFiles.storage_path = destination.toPath().toString();
-				orderFiles.file_sent_to = FileOwner.OrderFileOwner.CLIENT;
-				orderFiles.owner = FileOwner.OrderFileOwner.SUPPORT;
-				String product_file_type = form().bindFromRequest().get("product_file_type");
-				if(product_file_type.equals("")){
-					flash("fileuploadresponseerror","Could not upload file. Select File type.");
-					return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
-				}
-				if(product_file_type.equals("PRODUCT")){
-					orderFiles.product_file_type=FileType.ProductFileType.PRODUCT;
-					orders.is_complete = true;
-				}else if(product_file_type.equals("DRAFT"))
-					orderFiles.product_file_type=FileType.ProductFileType.DRAFT;
-				else if(product_file_type.equals("REVISION")){
-					orders.is_complete = true;
-					orderFiles.product_file_type=FileType.ProductFileType.REVISION;
-				}else if(product_file_type.equals("REFERENCE_MATERIAL"))
-					orderFiles.product_file_type=FileType.ProductFileType.REFERENCE_MATERIAL;
-				else if(product_file_type.equals("ADDITIONAL_FILE"))
-					orderFiles.product_file_type=FileType.ProductFileType.ADDITIONAL_FILE;
-				else if(product_file_type.equals("OTHER"))
-					orderFiles.product_file_type=FileType.ProductFileType.OTHER;
-				//FileUtils.moveFile(order_file, destination);
-				Files.move(order_file,destination);
-				Logger.info("File path:" + destination.toPath().toString());
-				flash("fileuploadresponsesuccess","Your file has been uploaded");
-				orderFiles.saveProductFile();
-				orders.saveOrder();
-				return redirect(controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(orders.order_code));
+				  //orderFiles.order_file = Files.toByteArray(order_file);
+				  orderFiles.orders = orders;
+				  String file_name  = part.getFilename();
+				  String file_key = part.getKey();
+				  String contentType = part.getContentType();
+				  Logger.info("file name:" + file_name + " file key:" + file_key + " content type:" + contentType);	      
+				  //String myUploadPath = Play.application().configuration().getString("myUploadPath");
+				  String uploadPath = Play.application().configuration().getString("orderfilespath", "/tmp/");
+				  //order_file.renameTo(order_file,);
+				  //order_file.renameTo(new File(uploadPath + file_name));
+				  orderFiles.file_name = file_name;
+				  orderFiles.content_type = contentType;
+				  orderFiles.upload_date = new Date();
+				  File destination = new File(uploadPath, order_file.getName());
+				  orderFiles.file_size = order_file.length();
+				  orderFiles.storage_path = destination.toPath().toString();
+				  orderFiles.file_sent_to = FileOwner.OrderFileOwner.CLIENT;
+				  orderFiles.owner = FileOwner.OrderFileOwner.SUPPORT;
+				  String product_file_type = form().bindFromRequest().get("product_file_type");
+				  if(product_file_type.equals("")){
+					  flash("fileuploadresponseerror","Could not upload file. Select File type.");
+					  return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
+				  }
+				  if(product_file_type.equals("PRODUCT")){
+					  orderFiles.product_file_type=FileType.ProductFileType.PRODUCT;
+					  orders.is_complete = true;
+				  }else if(product_file_type.equals("DRAFT"))
+					  orderFiles.product_file_type=FileType.ProductFileType.DRAFT;
+				  else if(product_file_type.equals("REVISION")){
+					  orders.is_complete = true;
+					  orderFiles.product_file_type=FileType.ProductFileType.REVISION;
+				  }else if(product_file_type.equals("REFERENCE_MATERIAL"))
+					  orderFiles.product_file_type=FileType.ProductFileType.REFERENCE_MATERIAL;
+				  else if(product_file_type.equals("ADDITIONAL_FILE"))
+					  orderFiles.product_file_type=FileType.ProductFileType.ADDITIONAL_FILE;
+				  else if(product_file_type.equals("OTHER"))
+					  orderFiles.product_file_type=FileType.ProductFileType.OTHER;
+				  //FileUtils.moveFile(order_file, destination);
+				  Files.move(order_file,destination);
+				  Logger.info("File path:" + destination.toPath().toString());
+				  flash("fileuploadresponsesuccess","Your file has been uploaded");
+				  orderFiles.saveProductFile();
+				  orders.saveOrder();
+				  return redirect(controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(orders.order_code));
 				}catch (IOException ioe) {
-				Logger.error("Server error on file upload: " + ioe.getMessage().toString());
-				flash("fileuploadresponseerror","Server error. Please try again");
-				return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
+				  Logger.error("Server error on file upload: " + ioe.getMessage().toString());
+				  flash("fileuploadresponseerror","Server error. Please try again");
+				  return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
 				}catch(Exception ex){
-				Logger.error("Server error on file upload: " + ex.getMessage().toString());
-				flash("fileuploadresponseerror","Server error. Please try again");
-				return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
+				  Logger.error("Server error on file upload: " + ex.getMessage().toString());
+				  flash("fileuploadresponseerror","Server error. Please try again");
+				  return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
 				}
 				
 			}
 			flash("fileuploadresponseerror","No file was selected");
-					return badRequest(manageorder.render(orders,orderProductFileBoundForm));
+			return badRequest(manageorder.render(orders,orderProductFileBoundForm));
 		}
+	public static Result AskForExtraPages(int pages, Long order_code){
+		Orders order = Orders.getOrderByCode(order_code);
+		
+		JSONObject jsonobject = new JSONObject();
+		if(order == null){
+		  jsonobject.put("success",0);
+		  jsonobject.put("message","Order was not found");
+		  return ok(Json.parse(jsonobject.toString()));
+		}
+		order.additional_pages = pages;
+		//CREATE A MESSAGE TO BE SENT TO THE CLIENT FOR SUCH REQUEST
+		//double new_order_total = order.computeOrderTotalForAdditionalPages(order);
+		//order.order_total = new_order_total;
+		order.saveOrder();
+		jsonobject.put("success",1);
+		jsonobject.put("message","Your request has been sent to the client");
+		return ok(Json.parse(jsonobject.toString()));
+	}
 }

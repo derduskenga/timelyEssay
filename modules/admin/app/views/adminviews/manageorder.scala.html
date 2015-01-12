@@ -34,7 +34,7 @@
 		</tr>
 		@if(clientOrders.client.orders.size()>1){
 			<tr>
-				<td>Other Orders</td>
+				<td>Other orders for this client</td>
 				<td>@for(order<-clientOrders.client.orders){@if(order.order_code != clientOrders.order_code){ <a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a> }}</td>
 			</tr>
 		}
@@ -48,16 +48,25 @@
 			<td><p>@if(clientOrders.is_paid == false){<strong class="text-danger">NOT PAID</strong>}else{Paid}</p></td>
 		</tr>
 		<tr>
-		<td>Order code</td>
-		<td>@clientOrders.order_code</td>
+			<td>Order code</td>
+			<td>@clientOrders.order_code</td>
 		</tr>
+		
 		<tr>
-		<td>Order status</td>
-		<td>@if(clientOrders.is_writer_assigned == false){Awaiting writer}else{Worked on}</td>
+		  <td>Order Total</td>	  <td><strong>@clientOrders.orderCurrence.currency_symbol_2@(Math.round(clientOrders.order_total*clientOrders.orderCurrence.convertion_rate*100)/100.00)</strong></td>
+		</tr>
+		
+		<tr>
+		  <td>Amount paid</td>  <td><strong>@clientOrders.orderCurrence.currency_symbol_2@(Math.round(clientOrders.amount_paid*clientOrders.orderCurrence.convertion_rate*100)/100.00)</strong></td>
+		</tr>
+		
+		<tr>
+			<td>Order status</td>
+			<td>@if(clientOrders.is_writer_assigned == false){Awaiting writer}else{Worked on}</td>
 		</tr> 
 		<tr>
-		<td>Document type</td>
-		<td>@clientOrders.orderDocumentType.document_type_name</td>
+			<td>Document type</td>
+			<td>@clientOrders.orderDocumentType.document_type_name</td>
 		</tr>      
 	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() != OrderCppMode.CppModes.perassignment.toString()){
 		<tr>      
@@ -66,23 +75,23 @@
 		</tr>
 	}
 		<tr>
-		<td>Topic</td>
-		<td>@clientOrders.topic</td>
+			<td>Topic</td>
+			<td>@clientOrders.topic</td>
 		</tr>
 	
 		<tr>
-		<td>Style</td>
-		<td>@clientOrders.writing_style</td>
+			<td>Style</td>
+			<td>@clientOrders.writing_style</td>
 		</tr>
 	
 		<tr>
-		<td>No. of sources/references</td>
-		<td>@clientOrders.no_of_references</td>
+			<td>No. of sources/references</td>
+			<td>@clientOrders.no_of_references</td>
 		</tr>
 	    
 		<tr>
-		<td>Want order after</td>
-		<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(Approx deadline @(clientOrders.order_deadline.getYear()+1900)/@(clientOrders.order_deadline.getMonth()+1)/@clientOrders.order_deadline.getDate() @clientOrders.order_deadline.getHours():@if(clientOrders.order_deadline.getMinutes()<10){0@clientOrders.order_deadline.getMinutes()}else{@clientOrders.order_deadline.getMinutes()})</span> </td>
+			<td>Want order after</td>
+			<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(Approx deadline @(clientOrders.order_deadline.getYear()+1900)/@(clientOrders.order_deadline.getMonth()+1)/@clientOrders.order_deadline.getDate() @clientOrders.order_deadline.getHours():@if(clientOrders.order_deadline.getMinutes()<10){0@clientOrders.order_deadline.getMinutes()}else{@clientOrders.order_deadline.getMinutes()})</span> </td>
 		</tr>
 		<tr>
 			<td>Order deadline</td>
@@ -144,10 +153,7 @@
 	    </td>
 	  </tr> 	
 	}      
-	<tr>
-	  <td>Order Total</td> 
-	  <td><strong>@clientOrders.orderCurrence.currency_symbol_2@(Math.round(clientOrders.order_total*clientOrders.orderCurrence.convertion_rate*100)/100.00)</strong></td>
-	</tr>
+
 	  <tr>
 	    <td>Messages</td>
 	    <td><a href="#">0(all Messages) (0 Unread (those sent to support by writers and client))</a></td>
@@ -208,6 +214,7 @@
 	  @if(!clientOrders.is_complete && clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name == OrderCppMode.CppModes.perpage){
 	    <hr> <!--.........................................................................--> 
 	    <div id="deadline-form-admin"> 
+	      
 	      <form id="extra_pages_form" name="extra_pages_form" method="post" action="">		
 		<div class="">							
 		    <legend>Request for additional pages</legend> <br>	
@@ -217,7 +224,7 @@
 			    <div class="form-group">					
 				<div class='input-group' id=''>
 				    <span class="input-group-addon" id="sizing-addon1">Extra pages</span>
-				    <input type="number" value="" data-fv-integer-message="The value is not an integer" class="form-control input-sm" name="extra_pages" id="extra_pages"/>
+				    <input type="number" value="" min="1" max="@Math.round((clientOrders.number_of_units/2))" data-fv-integer-message="The value is not an integer" class="form-control input-sm" name="extra_pages" id="extra_pages"/>
 				</div>								
 			    </div>								
 			</div>

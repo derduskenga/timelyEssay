@@ -23,6 +23,7 @@ POST			/manageorder/uploadfile/:order_code			controllers.admincontrollers.Manage
 GET												/login											controllers.admincontrollers.Application.login()
 POST											/login											controllers.admincontrollers.Application.authenticate()
 GET												/logout											controllers.admincontrollers.Application.logout()
+POST		/manageorder/askforextrapages/:pages/:order_code	controllers.admincontrollers.ManageOrdersActions.AskForExtraPages(pages:Int,order_code:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 #GET     /assets/*file               controllers.admincontrollers.Assets.versioned(path="/public", file: Asset)

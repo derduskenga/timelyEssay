@@ -3,11 +3,24 @@ $(document).ready(function(){
   askDeadlineExtensionAdmin();
   askForExtraPages();
   
+  submitAskForExtraPages();
+  
   jQuery('#order_deadline_admin').datetimepicker({
     format:'Y-m-d H:i'
   });
   
 });
+
+function submitAskForExtraPages(){
+  $('#extra-pages-btn').click(function(event){
+    event.preventDefault();
+    var pages = $('#extra_pages').val();
+    var order_code = $('#order-code-admin').text();
+    $.post("/manageorder/askforextrapages/" + pages + "/" + order_code,{}, function(data){
+       //A NEW TOTAL RETURNED HERE SHOULD UPLDATE THE CURRENT LABEL
+    },'json');
+  });
+}
 
 function askForExtraPages(){
       $('#extra_pages_form').bootstrapValidator({

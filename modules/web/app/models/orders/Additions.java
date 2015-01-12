@@ -66,14 +66,25 @@ public class Additions extends Model{
       }
       
       public static double getTotalAdditions(Orders newOrders){
-	List<Additions> orderAdditions = newOrders.additions;
-	double order_additions = 0.0;
-	if(orderAdditions != null){
-	  for(Additions aList:orderAdditions){
-	    order_additions = order_additions + aList.additional_price;
+	  List<Additions> orderAdditions = newOrders.additions;
+	  double order_additions = 0.0;
+	  if(orderAdditions != null){
+	    for(Additions aList:orderAdditions){
+	      order_additions = order_additions + aList.additional_price;
+	    }
 	  }
-	}
-	return order_additions*newOrders.number_of_units*newOrders.orderDocumentType.additions_factor;
+	  return order_additions*newOrders.number_of_units*newOrders.orderDocumentType.additions_factor;
+      }
+      
+      public static double getTotalAdditionsForAdditionalPages(Orders newOrders){
+	  List<Additions> orderAdditions = newOrders.additions;
+	  double order_additions = 0.0;
+	  if(orderAdditions != null){
+	    for(Additions aList:orderAdditions){
+	      order_additions = order_additions + aList.additional_price;
+	    }
+	  }
+	  return order_additions*newOrders.additional_pages*newOrders.orderDocumentType.additions_factor;
       }
       
       public static JSONArray getAdditionsArray(){

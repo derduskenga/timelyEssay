@@ -44,7 +44,7 @@ public class Orders extends Model{
 	public boolean is_closed = false;
 	public boolean on_revision = false;
 	public int client_feedback;
-	public int additional_pages;
+	public int additional_pages = 0;
 	//Order Files and types of files (e.g for revision, additional files, reference materials, order product,draft)
 	//Order fines is an entity(id,date,amount,reason,removed)
 	//order revisions (id,revision instructions)
@@ -163,6 +163,81 @@ public class Orders extends Model{
 	  return OrderDeadlines.getOrderDeadlinesByValue(Long.valueOf(dValue));
 	}
 	
+	public double computeOrderTotalForAdditionalPages(Orders newOrder){
+	      double order_value = 0.0; 
+	      double cost_per_unit = 0.0;
+	      if(newOrder.orderDocumentType.orderCppMode.order_cpp_mode_name.name().toString().equals(OrderCppMode.CppModes.perassignment.toString())){
+		//perassignment
+		Logger.info("type:perassignment");
+		double base_price = newOrder.orderDocumentType.base_price;
+		double deadline_additional_price = 0.0;
+		OrderDeadlines deadline = OrderDeadlines.getOrderDeadlinesByValue(Long.valueOf(newOrder.document_deadline));
+		List<DeadlineDeadlineCategoryAssociation> ddca = deadline.deadlineDeadlineCategoryAssociation;
+		for(DeadlineDeadlineCategoryAssociation d:ddca){
+		  if(d.orderDeadlineCategory.id == newOrder.orderDocumentType.orderDeadlineCategory.id){
+		    deadline_additional_price = d.additional_price;
+		    Logger.info("deadline_additional_price:"+deadline_additional_price);
+		  }
+		}
+		
+		double level_of_writing_additional_price = newOrder.orderLevelOfWriting.additional_price;
+		int number_of_units = newOrder.number_of_units;//number of assignments
+		double total_additions = Additions.getTotalAdditions(newOrder) + Additions.getTotalAdditionsForAdditionalPages(newOrder);
+		
+		cost_per_unit = base_price + deadline_additional_price + level_of_writing_additional_price;
+		order_value = (cost_per_unit*(number_of_units+newOrder.additional_pages)) + total_additions;
+		
+	      }else if(newOrder.orderDocumentType.orderCppMode.order_cpp_mode_name.name().toString().equals(OrderCppMode.CppModes.perpage.toString())){
+		//per_page
+		Logger.info("type:per_page");
+		double base_price = newOrder.orderDocumentType.base_price;
+		double deadline_additional_price = 0.0;
+		OrderDeadlines deadline = OrderDeadlines.getOrderDeadlinesByValue(Long.valueOf(newOrder.document_deadline));
+		
+		List<DeadlineDeadlineCategoryAssociation> ddca = deadline.deadlineDeadlineCategoryAssociation;
+		for(DeadlineDeadlineCategoryAssociation d:ddca){
+		  if(d.orderDeadlineCategory.id == newOrder.orderDocumentType.orderDeadlineCategory.id){
+		    deadline_additional_price = d.additional_price;
+		    Logger.info("deadline_additional_price:"+deadline_additional_price);
+		  }
+		}
+		
+		double subject_additinal_price = newOrder.orderSubject.orderSubjectCategory.additional_price;
+		double level_of_writing_additional_price = newOrder.orderLevelOfWriting.additional_price;
+		int number_of_units = newOrder.number_of_units;//number of pages  
+		double total_additions = Additions.getTotalAdditions(newOrder) + Additions.getTotalAdditionsForAdditionalPages(newOrder);
+		int spacing_factor = newOrder.spacing.factor;
+		
+		cost_per_unit = (base_price + deadline_additional_price + level_of_writing_additional_price+subject_additinal_price)*spacing_factor;
+		
+		order_value = (cost_per_unit*(number_of_units+newOrder.additional_pages)) + (total_additions*spacing_factor);
+	      }else{	  
+	      //per question
+		Logger.info("type:per_question");
+		double base_price = newOrder.orderDocumentType.base_price;
+		double deadline_additional_price = 0.0;
+		OrderDeadlines deadline = OrderDeadlines.getOrderDeadlinesByValue(Long.valueOf(newOrder.document_deadline));
+		List<DeadlineDeadlineCategoryAssociation> ddca = deadline.deadlineDeadlineCategoryAssociation;
+		for(DeadlineDeadlineCategoryAssociation d:ddca){
+		  if(d.orderDeadlineCategory.id == newOrder.orderDocumentType.orderDeadlineCategory.id){
+		    deadline_additional_price = d.additional_price;
+		    Logger.info("deadline_additional_price:"+deadline_additional_price);
+		  }
+		}
+		
+		double subject_additinal_price = newOrder.orderSubject.orderSubjectCategory.additional_price;
+		Logger.info("subject_additinal_price:" + subject_additinal_price);
+		double level_of_writing_additional_price = newOrder.orderLevelOfWriting.additional_price;
+		int number_of_units = newOrder.number_of_units;//number of questions  
+		double total_additions = Additions.getTotalAdditions(newOrder) + Additions.getTotalAdditionsForAdditionalPages(newOrder);
+		
+		cost_per_unit = (base_price + deadline_additional_price + level_of_writing_additional_price+subject_additinal_price);
+		
+		order_value = (cost_per_unit*(number_of_units+newOrder.additional_pages)) + total_additions;
+	      }
+	      return Math.round(order_value*100)/100.00;
+	}
+	
 	public double computeOrderTotal(Orders newOrder){
 	  double order_value = 0.0; 
 	  double cost_per_unit = 0.0;
@@ -240,7 +315,8 @@ public class Orders extends Model{
 	    order_value = (cost_per_unit*number_of_units) + total_additions;
 	  }
 	  return Math.round(order_value*100)/100.00;
-	}	
+	}
+	
 	public Date computeDeadline(Date date, int sec){
 	  Calendar calender = Calendar.getInstance();
 	  calender.setTimeInMillis(date.getTime()); 
