@@ -493,7 +493,6 @@ public class Application extends Controller{
 	  session("f_name", orders.client.f_name);
 	  session("l_name", orders.client.l_name);
 	}
-	
 	public static class Login {
 		public String email;
 		public String password;

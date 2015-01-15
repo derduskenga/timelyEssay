@@ -4,7 +4,7 @@
     <label class="col-sm-3 control-label" for="@field.id">@label</label>
     <div class="@divClass">
       <select
-        class="form-control"
+        class="form-control input-sm"
         id="@field.id"
         name="@if(isMultiple) {@(field.name + "[]")} else {@field.name}"
         @if(isMultiple) {multiple="multiple"}>

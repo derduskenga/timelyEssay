@@ -232,7 +232,7 @@ function validateForPerAssignmentBasis(){
 	operating_system:{
 	  validators:{
 	    notEmpty:{
-	      message:'Please select database'
+	      message:'Please select operating system (OS)'
 	    }
 	  }
 	},

@@ -112,5 +112,6 @@ public class Client extends Model{
 	public static List<PreferredWriter> getPreferedWriters(){
 		return preferredWriterFinder.all();
 	}
+	
 		
 } 

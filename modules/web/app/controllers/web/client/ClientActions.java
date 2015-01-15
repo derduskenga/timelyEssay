@@ -159,7 +159,7 @@ public class ClientActions extends Controller{
 	  if(orders == null){
 	    return ok(clientvieworder.render(new Orders(),orderFilesForm,new OrderMessages().getUnreadMessages(order_code)));
 	  }
-	  return ok(clientvieworder.render(orders,orderFilesForm,new OrderMessages().getUnreadMessages(order_code)));
+	  return ok(clientvieworder.render(orders.orderClientLocalTime(orders),orderFilesForm,new OrderMessages().getUnreadMessages(order_code)));
 	}
 	
 	public static Result saveOrderFile(Long order_code){
@@ -171,7 +171,7 @@ public class ClientActions extends Controller{
 	  Form<OrderFiles> orderFileBoundForm = orderFilesForm.bindFromRequest();
 	  if(orderFileBoundForm.hasErrors()) {
 	    flash("fileuploadresponseerror","There was an error.");
-	    return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
+	    return badRequest(clientvieworder.render(orders.orderClientLocalTime(orders),orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
 	  }
 	  OrderFiles orderFiles = orderFileBoundForm.get();
 	  MultipartFormData body = request().body().asMultipartFormData();
@@ -181,12 +181,12 @@ public class ClientActions extends Controller{
 	    
 	    if(order_file.length() > Utilities.FILE_UPLOAD_SIZE_LIMIT){
 	      flash("fileuploadresponseerror","Please attach a file not exceeding 25 MB");
-	      return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
+	      return badRequest(clientvieworder.render(orders.orderClientLocalTime(orders),orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
 	    }   
 	    
 	    if(part.getContentType().equals("application/x-ms-dos-executable")){
 	      flash("fileuploadresponseerror","File not allowed!");
-	      return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
+	      return badRequest(clientvieworder.render(orders.orderClientLocalTime(orders),orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
 	    }
 	      try{
 		//orderFiles.order_file = Files.toByteArray(order_file);
@@ -216,16 +216,16 @@ public class ClientActions extends Controller{
 	      }catch (IOException ioe){
 		Logger.error("Server error on file upload:");
 		flash("fileuploadresponseerror","Server error. Please try again");
-		return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code))); 
+		return badRequest(clientvieworder.render(orders.orderClientLocalTime(orders),orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code))); 
 	      }catch(Exception ex){
 		Logger.error("Server error on file upload:");
 		flash("fileuploadresponseerror","Server error. Please try again");
-		return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code))); 
+		return badRequest(clientvieworder.render(orders.orderClientLocalTime(orders),orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code))); 
 	      }
 	      
 	  }
 	  flash("fileuploadresponseerror","No file was selected");
-	  return badRequest(clientvieworder.render(orders,orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
+	  return badRequest(clientvieworder.render(orders.orderClientLocalTime(orders),orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
 	}
 	
 	public static Result downloadOrderFile(Long file_id){
@@ -267,22 +267,18 @@ public class ClientActions extends Controller{
 	}
 	
 	public static Result VoluntaryDeadlineExtension(String new_date, Long order_code){
-	  Date newOrderDate = new Date();
 	  JSONObject jobject = new JSONObject();
 	  try{
-	    SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	    isoFormat.setTimeZone(TimeZone.getDefault());
-	    newOrderDate = isoFormat.parse(new_date);
 	    Orders orders = Orders.getOrderByCode(order_code);
-	    orders.order_deadline = newOrderDate;
+	    if(orders == null){
+	      jobject.put("success",0);
+	      jobject.put("message","Order was not found");
+	      return ok(Json.parse(jobject.toString()));
+	    }
+	    orders.order_deadline = orders.newUtcOrderDeadline(new_date,orders);
 	    orders.saveOrder();
 	    jobject.put("success",1);
 	    jobject.put("message","Deadline has been extended");
-	    return ok(Json.parse(jobject.toString()));    
-	  }catch(ParseException pe){
-	    Logger.error("ParseException error" + pe.getMessage().toString());
-	    jobject.put("success",0);
-	    jobject.put("message","An error occured");
 	    return ok(Json.parse(jobject.toString()));    
 	  }catch(Exception ex){
 	    Logger.error("Exception error" + ex.getMessage().toString());

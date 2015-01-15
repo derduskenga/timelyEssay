@@ -7,6 +7,7 @@ import models.client.Client;
 import models.utility.Utilities;
 import play.Logger;
 import com.avaje.ebean.*;
+import java.text.*;
 
 
 @Entity
@@ -336,4 +337,35 @@ public class Orders extends Model{
 	  return "";
 	}
 	
+	public Date newUtcOrderDeadline(String deadline, Orders order){
+	  int client_offset = Integer.parseInt(order.client.client_time_zone_offset);
+	  Logger.info("client_offset in Integer:" + client_offset);
+	  TimeZone tz = order.client.client_time_zone_real;
+	  
+	  Calendar calender = Calendar.getInstance(); 
+	  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	  isoFormat.setTimeZone(tz);
+	  Date newOrderDate = new Date();
+	  try{
+	    Date orderDate = isoFormat.parse(deadline);
+	    calender.setTimeInMillis(orderDate.getTime());
+	    calender.add(Calendar.MINUTE,client_offset);//get UTC time to be stored
+	    newOrderDate = calender.getTime();
+	  }catch(ParseException pe){
+	    Logger.error(pe.getMessage().toString());
+	  }	  
+	  return newOrderDate;
+	}
+	
+	public Orders orderClientLocalTime(Orders order){
+	  //This is a deadline
+	  Date utcTime = order.order_deadline;
+	  int client_offset = Integer.parseInt(order.client.client_time_zone_offset);
+	  Calendar calender = Calendar.getInstance();
+	  calender.setTimeInMillis(utcTime.getTime());
+	  calender.add(Calendar.MINUTE,(client_offset*(-1)));//get local time
+	  Date localTime = calender.getTime();
+	  order.order_deadline = localTime;
+	  return order;
+	}
 } 

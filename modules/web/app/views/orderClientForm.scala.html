@@ -54,22 +54,22 @@
 
 	<div class="row form-inline" id="client-mobile-phone">
 	  <label class="col-sm-3 control-label">Phone number</label><br>
-	  <div class="col-sm-7">	    
+	  <div class="col-sm-9">	    
 	    @fieldtemplates.shortText(clientForm("country_code"),
 	      size="5",
-	      maxSize="4",
+	      maxSize="6",
 	      activity="readonly")
 	    
 	    @fieldtemplates.shortText(clientForm("area_code"),
 	      label="-",
-	      size="6",
+	      size="8",
 	      maxSize="4",
 	      activity="",
 	      placeholder="area code")
 	    
 	    @fieldtemplates.shortText(clientForm("phone_number"),
 	      label="-",
-	      size="12",
+	      size="14",
 	      maxSize="8",
 	      activity="",
 	      placeholder="number")
@@ -116,7 +116,7 @@
 	  label = "Order Urgency",
 	  optionMap=documentDeadlines,
 	  default="Urgency",
-	  includeStaticDefault=false,divClass="col-sm-6"
+	  includeStaticDefault=false,divClass="col-sm-9"
 	)
 	
 	<div id="order-subject-area">
@@ -142,7 +142,7 @@
 	  label = "Select number of pages/assignments/questions",
 	  optionMap=numberOfUnitsMap,
 	  default="--select--",
-	  includeStaticDefault=true,divClass="col-sm-6"
+	  includeStaticDefault=true,divClass="col-sm-9"
 	)	
 		
 	<div id="spacing-area">
@@ -156,7 +156,7 @@
 	  label = "Level",
 	  optionMap=levelOfWriting,
 	  default="Select document type",
-	  includeStaticDefault=false,divClass="col-sm-6"
+	  includeStaticDefault=false,divClass="col-sm-9"
 	)
 	
 	@currencyradiobuttons(orderForm("order_currency"),
@@ -173,21 +173,21 @@
 	  label="No. of References",
 	  optionMap=refMap,
 	  isDefaultSelect=false,
-	  divClass="col-sm-2",
+	  divClass="col-sm-9",
 	  default="--select--"
 	)
 
 	<div id="os-language-database" class="hidden">
 	  @fieldtemplates.osmultiselect(orderForm("operating_system"),
 	    label="Operating system",
-	    optionMap=styleMap,divClass="col-sm-6"
+	    optionMap=styleMap,divClass="col-sm-9"
 	  )
 	  
 	  @fieldtemplates.select(orderForm("prog_language"),
 	    label="Programing language",
 	    optionMap=languageMap,
 	    isDefaultSelect=true,
-	    divClass="col-sm-4",
+	    divClass="col-sm-9",
 	    default="--select language--"
 	  )
 	  
@@ -195,7 +195,7 @@
 	    label="Database",
 	    optionMap=databaseMap,
 	    isDefaultSelect=true,
-	    divClass="col-sm-4",
+	    divClass="col-sm-9",
 	    default="--select database--"
 	  )  
 	</div><!--End of os-language-database-->
@@ -215,7 +215,8 @@
 	  
 	  @fieldtemplates.text(orderForm("prefered_writer"),
 	    label = "Prefered writer ID",
-	    divClass="col-sm-7",
+	    placeholder="Leave blank if you do not have prefered writer",
+	    divClass="col-sm-9",
 	    help="If you have already used this writing service, enter the Id of the writer you would love to complete your work. If your prefered writer acceptes this order, you will pay 10% more, which will go directly to the writer")
 	  
       </div>

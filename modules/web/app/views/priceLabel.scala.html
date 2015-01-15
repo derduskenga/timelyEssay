@@ -1,10 +1,8 @@
 @(orderForm: Form[orders.Orders])(currenceList:Map[orders.OrderCurrence,Boolean])
 <div id="sticky-anchor"></div>
-<div class="stick col-sm-12" id="sticky">
-    <h3 align="center">
+<div class="stick col-sm-12" id="sticky" style="height:40px;">
+      <p class="text-right">
 	  <span id="order-total-label"> Order Total @for((ke,value)<-currenceList){@if(value==true){@ke.currency_symbol_2}}</span>   
 	  <input id="order_total" type="text" class="asd" name="order_total" value="@orderForm("order_total").valueOr("0. 00")" readonly/>
-    </h3>  
+      </p>
 </div>
-
-<!--@for((ke,value)<-currenceList){@if(value==true){@ke.currency_symbol_2 0.00 }} @orderForm("order_total").valueOr("")-->
