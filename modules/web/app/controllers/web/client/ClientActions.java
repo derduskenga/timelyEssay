@@ -9,6 +9,7 @@ import models.orders.OrderFiles;
 import models.orders.OrderRevision;
 import models.orders.OrderProductFiles;
 import models.orders.MessageParticipants;
+import models.common.security.PasswordHash;
 import play.data.Form;
 import models.client.PreferredWriter;
 import models.common.mailing.Mailing;
@@ -420,7 +421,8 @@ public class ClientActions extends Controller{
 	}
 	
 	public static Result changePassword(){
-	  JSONObject jobject = new JSONObject();
+	    JSONObject jobject = new JSONObject();
+	  try{
 	  Map<String, String[]> change_password_values = new HashMap<String,String[]>();
 	  change_password_values = request().body().asFormUrlEncoded();
 	  if(change_password_values.isEmpty()){
@@ -436,10 +438,36 @@ public class ClientActions extends Controller{
 	  //new password
 	  String n_password = n_password_details[0];
 	  
+	  String email = session().get("email");
+	  Client client =  (email == null)? null : Client.getClient(email);
+	  if(client == null){
+			jobject.put("success",0);
+			jobject.put("message","An error occured. Try again.");
+			return ok(Json.parse(jobject.toString()));
+	  }
+	    
+	 Boolean valid = PasswordHash.validatePassword(c_password, client.password+":"+client.salt);	
+		if(valid){
+					String hashedPassword = PasswordHash.createHash(n_password);
+					String[] params = hashedPassword.split(":");				
+					client.password = params[0];
+					client.salt = params[1];
+					client.saveClient();
+		}else{
+				jobject.put("success",0);
+				jobject.put("message","Current password entered is invalid.");
+				return ok(Json.parse(jobject.toString()));
+		}
 	  //do you code here; if password change is successful, return the JSONObject as shoen belo
 	  jobject.put("success",1);
 	  jobject.put("message","Password has been changed");
 	  return ok(Json.parse(jobject.toString()));  
+	  }catch(Exception e){
+					Logger.error("Error creating hashed password",e);
+					jobject.put("success",0);
+					jobject.put("message","An error occured. Try again.");
+					return ok(Json.parse(jobject.toString()));
+	 }
 	}
 	
 	public static Result pay(Long order_code){
