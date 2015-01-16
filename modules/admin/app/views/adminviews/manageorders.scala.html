@@ -1,5 +1,6 @@
 @(activeOrders:com.avaje.ebean.Page[models.orders.Orders])(completedOrders:com.avaje.ebean.Page[models.orders.Orders])(closedOrders:com.avaje.ebean.Page[models.orders.Orders])
 @import models.orders._
+@import controllers.admincontrollers._
 @adminmain("Manage Orders"){
 <div class="col-md-10" id="mainbody"><!-- start of main body -->
     <ul class="nav nav-tabs">
@@ -33,8 +34,8 @@
 							<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a></td>
 							<td>@order.topic</td>
 							<td>@order.number_of_units</td>
-							<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
-							<td>@(new models.orders.Orders().computeDeadline(order.order_date, order.document_deadline).format("dd-MM-YYYY HH:mm"))</td>
+							<td>@ManageOrdersActions.orderSupportLocalTime(order.order_date,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</td>
+							<td>@ManageOrdersActions.orderSupportLocalTime(order.order_deadline,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</td>
 							<td>@if(order.orderDocumentType.orderCppMode.order_cpp_mode_name == OrderCppMode.CppModes.perpage){@order.spacing.spacing}</td>
 							<td>@order.no_of_references</td>
 							<td>@order.writing_style</td>
@@ -81,8 +82,8 @@
 								<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a></td>
 								<td>@order.topic</td>
 								<td>@order.number_of_units</td>
-								<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
-								<td>@(new models.orders.Orders().computeDeadline(order.order_date, order.document_deadline).format("dd-MM-YYYY HH:mm"))</td>
+								<td>@ManageOrdersActions.orderSupportLocalTime(order.order_date,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</td>
+								<td>@ManageOrdersActions.orderSupportLocalTime(order.order_deadline,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</td>
 								<td>@order.spacing.spacing</td>
 								<td>@order.no_of_references</td>
 								<td>@order.writing_style</td>
@@ -131,8 +132,8 @@
 							<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">@order.order_code</a></td>
 							<td>@order.topic</td>
 							<td>@order.number_of_units</td>
-							<td>@order.order_date.format("dd-MM-YYYY HH:mm")</td>
-							<td>@(new models.orders.Orders().computeDeadline(order.order_date, order.document_deadline).format("dd-MM-YYYY HH:mm"))</td>
+							<td>@ManageOrdersActions.orderSupportLocalTime(order.order_date,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</td>
+							<td>@ManageOrdersActions.orderSupportLocalTime(order.order_deadline,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</td>
 							<td>@order.spacing.spacing</td>
 							<td>@order.no_of_references</td>
 							<td>@order.writing_style</td>

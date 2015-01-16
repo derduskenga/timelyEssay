@@ -46,6 +46,7 @@ public class Orders extends Model{
 	public boolean on_revision = false;
 	public int client_feedback;
 	public int additional_pages = 0;
+	public String source_domain;
 	//Order Files and types of files (e.g for revision, additional files, reference materials, order product,draft)
 	//Order fines is an entity(id,date,amount,reason,removed)
 	//order revisions (id,revision instructions)
@@ -128,6 +129,7 @@ public class Orders extends Model{
 	  }
 	  for(Orders order: ordersList){
 	    List<OrderMessages> messagesList = order.orderMessages;
+	    order = orderClientLocalTime(order);
 	    int i = 0;
 	    for(OrderMessages messages: messagesList){
 	      if(!messages.status && messages.msg_to == MessageParticipants.CLIENT){
@@ -140,11 +142,41 @@ public class Orders extends Model{
 	}
 	
 	public Map<Orders,Integer> completeOrdersUnreadMessages(List<Orders> ordersList){
-	  return null;
+	  Map<Orders,Integer> ordersMap = new LinkedHashMap<Orders,Integer>();
+	  if(ordersList.isEmpty()){
+	    return null;
+	  }
+	  for(Orders order: ordersList){
+	    List<OrderMessages> messagesList = order.orderMessages;
+	    order = orderClientLocalTime(order);
+	    int i = 0;
+	    for(OrderMessages messages: messagesList){
+	      if(!messages.status && messages.msg_to == MessageParticipants.CLIENT){
+		i = i+1;//count of unread messages
+	      }
+	    }
+	    ordersMap.put(order,i);
+	  }
+	  return ordersMap;
 	}
 	
 	public Map<Orders,Integer> closedOrdersUnreadMessages( List<Orders> ordersList){
-	  return null;
+	  Map<Orders,Integer> ordersMap = new LinkedHashMap<Orders,Integer>();
+	  if(ordersList.isEmpty()){
+	    return null;
+	  }
+	  for(Orders order: ordersList){
+	    List<OrderMessages> messagesList = order.orderMessages;
+	    order = orderClientLocalTime(order);
+	    int i = 0;
+	    for(OrderMessages messages: messagesList){
+	      if(!messages.status && messages.msg_to == MessageParticipants.CLIENT){
+		i = i+1;//count of unread messages
+	      }
+	    }
+	    ordersMap.put(order,i);
+	  }
+	  return ordersMap;
 	}
 	
 	//Method overloading
@@ -368,4 +400,6 @@ public class Orders extends Model{
 	  order.order_deadline = localTime;
 	  return order;
 	}
+	
 } 
+ 

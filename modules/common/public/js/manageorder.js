@@ -12,12 +12,13 @@ $(document).ready(function(){
 });
 
 function submitAskForExtraPages(){
+  var date = new Date().getTime();
   $('#extra-pages-btn').click(function(event){
     event.preventDefault();
     var pages = $('#extra_pages').val();
     var order_code = $('#order-code-admin').text();
-    $.post("/manageorder/askforextrapages/" + pages + "/" + order_code,{}, function(data){
-       //A NEW TOTAL RETURNED HERE SHOULD UPLDATE THE CURRENT LABEL
+    $.post("/manageorder/askforextrapages/" + pages + "/" + order_code + "/" + date,{}, function(data){
+       
     },'json');
   });
 }

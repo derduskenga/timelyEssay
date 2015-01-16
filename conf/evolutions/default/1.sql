@@ -18,6 +18,7 @@ create table admin_user (
   password                  varchar(255),
   salt                      varchar(255),
   active                    boolean default 'true',
+  admin_user_offset         varchar(255),
   constraint uq_admin_user_email unique (email),
   constraint pk_admin_user primary key (admin_user_id))
 ;
@@ -173,12 +174,16 @@ create table order_messages (
   id                        bigint not null,
   msg_to                    integer,
   msg_from                  integer,
-  status                    boolean default false,
+  status                    boolean default false not null,
+  action_required           boolean default false not null,
+  action_taken              boolean default false not null,
+  message_type              integer,
   orders_order_id           bigint,
   sent_on                   timestamp not null,
   message                   varchar(255),
   constraint ck_order_messages_msg_to check (msg_to in (0,1,2)),
   constraint ck_order_messages_msg_from check (msg_from in (0,1,2)),
+  constraint ck_order_messages_message_type check (message_type in (0,1,2)),
   constraint pk_order_messages primary key (id))
 ;
 
@@ -249,6 +254,7 @@ create table orders (
   on_revision               boolean,
   client_feedback           integer,
   additional_pages          integer,
+  source_domain             varchar(255),
   client_id                 bigint,
   order_level_of_writing_id bigint,
   order_document_type_id    bigint,

@@ -48,6 +48,9 @@ public class AdminUser extends Model implements Subject{
 		@Column(columnDefinition = "boolean default 'true'")
 		public Boolean active;
 		
+		public String admin_user_offset = "-180";
+		
+		
 		public static Finder<Long, AdminUser> adminUserFinder = new Finder<>(Long.class,AdminUser.class); 
 
 		public AdminUser getAdminUser(String username_or_email, String password){
@@ -188,4 +191,6 @@ public class AdminUser extends Model implements Subject{
 				}
 				return null;
 		}
+		
+		
 }

@@ -206,7 +206,8 @@ public class Application extends Controller{
 	  String cpp_mode  = form().bindFromRequest().get("deadline_category_tracker");
 	  String style_selected = orderFormDataMap.get("writing_style");
 	  String client_time_zone_offset = orderFormDataMap.get("client_time_zone_offset");
-	  String client_local_time = orderFormDataMap.get("client_local_time");	  
+	  String client_local_time = orderFormDataMap.get("client_local_time");
+	  String source_domain  = request().host();
 	  
 	  //Logger.info("orders form " + ordersBoundForm.errorsAsJson().toString());
 	  //Logger.info("client form " + clientBoundForm.errorsAsJson().toString());
@@ -366,6 +367,7 @@ public class Application extends Controller{
 	  //computer order total
 	  double order_value = newOrders.computeOrderTotal(newOrders);
 	  newOrders.order_total = order_value;
+	  newOrders.source_domain = source_domain;
 	  //order code
 	  Long returnedClientId = newClient.saveClient(); 
 	  Long returnedOrderId = newOrders.saveOrder();

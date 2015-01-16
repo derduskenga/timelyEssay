@@ -15,11 +15,8 @@ import play.data.Form;
 import com.avaje.ebean.Ebean;
 import static play.data.Form.form;
 
-import java.util.Map;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
+import java.text.*;
 import static play.mvc.Http.MultipartFormData;
 import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
@@ -36,6 +33,7 @@ import models.admin.adminmodels.AdminUser;
 import controllers.admincontrollers.AdminSecured;
 import models.admin.userpermissions.SecurityRole;
 import models.orders.Orders;
+import models.orders.MessageParticipants;
 import models.orders.OrderProductFiles;
 import models.utility.Utilities;
 import models.orders.FileOwner;
@@ -46,6 +44,8 @@ import be.objectify.deadbolt.java.actions.SubjectPresent;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import models.admin.security.NoUserDeadboltHandler;
+
+import models.orders.OrderMessages;
 
 import com.avaje.ebean.Page;
 import org.json.simple.JSONObject;
@@ -154,7 +154,7 @@ public class ManageOrdersActions extends Controller{
 			flash("fileuploadresponseerror","No file was selected");
 			return badRequest(manageorder.render(orders,orderProductFileBoundForm));
 		}
-	public static Result AskForExtraPages(int pages, Long order_code){
+	public static Result AskForExtraPages(int pages, Long order_code, String date){
 		Orders order = Orders.getOrderByCode(order_code);
 		
 		JSONObject jsonobject = new JSONObject();
@@ -167,9 +167,50 @@ public class ManageOrdersActions extends Controller{
 		//CREATE A MESSAGE TO BE SENT TO THE CLIENT FOR SUCH REQUEST
 		//double new_order_total = order.computeOrderTotalForAdditionalPages(order);
 		//order.order_total = new_order_total;
-		order.saveOrder();
+		//order.saveOrder();
+		AdminUser user = AdminUser.findByEmail(session().get("admin_email"));
+		Date message_date = new Date();
+		Calendar calender = Calendar.getInstance();
+		try{
+		  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		  message_date = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(date)))); 
+		  calender.setTimeInMillis(message_date.getTime());
+		  int offset = Integer.parseInt(user.admin_user_offset);
+		  calender.add(Calendar.MINUTE,offset);//get UTC time to be stored
+		}catch(ParseException pe){
+		  Logger.error("ParseException:" + pe.getMessage().toString());
+		  jsonobject.put("success",0);
+		  jsonobject.put("message","An error occured. Please try again");
+		  return ok(Json.parse(jsonobject.toString()));
+		}
+		OrderMessages orderMessage = new OrderMessages();
+		orderMessage.msg_to = MessageParticipants.CLIENT;
+		orderMessage.msg_from = MessageParticipants.WRITERS;
+		orderMessage.status = false;
+		orderMessage.orders = order;
+		orderMessage.sent_on = calender.getTime();
+		Long message_id = orderMessage.saveClientMessageReturningId();
+		OrderMessages saveMessage = OrderMessages.getMessageById(message_id);
+		
+		saveMessage.message = OrderMessages.getAdditinalPagesMessageTemplate(order,message_id,pages);
+		saveMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
+		saveMessage.saveClientMessage();
+		
 		jsonobject.put("success",1);
 		jsonobject.put("message","Your request has been sent to the client");
 		return ok(Json.parse(jsonobject.toString()));
+	}
+	
+	public static Date orderSupportLocalTime(Date date,String support_email){
+	  //This is a deadline 
+	  AdminUser admin_user = AdminUser.findByEmail(support_email);
+	  Date utcTime = date;
+	  int client_offset = Integer.parseInt(admin_user.admin_user_offset);
+	  Calendar calender = Calendar.getInstance();
+	  calender.setTimeInMillis(utcTime.getTime());
+	  calender.add(Calendar.MINUTE,(client_offset*(-1)));//get local time
+	  Date localTime = calender.getTime();
+	  //order.order_deadline = localTime;
+	  return localTime;
 	}
 }

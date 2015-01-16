@@ -1,5 +1,6 @@
 @(clientOrders: models.orders.Orders)(orderFilesForm:Form[models.orders.OrderProductFiles])
 @import models.orders._
+@import controllers.admincontrollers.ManageOrdersActions
 @import fieldtemplates._
 @adminmain("Title"){
 <div class="col-md-10" id="mainbody">
@@ -91,7 +92,7 @@
 	    
 		<tr>
 			<td>Want order after</td>
-			<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>(Approx deadline @(clientOrders.order_deadline.getYear()+1900)/@(clientOrders.order_deadline.getMonth()+1)/@clientOrders.order_deadline.getDate() @clientOrders.order_deadline.getHours():@if(clientOrders.order_deadline.getMinutes()<10){0@clientOrders.order_deadline.getMinutes()}else{@clientOrders.order_deadline.getMinutes()})</span> </td>
+			<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>@ManageOrdersActions.orderSupportLocalTime(clientOrders.order_deadline,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</span> </td>
 		</tr>
 		<tr>
 			<td>Order deadline</td>

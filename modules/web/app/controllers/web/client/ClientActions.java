@@ -74,6 +74,7 @@ public class ClientActions extends Controller{
 	  OrderMessages orderMessage = newBoundMessageForm.get();
 	  orderMessage.msg_from = MessageParticipants.CLIENT;
 	  orderMessage.orders = orders;
+	  orderMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
 	  if(orderMessage.saveClientMessage()){
 		  return redirect(controllers.web.client.routes.ClientActions.orderMessages(order_code));
 	  }

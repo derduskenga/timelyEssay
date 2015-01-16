@@ -29,8 +29,16 @@ public class OrderMessages extends Model{
 		
 		public MessageParticipants msg_from;
 		
-		@Column(columnDefinition="boolean default false")
+		@Column(nullable=false,columnDefinition="boolean default false")
 		public Boolean status = false; 
+		
+		@Column(nullable=false, columnDefinition="boolean default false")
+		public Boolean action_required = false;
+	
+		@Column(nullable=false, columnDefinition="boolean default false")
+		public Boolean action_taken = false;
+		
+		public OrderMessages.ActionableMessageType message_type;
 		//relationship fields
 		@ManyToOne
 		public Orders orders;		
@@ -62,6 +70,15 @@ public class OrderMessages extends Model{
 		      return true;
 		}
 		
+		public Long saveClientMessageReturningId(){
+		      if(this.id == null){
+			save();
+			return id;
+		      }
+		      update();
+		      return id;
+		}
+		
 		public static Finder<Long, OrderMessages> orderMessagesFinder = 
 						new Finder<Long, OrderMessages>(Long.class, OrderMessages.class);
 						
@@ -89,5 +106,15 @@ public class OrderMessages extends Model{
 		    }
 		  }
 		  return unread;
+		}
+		public static String getAdditinalPagesMessageTemplate(Orders order, Long message_id, int pages){
+		  String message_text = "Dear " + order.client.l_name + ",<br>" +
+					"Our writer is asking you give " + pages + "additinal page(s) to your work so as to fulfill your requirements<br>" +
+					"If you agree hit 'Accept' otherwise hit 'Decline' <br><br>";
+		  return message_text;
+		}
+		
+		public enum ActionableMessageType{
+		  ADDITIONAL_PAGES,DEADLINE_EXTENSION,OTHER
 		}
 }
