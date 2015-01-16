@@ -82,5 +82,89 @@ public class ClientMails{
 					
 		}
 		
+		public void sendClientResetPasswordMail(String email, String token){
+			Thread t = new Thread() {
+						public void run() {
+										MandrillApi mandrillApi = new MandrillApi("qB6SN2vnpORIxTIjmlIoFA");
+										MandrillMessage message = new MandrillMessage();
+										message.setSubject("Timely Essay Password Reset");
+										message.setFromEmail("admin@timelyessay.com");
+										message.setFromName("admin@timelyessay.com");
+										try{
+								String  html="";										
+											html+="<p>Hello,</p>";
+											html+="<p>&nbsp;</p>";
+											html+="<p>We recently received a password reset request for your timelyessay.com account.</p>";
+											html+="<p>Please click&nbsp;<strong><a href='http://www.timelyessay.com/reset-password?token="+token+"'";
+											html+="target='_blank'>here</a></strong> or visit the link below on your browser to reset your password.</p>";
+											html+="<p><a href='http://www.timelyessay.com/reset-password?token="+token+"' target='_blank'><strong>http://www.timelyessay.com/reset-password?token="+token+"</strong></a></p>";
+											html+="<p>&nbsp;</p>";
+											html+="<p>Kind Regards,</p>";
+											html+="<p>Your Friends at TimelyEssay.</p>";
+											html+="<p>&nbsp;</p>";
+											html+="<p>&nbsp;</p>";
+											html+="<p>&nbsp;</p>";
+										message.setHtml(html);
+										message.setAutoText(true);
+										ArrayList<MandrillMessage.Recipient> recipients = new ArrayList<MandrillMessage.Recipient>();
+										MandrillMessage.Recipient recipient = new MandrillMessage.Recipient();
+										recipient.setEmail(email);
+										recipients.add(recipient);
+										message.setTo(recipients);
+										message.setPreserveRecipients(false);
+										MandrillMessageStatus[] messageStatusReports = mandrillApi
+												.messages().send(message, false); 			
+										} catch (MandrillApiError mandrillApiError) {
+												mandrillApiError.printStackTrace();
+										} catch (IOException e) {
+												e.printStackTrace();
+										}
+								
+								}
+					};
+					t.start();
+		}
+		
+		public void sendPasswordChangedMail(String email){
+						Thread t = new Thread() {
+						public void run() {
+										MandrillApi mandrillApi = new MandrillApi("qB6SN2vnpORIxTIjmlIoFA");
+										MandrillMessage message = new MandrillMessage();
+										message.setSubject("Timely Essay Password Changed.");
+										message.setFromEmail("admin@timelyessay.com");
+										message.setFromName("admin@timelyessay.com");
+										try{
+								String  html="";										
+											html+="<p>Hello,</p>";
+											html+="<p>&nbsp;</p>";
+											html+="<p>Your timelyessay.com password was recently changed.</p>";
+											html+="If this wasn't you, please contact Timely Essay Admin via admin@timelyessay.com.";
+											html+="<p>&nbsp;</p>";
+											html+="<p>Kind Regards,</p>";
+											html+="<p>TimelyEssay Admin.</p>";
+											html+="<p>&nbsp;</p>";
+											html+="<p>&nbsp;</p>";
+											html+="<p>&nbsp;</p>";
+										message.setHtml(html);
+										message.setAutoText(true);
+										ArrayList<MandrillMessage.Recipient> recipients = new ArrayList<MandrillMessage.Recipient>();
+										MandrillMessage.Recipient recipient = new MandrillMessage.Recipient();
+										recipient.setEmail(email);
+										recipients.add(recipient);
+										message.setTo(recipients);
+										message.setPreserveRecipients(false);
+										MandrillMessageStatus[] messageStatusReports = mandrillApi
+												.messages().send(message, false); 			
+										} catch (MandrillApiError mandrillApiError) {
+												mandrillApiError.printStackTrace();
+										} catch (IOException e) {
+												e.printStackTrace();
+										}
+								
+								}
+					};
+					t.start();
+		
+		}
 }
  
