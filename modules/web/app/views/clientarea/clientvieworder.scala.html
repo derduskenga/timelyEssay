@@ -78,7 +78,7 @@
 	@if(clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name.name() == OrderCppMode.CppModes.perpage.toString()){
 	  <tr>
 	    <td>Number of pages</td>
-	    <td>@clientOrders.number_of_units</td>
+	    <td>@(clientOrders.number_of_units+clientOrders.additional_pages)</td>
 	  </tr>
 	  
 	  <tr>
@@ -115,7 +115,7 @@
 	</tr>
 	  <tr>
 	    <td>Messages</td>
-	    <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)">@clientOrders.orderMessages.size() (<span class="phone-number">@unread_messages Unread</span>)</a> <a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)" class="btn btn-primary btn-sm"> Send message for this order </a></td>
+	    <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)">@OrderMessages.getClientOrderMessages(clientOrders.order_code).size() (<span class="phone-number">@unread_messages Unread</span>)</a> <a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)" class="btn btn-primary btn-sm"> Send message for this order </a></td>
 	  </tr>
       </table>
     </div>
@@ -205,7 +205,7 @@
 	      <a href="#" title="extend deadline" id="extend-deadline-link"> <img height="25" width="25" src="@routes.Assets.at("images/extend-deadline.png")"/>&nbsp;&nbsp;Extend deadline</a> &nbsp;&nbsp;&nbsp;
 	      @if(clientOrders.is_complete){<a href="#" class='' title="Ask for revision" id="ask-for-revision-link"> <img height="25" width="25" src="@routes.Assets.at("images/revise.png")"/>&nbsp;&nbsp;Ask for revision</a> &nbsp;&nbsp;&nbsp;
 	      <a href="#" class='' title="Fill feedback survey" id="fill-feedback-survey-link"> <img height="25" width="25" src="@routes.Assets.at("images/feedback.jpg")"/>&nbsp;&nbsp;Fill feedback survey</a>&nbsp;&nbsp;&nbsp;}
-	      <a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)" title="Send message to writer" id="message-to-writer-link"> <img height="25" width="25" src="@routes.Assets.at("images/message.png")"/>&nbsp;&nbsp;Send message to writer</a>	      
+	      <a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)" title="Send message to writer" id="message-to-writer-link"> <img height="25" width="25" src="@routes.Assets.at("images/message.png")"/>&nbsp;&nbsp;Send a message</a>	      
       </div>
       
      <br>

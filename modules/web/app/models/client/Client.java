@@ -101,9 +101,8 @@ public class Client extends Model{
 	    save();
 	    return id;
 	  }else{
-	   Logger.info("also updating client");
 	   update();
-	    return id;
+	   return id;
 	  }
 	}
 	

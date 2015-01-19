@@ -4,12 +4,32 @@ $(document).ready(function(){
   askForExtraPages();
   
   submitAskForExtraPages();
+  submitAskForDeadlineExtension();
   
   jQuery('#order_deadline_admin').datetimepicker({
     format:'Y-m-d H:i'
   });
   
 });
+
+function submitAskForDeadlineExtension(){
+   $('#btn-deadline-extension-admin').click(function(event){
+      event.preventDefault();
+      var deadline = $('#order_deadline_admin').val();
+      var reason = $('#deadline_extension_reason').val();
+      var order_code = $('#order-code-admin').text();
+      var date = new Date().getTime();
+      $.post("/manageorder/askfordeadlineextensionadmin/" + deadline + "/" + date + "/" + reason + "/" + order_code ,{}, function(data){
+	if(data['success'] == 1){
+	  $('#deadline-extension-request-response').html("<div id='de-response' class='alert alert-success'>" + data['message'] +  "</div>");
+	  $("#de-response").show().delay(5000).fadeOut("slow");
+	}else{
+	  $('#deadline-extension-request-response').html("<div id='de-response' class='alert alert-danger'>" + data['message'] +  "</div>");
+	  $("#de-response").show().delay(5000).fadeOut("slow");
+	}
+      },'json');
+   })
+}
 
 function submitAskForExtraPages(){
   var date = new Date().getTime();
@@ -18,7 +38,13 @@ function submitAskForExtraPages(){
     var pages = $('#extra_pages').val();
     var order_code = $('#order-code-admin').text();
     $.post("/manageorder/askforextrapages/" + pages + "/" + order_code + "/" + date,{}, function(data){
-       
+      if(data['success'] == 1){
+	$('#additional-pages-request-response').html("<div id='p-response' class='alert alert-success'>" + data['message'] +  "</div>");
+	$("#p-response").show().delay(5000).fadeOut("slow");
+      }else{
+	$('#additional-pages-request-response').html("<div id='p-response' class='alert alert-danger'>" + data['message'] +  "</div>");
+	$("#p-response").show().delay(5000).fadeOut("slow");
+      }
     },'json');
   });
 }

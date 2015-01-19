@@ -1,10 +1,13 @@
 $(document).ready(function(event){
   valididateRecoverPasswordForm();
-
-  $(function () {
-      $(window).scroll(sticky_relocate);
-      sticky_relocate();
-  });  
+    
+      $(function () {
+	$(window).scroll(sticky_relocate);
+	if($('#sticky-anchor').length != 0){
+	  sticky_relocate();
+	}
+      });
+  
 });
 
 
@@ -35,11 +38,11 @@ function valididateRecoverPasswordForm(){
 
 
   function sticky_relocate() {
-    var window_top = $(window).scrollTop();
-    var div_top = $('#sticky-anchor').offset().top;
-    if (window_top > div_top) {
-        $('#sticky').addClass('stick');
-    } else {
-        $('#sticky').removeClass('stick');
-    }
+	var window_top = $(window).scrollTop();
+	  var div_top = $('#sticky-anchor').offset().top;
+	  if (window_top > div_top) {
+	      $('#sticky').addClass('stick');
+	  } else {
+	      $('#sticky').removeClass('stick');
+	  }
   }

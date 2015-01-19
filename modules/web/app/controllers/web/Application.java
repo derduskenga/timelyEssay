@@ -348,6 +348,7 @@ public class Application extends Controller{
 	  calender.add(Calendar.MINUTE,timezone_offset);//get UTC time to be stored
 	  //Logger.info("zone ID or getDisplayName:" + calender.getTimeZone().getDisplayName());
 	  newOrders.order_date = calender.getTime();
+	  Logger.info("document deadline:" + newOrders.document_deadline);
 	  newOrders.order_deadline = newOrders.computeDeadline(calender.getTime(),newOrders.document_deadline);
 	  if(newClient.id == null){
 	    newClient.created_on = calender.getTime();
@@ -372,7 +373,7 @@ public class Application extends Controller{
 	  Long returnedClientId = newClient.saveClient(); 
 	  Long returnedOrderId = newOrders.saveOrder();
 	  Orders forUpdate = Orders.getOrderById(returnedOrderId);
-	  forUpdate.order_code = forUpdate.order_id+ Utilities.ORDER_CODE_CONSTANT;
+	  forUpdate.order_code = forUpdate.order_id + Utilities.ORDER_CODE_CONSTANT;
 	  forUpdate.saveOrder();
 	  flash("cliet_order_success","You have placed an order");  
 	  //return redirect(controllers.web.client.routes.ClientActions.messages()); 

@@ -1,9 +1,9 @@
 @import fieldtemplates._
 @import helper._
+@import models.orders._
 
 @(orders:models.orders.Orders)( newMessageForm: Form[models.orders.OrderMessages])(messageReceipients:Map[String,Boolean])(orderMessages: List[models.orders.OrderMessages])
 @clientmain("Timely Essay | Messages"){
-	
 	@if(orders == null){
 	      <div id="" class="" style="margin-top:20px">
 		<div class="no-order-messages">No order found.</div>
@@ -15,14 +15,38 @@
 			}else{
 			    @for(message <- orderMessages){
 				@if(message.msg_from != models.orders.MessageParticipants.CLIENT){
-						<div class="message-shared-class to-client-msg @if(message.status){read}else{unread}" id="to-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
-							<div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize <small>on</small>  @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
-							<div class="bubble"><pre>@Html(message.message)</pre></div>
-						</div>
+					      <div class="message-shared-class to-client-msg @if(message.status){read}else{unread}" id="to-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
+						      <div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize <small>on</small>  @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
+						      <div class="bubble">
+							<pre>@Html(message.message)</pre>
+							@if(message.message_type == OrderMessages.ActionableMessageType.ADDITIONAL_PAGES){
+							  <div id="">
+							    <button @if(message.action_taken){disabled style="color: #ccc;"} class="additional-pages-shared-class" id="additional-pages-accept-@orders.order_code-@message.id">
+							      Accept
+							    </button>
+							    <button @if(message.action_taken){disabled style="color: #ccc;"} class="additional-pages-shared-class" id="additional-pages-decline-@orders.order_code-@message.id">
+							      Decline
+							    </button>
+							  </div>
+							}
+							@if(message.message_type == OrderMessages.ActionableMessageType.DEADLINE_EXTENSION){
+							  <div id="">
+							    <button @if(message.action_taken){disabled style="color: #ccc;"} class="deadline-extension-shared-class" id="deadline-extension-accept-@orders.order_code-@message.id"> 
+							      Accept
+							    </button>
+							    <button @if(message.action_taken){disabled style="color: #ccc;"} class="deadline-extension-shared-class" id="deadline-extension-decline-@orders.order_code-@message.id"> 
+							      Decline 
+							    </button>
+							  </div>  
+							}
+							<strong>From support</strong>
+							<br><br>
+						      </div>     
+					      </div> 
 				}else{
 						<div class="message-shared-class from-client-msg" id="from-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
 							<div class="from-client-msg-details">Me <small>to </small>@message.msg_to.toString().toLowerCase().capitalize<small> on</small> @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
-							<div class="bubble2"><pre>@message.message</pre></div>
+							<div class="bubble2"><pre>@Html(message.message)</pre></div>
 						</div>
 				}
 			    }

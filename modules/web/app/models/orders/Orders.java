@@ -97,7 +97,6 @@ public class Orders extends Model{
 	    save();
 	    return order_id;
 	  }else{
-	    Logger.info("updating");
 	    this.order_code = order_id + Utilities.ORDER_CODE_CONSTANT;
 	    update();
 	    return order_id;
@@ -369,7 +368,7 @@ public class Orders extends Model{
 	  return "";
 	}
 	
-	public Date newUtcOrderDeadline(String deadline, Orders order){
+	public Date newUtcOrderDeadline(String deadline, Orders order){//deadline is a formated tsring value
 	  int client_offset = Integer.parseInt(order.client.client_time_zone_offset);
 	  Logger.info("client_offset in Integer:" + client_offset);
 	  TimeZone tz = order.client.client_time_zone_real;
@@ -380,6 +379,40 @@ public class Orders extends Model{
 	  Date newOrderDate = new Date();
 	  try{
 	    Date orderDate = isoFormat.parse(deadline);
+	    calender.setTimeInMillis(orderDate.getTime());
+	    calender.add(Calendar.MINUTE,client_offset);//get UTC time to be stored
+	    newOrderDate = calender.getTime();
+	  }catch(ParseException pe){
+	    Logger.error(pe.getMessage().toString());
+	  }	  
+	  return newOrderDate;
+	}
+	
+	public Date strDateToDateObject(String deadline){//deadline is a formated tsring value
+	  Calendar calender = Calendar.getInstance(); 
+	  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	  Date newOrderDate = new Date();
+	  try{
+	    Date orderDate = isoFormat.parse(deadline);
+	    calender.setTimeInMillis(orderDate.getTime());
+	    newOrderDate = calender.getTime();
+	  }catch(ParseException pe){
+	    Logger.error(pe.getMessage().toString());
+	  }	  
+	  return newOrderDate;
+	}
+	
+	public Date extendedUtcOrderDeadline(String deadline, Orders order){//deadline is a long value
+	  int client_offset = Integer.parseInt(order.client.client_time_zone_offset);
+	  Logger.info("client_offset in Integer:" + client_offset);
+	  TimeZone tz = order.client.client_time_zone_real;
+	  
+	  Calendar calender = Calendar.getInstance(); 
+	  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	  isoFormat.setTimeZone(tz);
+	  Date newOrderDate = new Date();
+	  try{
+	    Date orderDate = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(deadline))));
 	    calender.setTimeInMillis(orderDate.getTime());
 	    calender.add(Calendar.MINUTE,client_offset);//get UTC time to be stored
 	    newOrderDate = calender.getTime();

@@ -169,6 +169,13 @@ public class ManageOrdersActions extends Controller{
 		//order.order_total = new_order_total;
 		//order.saveOrder();
 		AdminUser user = AdminUser.findByEmail(session().get("admin_email"));
+		if(user == null){
+		  //user not found or user is not logged in
+		  jsonobject.put("success",0);
+		  jsonobject.put("message","Order was not found");
+		  //return ok(Json.parse(jsonobject.toString())); 
+		  return redirect(controllers.admincontrollers.routes.ManageOrdersActions.manageOrders());
+		}
 		Date message_date = new Date();
 		Calendar calender = Calendar.getInstance();
 		try{
@@ -192,13 +199,90 @@ public class ManageOrdersActions extends Controller{
 		Long message_id = orderMessage.saveClientMessageReturningId();
 		OrderMessages saveMessage = OrderMessages.getMessageById(message_id);
 		
-		saveMessage.message = OrderMessages.getAdditinalPagesMessageTemplate(order,message_id,pages);
-		saveMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
+		saveMessage.message = OrderMessages.getAdditinalPagesMessageTemplate(order,pages);
+		saveMessage.message_type = OrderMessages.ActionableMessageType.ADDITIONAL_PAGES;
+		saveMessage.action_required = true;
+		saveMessage.message_promise_value = pages + "";
 		saveMessage.saveClientMessage();
 		
 		jsonobject.put("success",1);
 		jsonobject.put("message","Your request has been sent to the client");
 		return ok(Json.parse(jsonobject.toString()));
+	}
+	
+	public static Result AskForDeadlineExtension(String deadline_,String date, String reason,Long order_code){
+		String deadline_extension_reason = "";
+		if(reason.equals("USING_SOFTWARE")){
+		  deadline_extension_reason = "using a specific software to complete ";
+		}else if(reason.equals("EXTENSIVE_RESEARCH")){
+		  deadline_extension_reason = "an extensive research required to complete ";
+		}else if(reason.equals("CLOSE_TO_DEADLINE")){
+		  deadline_extension_reason = "geting close to the deadline, ";
+		}else if(reason.equals("LIMITED_MATERIAL")){
+		  deadline_extension_reason = "a limited materials, which are required to complete ";
+		}
+		Orders order = Orders.getOrderByCode(order_code);
+		OrderMessages orderMessage = new OrderMessages();
+		JSONObject jsonobject = new JSONObject();
+		if(order == null){
+		  jsonobject.put("success",0);
+		  jsonobject.put("message","Order was not found");
+		  return ok(Json.parse(jsonobject.toString()));
+		}
+		
+		AdminUser user = AdminUser.findByEmail(session().get("admin_email"));
+		if(user == null){
+		  jsonobject.put("success",0);
+		  jsonobject.put("message","Order was not found");
+		  return ok(Json.parse(jsonobject.toString())); 
+		}
+		Date message_date = new Date();
+		Date deadline = new Date();
+		Calendar calender = Calendar.getInstance();
+		Calendar deadline_calender = Calendar.getInstance();
+		String str_promise = "";
+		try{
+		  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		  SimpleDateFormat isoDeadlineFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		  //For message date utc time
+		  message_date = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(date)))); 
+		  calender.setTimeInMillis(message_date.getTime());
+		  int offset = Integer.parseInt(user.admin_user_offset);
+		  calender.add(Calendar.MINUTE,offset);//get UTC time to be stored
+		  message_date = calender.getTime();
+		  
+		  //for deadline utc time
+		  deadline =  isoDeadlineFormat.parse(deadline_); 
+		  deadline_calender.setTimeInMillis(deadline.getTime());
+		  int client_offset = Integer.parseInt(order.client.client_time_zone_offset);
+		  deadline_calender.add(Calendar.MINUTE,client_offset);
+		  deadline = deadline_calender.getTime();
+		  str_promise = isoDeadlineFormat.format(deadline);
+		}catch(ParseException pe){
+		  Logger.error("ParseException:" + pe.getMessage().toString());
+		  jsonobject.put("success",0);
+		  jsonobject.put("message","An error occured. Please try again");
+		  return ok(Json.parse(jsonobject.toString()));
+		}
+		orderMessage.msg_to = MessageParticipants.CLIENT;
+		orderMessage.msg_from = MessageParticipants.WRITERS;
+		orderMessage.status = false;
+		orderMessage.orders = order;
+		orderMessage.sent_on = message_date;
+		Long message_id = orderMessage.saveClientMessageReturningId();
+		OrderMessages saveMessage = OrderMessages.getMessageById(message_id);
+		
+		saveMessage.message = OrderMessages.getExtendDeadlineMessageTemplate(order,deadline,deadline_extension_reason);
+		saveMessage.message_type = OrderMessages.ActionableMessageType.DEADLINE_EXTENSION;
+		saveMessage.action_required = true;
+		saveMessage.message_promise_value = str_promise;
+		saveMessage.saveClientMessage();
+		
+		jsonobject.put("success",1);
+		jsonobject.put("message","Your request has been sent to the client");
+		return ok(Json.parse(jsonobject.toString()));
+		
+		
 	}
 	
 	public static Date orderSupportLocalTime(Date date,String support_email){

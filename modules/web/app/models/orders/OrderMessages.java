@@ -1,21 +1,19 @@
 package models.orders;
 
-import java.util.List;
-import java.util.ArrayList;
 import play.data.validation.Constraints;
 import javax.persistence.*;
 import play.db.ebean.Model;
 import models.client.Client;
 import models.writer.FreelanceWriter;
 import models.support.WriterSupport;
+import play.*;
+import play.mvc.*;
 
-import java.util.Map;
-import java.util.HashMap;
 import javax.persistence.Column;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.text.*;
 import com.avaje.ebean.Expr;
 
 @Entity
@@ -38,6 +36,9 @@ public class OrderMessages extends Model{
 		@Column(nullable=false, columnDefinition="boolean default false")
 		public Boolean action_taken = false;
 		
+		@Column(nullable=false)
+		public String message_promise_value = "none";
+		
 		public OrderMessages.ActionableMessageType message_type;
 		//relationship fields
 		@ManyToOne
@@ -45,7 +46,7 @@ public class OrderMessages extends Model{
 		@Column(nullable=false)
 		@Temporal(TemporalType.TIMESTAMP)
 		public Date sent_on=new Date();
-		
+		@Lob
 		@Constraints.Required(message = "Please select message receipient")
 		public String message;
 		
@@ -98,7 +99,7 @@ public class OrderMessages extends Model{
 		  if(order == null){
 		    return 0;
 		  }  
-		  List<OrderMessages> orderList = order.orderMessages;		  
+		  List<OrderMessages> orderList = OrderMessages.getClientOrderMessages(order_code);  
 		  int unread = 0;
 		  for(OrderMessages messages:orderList){
 		    if(!messages.status && messages.msg_to == MessageParticipants.CLIENT){//unread messages
@@ -107,11 +108,82 @@ public class OrderMessages extends Model{
 		  }
 		  return unread;
 		}
-		public static String getAdditinalPagesMessageTemplate(Orders order, Long message_id, int pages){
-		  String message_text = "Dear " + order.client.l_name + ",<br>" +
-					"Our writer is asking you give " + pages + "additinal page(s) to your work so as to fulfill your requirements<br>" +
-					"If you agree hit 'Accept' otherwise hit 'Decline' <br><br>";
+		public static String getAdditinalPagesMessageTemplate(Orders order, int pages){
+		  String message_text = "<strong>Dear " + order.client.l_name + ",</strong> <br><br>" +
+					"Our writer is asking you give " + pages + " additinal page(s) to your work so as to fulfill your requirements<br>" +
+					"If you agree hit 'Accept' otherwise hit 'Decline'";
 		  return message_text;
+		}
+		
+		public static String getExtendDeadlineMessageTemplate(Orders order, Date suggested_deadline_in_utc, String reason_label){
+		  //Templates must have local times of recipient
+		  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm a");
+		  Calendar calender = Calendar.getInstance();
+		  calender.setTimeInMillis(suggested_deadline_in_utc.getTime());
+		  int offset = Integer.parseInt(order.client.client_time_zone_offset);
+		  calender.add(Calendar.MINUTE,offset*(-1));//get UTC time to be stored
+		  String date_label = isoFormat.format(calender.getTime());
+		  String message_text = "<strong>Dear " + order.client.l_name +   "</strong> <br><br>" +
+					"Because of " + reason_label + "our writer is asking you to allow a deadline<br>extension to " +
+					"" + date_label + " <br>" +
+					"If you agree hit 'Accept'." + 
+					"If you do not accept, we recommend that you suggest your own deadline";
+				      
+		  return message_text;
+		}
+		
+		public static String getMessageTemplateForAcceptedAdditionalPagesToWriter(Orders order, boolean status){
+		  String message_text = "";
+		  if(status){
+		      message_text = "<strong>Dear writer,</strong><br><br>" +
+					"The number of pages was by raised " + order.additional_pages + " upon your request. <br>" +
+					"We ask you to follow the instructions and complete the order in a timely manner <br><br>";
+		      return message_text;
+		  }
+		  message_text = "<strong>Dear writer,</strong><br><br>" +
+				  "Unfortunately, your request for additinal pages from the client was declined<br>" +
+				  "We ask you to complete the order using the client's earlier instructions." +
+				   "If you have any questions, do not hesitate to talk to us";
+		  return message_text;	  
+		}
+		
+		public static String getMessageTemplateForClientPayForAdditionalPages(Orders order){
+		  String message_text = "<strong>Dear " + order.client.l_name + ",</strong><br><br>" +
+					"You raised the number pages of order <a href='/mydashboard/order/view/" + order.order_code + "'>#" + order.order_code + "</a> by " + order.additional_pages + " upon our writers request.<br>" +
+					"We kindly ask you to make the additinal payment.";
+		  return message_text;
+		}
+		
+		public static String getMessageForWriterDeadlineRequestResponse(boolean status){
+		  String message_text = "";
+		  if(status){
+		    message_text = "<strong>Dear writer,</strong><br><br>" +
+				   "The deadline of this order was extended upon your request.<br>" +
+				   "We ask you to complete this order in a timely manner." + 
+				   "If you have any questions, do not hesitate to talk to us";
+		    return message_text;
+		  }
+		    message_text = "<strong>Dear writer,</strong><br><br>" +
+				   "Unfortunately, the client refised to extended the deadline as you had requested.<br>" +
+				   "We, therefore, ask you to complete this order based on its current deadline" + 
+				   "If you have any questions, do not hesitate to talk to us"; 
+		    return message_text;
+		}
+		
+		public static Date computeMessageUtcTime(String client_time_zone_offset, String date){
+		  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		  Calendar calender = Calendar.getInstance();
+		  Date message_date = new Date();
+		  try{
+		    message_date = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(date))));
+		    calender.setTimeInMillis(message_date.getTime());
+		    int offset = Integer.parseInt(client_time_zone_offset);
+		    calender.add(Calendar.MINUTE,offset);//get UTC time to be stored
+		    message_date = calender.getTime();
+		  }catch(ParseException pe){
+		    Logger.info(pe.getMessage().toString());
+		  }
+		  return message_date;
 		}
 		
 		public enum ActionableMessageType{
