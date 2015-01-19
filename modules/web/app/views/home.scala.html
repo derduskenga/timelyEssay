@@ -1,5 +1,10 @@
 @(loginForm: Form[web.Application.Login])
 @main("Timely Essay | For Quality Service")(loginForm){		
+		@if(flash.containsKey("error")){
+			<div class="alert alert-danger">
+				@flash.get("error")
+			</div>
+		}
 		<div class="text-justify" id="home-content">
 		<h3>You have Found your Best Academic Helper</h3>
 		

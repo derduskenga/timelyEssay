@@ -272,6 +272,15 @@ create table preferred_writer (
   constraint pk_preferred_writer primary key (preferred_writer_entry_id))
 ;
 
+create table reset_password (
+  id                        bigint not null,
+  token                     varchar(255) not null,
+  date_generated            timestamp not null,
+  used                      boolean,
+  client_id                 bigint,
+  constraint pk_reset_password primary key (id))
+;
+
 create table security_role (
   id                        bigint not null,
   name                      varchar(255) not null,
@@ -383,6 +392,8 @@ create sequence orders_seq;
 
 create sequence preferred_writer_seq;
 
+create sequence reset_password_seq;
+
 create sequence security_role_seq;
 
 create sequence spacing_seq;
@@ -431,6 +442,8 @@ alter table preferred_writer add constraint fk_preferred_writer_client_19 foreig
 create index ix_preferred_writer_client_19 on preferred_writer (client_id);
 alter table preferred_writer add constraint fk_preferred_writer_freelance_20 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
 create index ix_preferred_writer_freelance_20 on preferred_writer (freelance_writer_freelance_writer_id);
+alter table reset_password add constraint fk_reset_password_client_21 foreign key (client_id) references client (id);
+create index ix_reset_password_client_21 on reset_password (client_id);
 
 
 
@@ -520,6 +533,8 @@ drop table if exists orders cascade;
 
 drop table if exists preferred_writer cascade;
 
+drop table if exists reset_password cascade;
+
 drop table if exists security_role cascade;
 
 drop table if exists spacing cascade;
@@ -575,6 +590,8 @@ drop sequence if exists order_subject_category_seq;
 drop sequence if exists orders_seq;
 
 drop sequence if exists preferred_writer_seq;
+
+drop sequence if exists reset_password_seq;
 
 drop sequence if exists security_role_seq;
 

@@ -16,6 +16,8 @@ import play.data.validation.ValidationError;
 import views.html.home;
 import views.html.orderSummary;
 import views.html.forgotpassword;
+import views.html.resetpassword;
+import views.html.errorpage;
 import views.html.orderClientForm;
 import models.client.Client;
 import play.data.validation.Constraints;
@@ -24,6 +26,7 @@ import models.orders.OrderDocumentType;
 import models.orders.TempStore;
 import models.client.Countries;
 import models.client.ClientMails;
+import models.client.ResetPassword;
 import models.orders.OrderLevelOfWriting;
 import models.orders.OrderCurrence;
 import models.orders.Spacing;
@@ -479,17 +482,90 @@ public class Application extends Controller{
 	  Map<String, String[]> recover_password_values = new HashMap<String,String[]>();
 	  recover_password_values = request().body().asFormUrlEncoded();
 	  if(recover_password_values.isEmpty()){
-	      flash("emailnotreceived","Your email may have been lost");
+	      flash("emailnotreceived","Sorry, An error occured. Try Again.");
+	      Logger.info("Email not received at reset password");
 	      return ok(forgotpassword.render(loginForm));
 	  }
 	 
 	  String recoverDetails[] = recover_password_values.get("recover_password_email");
 	  String email = recoverDetails[0];
 	  Logger.info("email is: " + email);
+	  Client client = Client.getClient(email);
+	  if(client==null){
+		 flash("recoveremailreceived","We could not find the email you entered.");
+		return ok(forgotpassword.render(loginForm));
+	  }
+	  
 	  //recove password and send to mail return this
-	  flash("recoveremailreceived","If we find this email in our database, we will send details to your email on how to change password");
+	  RandomString randomString = new RandomString(32);
+	  String random = randomString.nextString();
+	  ResetPassword resetPassword = new ResetPassword(random);
+	  resetPassword.client = client;
+	  resetPassword.saveResetPassword();
+	  ClientMails cm = new ClientMails();
+	  cm.sendClientResetPasswordMail(client.email, random);
+	  flash("recoveremailreceived","We've sent a link to your email. Please note that it may take a while for the email to arrive in your inbox. If you do not received an email after 15 minutes, please resubmit your email.");
 	  return ok(forgotpassword.render(loginForm));
 	}
+	
+	public static Result resetPassword(String token){
+		ResetPassword resetPassword = new ResetPassword().getResetPassword(token);
+		if(resetPassword==null){
+			flash("error", "Sorry, We could not find the  page you are trying to view.");
+			return badRequest(errorpage.render());
+		}
+		if(resetPassword.used == true){
+			flash("error","The link you are using has already expired. Please resend your email to reset your password again.");
+			return badRequest(errorpage.render());
+		}
+		
+		return ok(resetpassword.render(resetPassword.token));
+	
+	}
+	
+	public static Result saveResetPassword(){
+			String password1 = form().bindFromRequest().get("password1");
+			String password2 = form().bindFromRequest().get("password2");
+			String token = form().bindFromRequest().get("token");
+			
+			if(!password1.equals(password2)){
+				flash("error","The passwords you entered are not equal.");
+				return ok(resetpassword.render(token));
+			}
+			if(password1.length()<5){
+				flash("error","Your password must be at least 5 characters long.");
+				return ok(resetpassword.render(token));
+			}
+			ResetPassword resetPassword = new ResetPassword().getResetPassword(token);
+			if(resetPassword == null){
+				flash("error","The page you are trying to view does not exist.");
+				return badRequest(errorpage.render());
+			}
+			
+			if(resetPassword.used == true){
+				flash("error","The link you are using has already expired. Please resend your email to reset your password again.");
+				return badRequest(errorpage.render());
+			}
+			Client client = resetPassword.client;
+			try{
+				String hashedPassword = PasswordHash.createHash(password1);
+				String[] params = hashedPassword.split(":");
+				client.password = params[0];
+				client.salt = params[1];
+				client.saveClient();
+				resetPassword.used = true;
+				resetPassword.saveResetPassword();
+				ClientMails cm = new ClientMails();
+				cm.sendPasswordChangedMail(client.email);
+				flash("success","You have successfully changed your password.");
+				Form<Login> loginForm = Form.form(Login.class);
+				return ok(home.render(loginForm));
+			}catch(Exception e){
+				flash("error","Something went wrong. Please try again.");
+				return ok(resetpassword.render(token));
+			}
+	}
+	
 	public static void setSession(Orders orders){
 	  session().clear();
 	  session("email", orders.client.email);

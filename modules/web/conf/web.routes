@@ -16,9 +16,12 @@ POST			/mydashboard/sendinvitationmail		controllers.web.client.ClientActions.sen
 GET			/mydashboard/preferredwriters		controllers.web.client.ClientActions.preferredWriters()
 POST			/mydashboard/savepreferredwriter	controllers.web.client.ClientActions.savePreferredWriter()
 
+#client reset password
+GET 				/reset-password									controllers.web.Application.resetPassword(token:String?="")					
+POST 			/reset-password									controllers.web.Application.saveResetPassword()
 
 #placing a new order 
-GET			/neworder					   controllers.web.Application.newOrder()	
+GET				/neworder					   controllers.web.Application.newOrder()	
 POST			/submitorder					   controllers.web.Application.saveClientOrder()
 POST			/fetch/countriesjson				   controllers.web.Application.fetchCountries()
 POST			/fetch/orderdocument/:docId			   controllers.web.Application.fetchDocument(docId:Long)
