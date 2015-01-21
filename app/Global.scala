@@ -73,14 +73,15 @@ object Global extends GlobalSettings {
 		}
 		
 	    Logger.info("Application has started")
-	}  
-	
+	}
+	//Handling missing actions and binding errors	
 	// 404 - page not found error
-	/*override def onHandlerNotFound (request: RequestHeader) = getSubdomain(request) match {
+	override def onHandlerNotFound (request: RequestHeader) = getSubdomain(request) match {
 		case "admin" => GlobalAdmin.onHandlerNotFound(request)
 		case _ => GlobalWeb.onHandlerNotFound(request)
 	}
 	
+	/**/
 	// 500 - internal server error
 	override def onError (request: RequestHeader, throwable: Throwable) = getSubdomain(request) match {
 		case "admin" => GlobalAdmin.onError(request, throwable)
@@ -91,6 +92,6 @@ object Global extends GlobalSettings {
 	override def onBadRequest (request: RequestHeader, error: String) = getSubdomain(request) match {
 		case "admin" => GlobalAdmin.onBadRequest(request, error)
 		case _ => GlobalWeb.onBadRequest(request, error)
-	}*/
+	}
 
 }
