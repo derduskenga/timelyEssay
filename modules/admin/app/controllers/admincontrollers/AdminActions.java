@@ -4,6 +4,7 @@ import views.html.adminviews.adminhome;
 import views.html.adminviews.createadminuser;
 import views.html.adminviews.manageusers;
 import views.html.adminviews.adminerror;
+import views.html.adminviews.adminprofile;
 import views.html.adminviews.adminroles;
 import views.html.adminviews.addrole;
 
@@ -14,9 +15,18 @@ import com.avaje.ebean.Ebean;
 import static play.data.Form.form;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import play.libs.Json;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import play.libs.Json;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -114,6 +124,10 @@ public class AdminActions extends Controller{
 			return ok(manageusers.render(list));
 	}
 	
+	public static Result myProfile(){
+			return ok(adminprofile.render(AdminUser.findByEmail(session().get("admin_email"))));
+	}
+	
 	public static Result deactivateAdminUser(Long admin_user_id){
 				ObjectNode result = Json.newObject();
 				AdminUser user = new AdminUser();
@@ -180,5 +194,59 @@ public class AdminActions extends Controller{
 			role.save();
 			flash("success", "Security role successfully added");
 			return redirect(controllers.admincontrollers.routes.AdminActions.newAdminRole());
+	}
+	
+	public static Result changePassword(){
+	       JSONObject jobject = new JSONObject();
+		   try{
+			Map<String, String[]> change_password_values = new HashMap<String,String[]>();
+			change_password_values = request().body().asFormUrlEncoded();
+			if(change_password_values.isEmpty()){
+				jobject.put("success",0);
+				jobject.put("message","An error occured. Try again");
+				return ok(Json.parse(jobject.toString()));
+			}
+			String c_password_details[] = change_password_values.get("current_password");
+			//current password
+			String c_password = c_password_details[0];
+			
+			String n_password_details[] = change_password_values.get("new_password");
+			//new password
+			String n_password = n_password_details[0];
+			if(n_password.length()<5){
+					jobject.put("success",0);
+					jobject.put("message","Your new password is too short.");
+					return ok(Json.parse(jobject.toString()));
+			}
+			String email = session().get("admin_email");
+			AdminUser adminUser =  (email == null)? null : AdminUser.findByEmail(email);
+			if(adminUser == null){
+					jobject.put("success",0);
+					jobject.put("message","An error occured. Try again.");
+					return ok(Json.parse(jobject.toString()));
+			}
+				
+			Boolean valid = PasswordHash.validatePassword(c_password, adminUser.password+":"+adminUser.salt);	
+				if(valid){
+							String hashedPassword = PasswordHash.createHash(n_password);
+							String[] params = hashedPassword.split(":");				
+							adminUser.password = params[0];
+							adminUser.salt = params[1];
+							adminUser.saveAdminUser();
+				}else{
+						jobject.put("success",0);
+						jobject.put("message","Current password entered is invalid.");
+						return ok(Json.parse(jobject.toString()));
+				}
+			//do you code here; if password change is successful, return the JSONObject as shoen belo
+			jobject.put("success",1);
+			jobject.put("message","Password has been changed");
+			return ok(Json.parse(jobject.toString()));  
+			}catch(Exception e){
+							Logger.error("Error creating hashed password",e);
+							jobject.put("success",0);
+							jobject.put("message","An error occured. Try again.");
+							return ok(Json.parse(jobject.toString()));
+			}
 	}
 }

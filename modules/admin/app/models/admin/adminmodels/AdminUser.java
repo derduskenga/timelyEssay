@@ -88,7 +88,7 @@ public class AdminUser extends Model implements Subject{
 				return adminRolesMap;
 		}
 		 
-		 public boolean saveAdminUser(){
+		public boolean saveAdminUser(){
 				if(admin_user_id != null)
 					update();
 				else{

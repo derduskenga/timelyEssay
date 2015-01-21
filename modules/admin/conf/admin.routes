@@ -14,6 +14,10 @@ GET												/editadminuser			    			controllers.admincontrollers.AdminActions
 GET												/adminroles			    					controllers.admincontrollers.AdminActions.newAdminRole()
 POST											/adminroles			    					controllers.admincontrollers.AdminActions.saveNewAdminRole()
 
+#admin profile actions
+GET												/myprofile			    					controllers.admincontrollers.AdminActions.myProfile()
+POST											/changepassword						controllers.admincontrollers.AdminActions.changePassword()
+
 #manage orders
 GET			/manageorders			   controllers.admincontrollers.ManageOrdersActions.manageOrders()
 GET				/manageorder/:order_code			    			controllers.admincontrollers.ManageOrdersActions.manageOrder(order_code: Long)
