@@ -167,7 +167,7 @@ public class ClientMessageActions extends Controller{
       newWriterMessage.saveClientMessage();
       
       jsonobject.put("success",1);
-      jsonobject.put("message","Our writer will receive you response. Thank you");
+      jsonobject.put("message","Our writer will receive your response. Thank you");
       return ok(Json.parse(jsonobject.toString()));      
   } 
 }

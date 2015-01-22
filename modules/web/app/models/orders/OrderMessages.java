@@ -94,6 +94,15 @@ public class OrderMessages extends Model{
 							.orderBy("sent_on").findList();
 		}
 		
+		//for now, get all messages associated with this order.
+		//hence the commented out part of the code below
+		public static List<OrderMessages> getAdminOrderMessages(Long order_code){
+					return  orderMessagesFinder.where()
+							.eq("orders.order_code",order_code)
+						//	.or(Expr.eq("msg_to", MessageParticipants.SUPPORT),Expr.eq("msg_from", MessageParticipants.SUPPORT))
+							.orderBy("sent_on").findList();
+		}
+		
 		public int getUnreadMessages(Long order_code){
 		  Orders order = Orders.getOrderByCode(order_code);
 		  if(order == null){

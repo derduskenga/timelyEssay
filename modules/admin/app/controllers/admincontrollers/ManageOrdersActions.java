@@ -4,6 +4,7 @@ import views.html.adminviews.adminhome;
 import views.html.adminviews.createadminuser;
 import views.html.adminviews.manageusers;
 import views.html.adminviews.adminerror;
+import views.html.adminviews.adminmessages;
 import views.html.adminviews.adminroles;
 import views.html.adminviews.manageorders;
 import views.html.adminviews.manageorder;
@@ -283,18 +284,53 @@ public class ManageOrdersActions extends Controller{
 		return ok(Json.parse(jsonobject.toString()));
 		
 		
+	}	
+	
+	
+	public static Result orderMessages(Long order_code){
+	  Form<OrderMessages> newMessageForm = Form.form(OrderMessages.class);
+	  return ok(adminmessages.render(Orders.getOrderByCode(order_code),newMessageForm, OrderMessages.getReceipientsMap("SUPPORT"),getOrderMessages(order_code)));
+	}
+	
+	public static List<OrderMessages> getOrderMessages(Long order_code){
+			List<OrderMessages> orderMessages = new ArrayList<OrderMessages>();
+			orderMessages = OrderMessages.getAdminOrderMessages(order_code);
+			return orderMessages;
+	}
+
+	public static Result saveAdminMessage(Long order_code){
+			Form<OrderMessages> newBoundMessageForm = Form.form(OrderMessages.class).bindFromRequest();
+			Orders orders = Orders.getOrderByCode(order_code);
+			if(orders == null){
+				return badRequest(adminmessages.render(orders,newBoundMessageForm, OrderMessages.getReceipientsMap("SUPPORT"), getOrderMessages(order_code)));
+			}
+			if(newBoundMessageForm.hasErrors()) {
+				flash("error", "Please correct the form below.");
+				flash("show_form", "true");
+				return badRequest(adminmessages.render(orders,newBoundMessageForm, OrderMessages.getReceipientsMap("SUPPORT"), getOrderMessages(order_code)));
+			}	
+			OrderMessages orderMessage = newBoundMessageForm.get();
+			orderMessage.msg_from = MessageParticipants.SUPPORT;
+			orderMessage.orders = orders;
+			orderMessage.message_promise_value = "none";
+			orderMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
+			if(orderMessage.saveClientMessage()){
+				return redirect(controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order_code));
+			}
+			flash("admin-message-error","Could not save message.");
+			return redirect(controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order_code));
 	}
 	
 	public static Date orderSupportLocalTime(Date date,String support_email){
-	  //This is a deadline 
-	  AdminUser admin_user = AdminUser.findByEmail(support_email);
-	  Date utcTime = date;
-	  int client_offset = Integer.parseInt(admin_user.admin_user_offset);
-	  Calendar calender = Calendar.getInstance();
-	  calender.setTimeInMillis(utcTime.getTime());
-	  calender.add(Calendar.MINUTE,(client_offset*(-1)));//get local time
-	  Date localTime = calender.getTime();
-	  //order.order_deadline = localTime;
-	  return localTime;
+			//This is a deadline 
+			AdminUser admin_user = AdminUser.findByEmail(support_email);
+			Date utcTime = date;
+			int client_offset = Integer.parseInt(admin_user.admin_user_offset);
+			Calendar calender = Calendar.getInstance();
+			calender.setTimeInMillis(utcTime.getTime());
+			calender.add(Calendar.MINUTE,(client_offset*(-1)));//get local time
+			Date localTime = calender.getTime();
+			//order.order_deadline = localTime;
+			return localTime;
 	}
 }
