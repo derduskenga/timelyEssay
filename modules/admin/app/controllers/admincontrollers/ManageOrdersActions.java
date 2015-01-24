@@ -297,6 +297,18 @@ public class ManageOrdersActions extends Controller{
 			orderMessages = OrderMessages.getAdminOrderMessages(order_code);
 			return orderMessages;
 	}
+<<<<<<< HEAD
+=======
+	
+	public static Result markMessageRead(Long msg_id){
+			OrderMessages ordermsg = new OrderMessages().getMessageById(msg_id);
+			if(ordermsg!=null){
+				ordermsg.status = true;
+				ordermsg.saveClientMessage();
+			}
+			return ok();
+	}
+>>>>>>> sam-branch
 
 	public static Result saveAdminMessage(Long order_code){
 			Form<OrderMessages> newBoundMessageForm = Form.form(OrderMessages.class).bindFromRequest();

@@ -26,7 +26,33 @@ $(document).ready(function(){
 		}
 	});
 
+<<<<<<< HEAD
 });
+=======
+	markMessages();
+	
+});
+
+function markMessages(){
+	 $(".msg-to-support.unread").each(function(){ 
+      var elemid = $(this).attr('id');
+      $(this).waypoint(function(direction){
+					var elementArray = elemid.split('-');
+					var order_code = elementArray[0]; //to or from
+					var msg_id = elementArray[1];
+			
+						$.post("/manageorder/messages/markread/"+msg_id,{}, function(data){
+						if(data['success'] == 1){
+						//remove the unread class
+						$("#" + elemid + "").removeClass("unread").addClass("read");
+						}
+						},'json');
+      }, {
+			offset:'75%'
+      });
+});
+}
+>>>>>>> sam-branch
 
 function alternateNewMessageView(panel){
 		$('.messages-action').hide(1000);
