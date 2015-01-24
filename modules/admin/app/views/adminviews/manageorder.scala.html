@@ -92,7 +92,7 @@
 	    
 		<tr>
 			<td>Want order after</td>
-			<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>@ManageOrdersActions.orderSupportLocalTime(clientOrders.order_deadline,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</span> </td>
+			<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>@ManageOrdersActions.orderSupportLocalTime(clientOrders.order_deadline,session.get("admin_email")).format("dd-MM-YYYY HH:mm a")</span> </td>
 		</tr>
 		<tr>
 			<td>Order deadline</td>
@@ -269,7 +269,7 @@
 	    </div>
 	  }
 	  @for(orderList <- clientOrders.orderFiles){
-	    @orderList.file_name <a href="#" class="file-shared-class" id="order-file-@orderList.id" title="download @orderList.file_name file"> <span class="fa fa-download file-download-icon"> </span></a><br>
+	    @orderList.file_name <a href="#" class="order-file-shared-class" id="order-file-@orderList.id" title="download @orderList.file_name file"> <span class="fa fa-download file-download-icon"> </span></a><br>
 	  }
 	</div>
       }
@@ -306,6 +306,7 @@
 					<option value="OTHER">Other</option>
 				</select>
 		  </div>
+		  <input type="hidden" id="file_local_date" name="file_local_date">
 		<div class="col-sm-2 form-group">
 		  <input type="submit" class="btn btn-primary btn-sm" value="Upload file" id = "order-file-form-submit">
 		</div>
@@ -328,7 +329,7 @@
 	  <tr>
 	    <td><strong> Type </strong></td>
 	    <td><strong> From </strong></td>
-	    <td><strong> Name </strong>(Click <img src="@routes.Assets.at("images/downloadimg.png")"/> to download)</td>
+	    <td><strong> Name </strong></td>
 	    <td><strong> Size </strong></td>
 	    <td><strong> Upload date </strong></td>
 	  </tr>
@@ -337,9 +338,9 @@
 	  <!--width="28" height="22"  -->
 	    <td> @productFiles.product_file_type.name() </td>
 	    <td> @productFiles.owner.name()</td>
-	    <td> @productFiles.file_name  <a href="#" title="download" class="product-file-shared-class" id="product-file-@productFiles.id"><img src="@routes.Assets.at("images/downloadimg.png")"/></a></td>
+	    <td> @productFiles.file_name  <a href="#" title="download" class="admin-product-file-shared-class" id="product-file-@productFiles.id"><span class="fa fa-download file-download-icon"> </span></a></td>
 	    <td> @(Math.round((productFiles.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB</td>
-	    <td> @(productFiles.upload_date.getYear()+1900)/@(productFiles.upload_date.getMonth()+1)/@productFiles.upload_date.getDate() 		@productFiles.upload_date.getHours():@productFiles.upload_date.getMinutes()</td>
+	    <td>@ManageOrdersActions.orderSupportLocalTime(productFiles.upload_date,session.get("admin_email")).format("dd-MM-YYYY HH:mm a")</td>
 	  </tr>
 	  }	  
 	 </table>

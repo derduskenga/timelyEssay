@@ -1,6 +1,7 @@
 $(document).ready(function(e){
   extendDeadlineActions();
   additionalPagesActions();
+  setClientLocalTimeField();
 });
 
 
@@ -56,6 +57,10 @@ function extendDeadlineActions(){
     },'json');
     
   });
+}
+
+function setClientLocalTimeField(){
+  $('#client_local_time').val(new Date().getTime());
 }
 
 

@@ -1,0 +1,45 @@
+@(loginForm: Form[web.Application.Login])
+@main("Timely Essay | For Quality Service")(loginForm){
+  <strong>Our Prices</strong>
+  
+  <div class="text-justify">
+    <p>Our pricing policy is quite friendly and practical , and there is always a chance for 
+
+    negotiations. So you do not have to shy away out of fear of the charges listed. Furthermore, 
+
+    we give offers to our loyal customers.</p>
+  </div>
+  
+  <div>
+      <table class="table table-bordered">
+	<thead>
+	  <tr>
+	  <th>Deadline</th>
+	    <th>Undergraduate/<br>College</th>
+	    <th>Master</th>
+	    <th>Ph. D</th>
+	  </tr>
+	</thead>
+	<tbody>
+	    <tr>
+	      <td>$x</td>
+	      <td>$x </td>
+	      <td> $x</td>
+	      <td> $x</td>
+	    </tr>
+	    <tr>
+	      <td>$x</td>
+	      <td>$x </td>
+	      <td> $x</td>
+	      <td> $x</td>
+	    </tr>
+	</tbody>
+      </table>
+  </div>
+  
+  <div>
+    <p align="center"><a href="@controllers.web.routes.Application.newOrder()" class="btn btn-warning">&nbsp;&nbsp;&nbsp;Good prices! Write My Essay Now&nbsp;&nbsp;&nbsp;</a></p>
+  </div>
+  
+  
+}

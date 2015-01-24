@@ -41,43 +41,68 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#" >Home</a>
+                <a class="navbar-brand" href="@controllers.web.routes.Application.essay()" >Custom Essay</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="navbar-collapse">
 				<ul class="nav navbar-nav">
 					<li class="divider-vertical"></li>
-					<li><a href="index.html#abt">Custom Essay</a></li>
+					<li><a href="@controllers.web.routes.Application.bookReport()">Book report</a></li>
 					<li class="divider-vertical"></li>
-					<li> <a href="index.html#services">Research paper</a></li>
+					<li> <a href="@controllers.web.routes.Application.researchPaper()">Research paper</a></li>
 					<li class="divider-vertical"></li>
+					
 					<li>
-						<a href="#" data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle">Dissertation Services <b class="caret"></b></a>
+						<a href="@controllers.web.routes.Application.dissertation()" data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle">Dissertation Services <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-						<li><a href="#">Thesis</a></li>
-						<li class="divider"></li>
-						<li><a href="#">Editing</a></li>
-						<li class="divider"></li>
-						<li><a href="">Proof Reading</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Dissertation proposal</a></li>
-						<li class="divider"></li>  
-						<li><a href="#">Dissertation introduction</a></li>
-						<li class="divider"></li>                                      
-						<li><a href="#">Dissertation Literature</a></li>
-						<li class="divider"></li>
+						  <li><a href="@controllers.web.routes.Application.dissertation()#thesis">Thesis paper</a></li>
+						  <li class="divider"></li>
+						  <li><a href="@controllers.web.routes.Application.dissertation()#dissertation-proposal">Dissertation-proposal</a></li>
+						  <li class="divider"></li>
+						  <li><a href="@controllers.web.routes.Application.dissertation()#abstract">Dissertation-Abstract</a></li>
+						  <li class="divider"></li> 
+						  <li><a href="@controllers.web.routes.Application.dissertation()#introduction">Dissertation-Introduction</a></li>
+						  <li class="divider"></li>                                      
+						  <li><a href="@controllers.web.routes.Application.dissertation()#literature-review">Dissertation-Literature Review</a></li>
+						  <li class="divider"></li>
+						  <li><a href="@controllers.web.routes.Application.dissertation()#methodology">Dissertation-Metholody</a></li>
+						  <li class="divider"></li> 
+						  <li><a href="@controllers.web.routes.Application.dissertation()#discussion">Dissertation-Discussion,</a></li>
+						  <li class="divider"></li> 
 						</ul>
 					</li>
+					
 					<li class="divider-vertical"></li>
-					<li><a href="index.html#">Coursework</a></li>
+					<li><a href="@controllers.web.routes.Application.coursework()">Coursework</a></li>
 					<li class="divider-vertical"></li>
-					<li> <a href="index.html#">Editing Services</a></li>
+					<li> <a href="@controllers.web.routes.Application.editing()">Editing Services</a></li>
 					<li class="divider-vertical"></li>
-					<li><a href="index.html#">Admision Services</a></li>
+					<li><a href="@controllers.web.routes.Application.admision()">Admision Services</a></li>
 					<li class="divider-vertical"></li>
-					<li> <a href="index.html#">Resume Services</a></li>
+					<li> <a href="@controllers.web.routes.Application.termPaper()">Term Paper</a></li>
 					<li class="divider-vertical"></li>
-					<li> <a href="index.html#">More Services</a></li>
+					<li>
+						<a href="#" data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle">See More<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+						    <li><a href="@controllers.web.routes.Application.mathProblem()">Math problems</a></li>
+						    <li class="divider"></li>
+						    <li><a href="@controllers.web.routes.Application.programming()">Computer programming</a></li>
+						    <li class="divider"></li>
+						    <li><a href="@controllers.web.routes.Application.proofReading()">Proofreading</a></li>
+						    <li class="divider"></li>
+						    <li><a href="@controllers.web.routes.Application.homework()">Homework help</a></li>
+						    <li class="divider"></li>  
+						    <li><a href="@controllers.web.routes.Application.labReport()">Lab report</a></li> 
+						    <li class="divider"></li>                                      
+						    <li><a href="@controllers.web.routes.Application.reviewWriting()">Review writing</a></li> 
+						    <li class="divider"></li>
+						    <li><a href="@controllers.web.routes.Application.articleCritique()">Article critique</a></li> 
+						    <li class="divider"></li>
+						    <li><a href="@controllers.web.routes.Application.presentation()">Presentation</a></li> 
+						    <li class="divider"></li>
+						</ul>
+					</li>
+					
 				</ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -90,12 +115,10 @@
 			<div class="col-md-2" id="left-column"><!-- start of navigation column -->
 				<ul class="nav nav-pills nav-stacked" id="navigation">
 					<li><a href="@controllers.web.routes.Application.index()">Home</a></li>
-					<li ><a href="aboutus.html">About Us</a></li>
-					<li ><a href="#">Prices</a></li>
+					<li ><a href="@controllers.web.routes.Application.aboutUs()">About Us</a></li>
 					<li><a href="@controllers.web.routes.Application.newOrder()">Order Now</a></li>
-					<li><a href="#">How it works</a></li>
-					<li><a href="#">Prices</a></li>
-					<li><a href="#">How it works</a></li>
+					<li><a href="@controllers.web.routes.Application.howItWorks()">How it works</a></li>
+					<li><a href="@controllers.web.routes.Application.prices()">Prices</a></li>
 				</ul>
 			</div><!-- end of navigation column  -->
 			<div class="col-md-7" id="mainbody"><!-- start of main body -->
@@ -146,36 +169,39 @@
 		
 	</div>
 	<div class="container"><!--start outer container -->
-			<footer class="text-center"><!--start footer-->   
-				<div class="footer-below">
-						<div class="container"><!--start container -->
-								<div class="col-lg-12">
-									<h3>Social media</h3>
-									<ul class="list-inline intro-social-buttons">
-										<li>
-											<a href="https://twitter.com" ><i class="fa fa-twitter fa-fw"></i> <span class="network-name"></span></a>
-										</li>
-										<li>
-											<a href="https://facebook.com"><i class="fa fa-facebook fa-fw"></i> <span class="network-name"></span></a>
-										</li>
-										<li>
-											<a href="https://facebook.com"><i class="fa  fa-google-plus fa-fw"></i> <span class="network-name"></span></a>
-										</li>
-										<li>
-											<a href="https://www.linkedin.com/"><i class="fa  fa-linkedin fa-fw"></i> <span class="network-name"></span></a>
-										</li>
-									</ul>   
-									Copyright &copy; TimelyEssay 2014
-								</div>
-						</div><!--close container -->
+	    <footer class="text-center"><!--start footer-->   
+		<div class="footer-below">
+		      <div class="container"><!--start container -->
+				<div class="col-lg-12">
+				    <h3>Social media</h3>
+				    <ul class="list-inline intro-social-buttons">
+					    <li>
+						    <a href="https://twitter.com" ><i class="fa fa-twitter fa-fw"></i> <span class="network-name"></span></a>
+					    </li>
+					    <li>
+						    <a href="https://facebook.com"><i class="fa fa-facebook fa-fw"></i> <span class="network-name"></span></a>
+					    </li>
+					    <li>
+						    <a href="https://facebook.com"><i class="fa  fa-google-plus fa-fw"></i> <span class="network-name"></span></a>
+					    </li>
+					    <li>
+						    <a href="https://www.linkedin.com/"><i class="fa  fa-linkedin fa-fw"></i> <span class="network-name"></span></a>
+					    </li>
+				    </ul>   
+				    <a href="@controllers.web.routes.Application.disclamer()">Disclamer</a> | 
+				    <a href="@controllers.web.routes.Application.privacyPolicy()">Privacy policy</a> | 
+				    <a href="@controllers.web.routes.Application.termsAndConditions()">Terms &amp; Conditions</a><br>
+				    TimelyEssay.com Copyright &copy;2015
 				</div>
-			</footer><!--End footer-->
+		      </div><!--close container -->
+		</div>
+	    </footer><!--End footer-->
 			<div class="row">
 			</div>
 	</div><!--close outer container -->
 	<!-- Pure Chat Snippet -->
 	<script type='text/javascript'>
-	(function () {  var done = false;   var script = document.createElement('script'); script.async = true; script.type = 'text/javascript';    script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript'; document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) {   if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) { var w = new PCWidget({ c: '4bcd4a19-80d3-4ffa-b0fc-5a2960b4a651', f: true }); done = true;   }   };  })();
+	(function () {  var done = false;   var script = document.createElement('script'); script.async = true; script.type = 'text/javascript';    script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript'; document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) {   if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) { var w = new PCWidget({c:'4bcd4a19-80d3-4ffa-b0fc-5a2960b4a651', f: true }); done = true;}};})();
 	</script>
 	<!-- End Pure Chat Snippet -->
 	<!-- Scripts -->

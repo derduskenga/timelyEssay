@@ -73,9 +73,13 @@ public class ManageOrdersActions extends Controller{
 				//get the order by order_code
 			Orders orders = Orders.getOrderByCode(order_code);
 			Form<OrderProductFiles> orderProductFileBoundForm = Form.form(OrderProductFiles.class);
+
 			if(orders==null)
 				return badRequest(manageorder.render(null,orderProductFileBoundForm));
 			orderProductFileBoundForm =orderProductFileBoundForm.bindFromRequest();
+			Map<String,String> clientProductFileMap = new HashMap<String,String>();
+			clientProductFileMap = orderProductFileBoundForm.data();
+			String file_local_date = clientProductFileMap.get("file_local_date");
 			if(orderProductFileBoundForm.hasErrors()) {
 				flash("fileuploadresponseerror","There was an error.");
 				return badRequest(manageorder.render(orders,orderProductFileBoundForm));
@@ -108,7 +112,7 @@ public class ManageOrdersActions extends Controller{
 				  //order_file.renameTo(new File(uploadPath + file_name));
 				  orderFiles.file_name = file_name;
 				  orderFiles.content_type = contentType;
-				  orderFiles.upload_date = new Date();
+				  orderFiles.upload_date = OrderMessages.computeMessageUtcTime(Utilities.WRITER_TIMEZONE_OFFSET,file_local_date);
 				  File destination = new File(uploadPath, order_file.getName());
 				  orderFiles.file_size = order_file.length();
 				  orderFiles.storage_path = destination.toPath().toString();
@@ -145,7 +149,7 @@ public class ManageOrdersActions extends Controller{
 				  flash("fileuploadresponseerror","Server error. Please try again");
 				  return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
 				}catch(Exception ex){
-				  Logger.error("Server error on file upload: " + ex.getMessage().toString());
+				  Logger.error("Server error on file upload here: " + ex.getMessage().toString());
 				  flash("fileuploadresponseerror","Server error. Please try again");
 				  return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
 				}
@@ -285,16 +289,54 @@ public class ManageOrdersActions extends Controller{
 		
 	}
 	
-	public static Date orderSupportLocalTime(Date date,String support_email){
-	  //This is a deadline 
-	  AdminUser admin_user = AdminUser.findByEmail(support_email);
-	  Date utcTime = date;
-	  int client_offset = Integer.parseInt(admin_user.admin_user_offset);
-	  Calendar calender = Calendar.getInstance();
-	  calender.setTimeInMillis(utcTime.getTime());
-	  calender.add(Calendar.MINUTE,(client_offset*(-1)));//get local time
-	  Date localTime = calender.getTime();
-	  //order.order_deadline = localTime;
-	  return localTime;
-	}
+	  public static Result downloadProductFile(Long file_id){
+	    OrderProductFiles orderProductFiles = OrderProductFiles.getOrderProductFiles(file_id);
+	    if(orderProductFiles == null){
+	      flash("adminorderproductfiledownloaderror","File error. Please try again");
+	      return ok();
+	    }
+	    response().setContentType(orderProductFiles.content_type);  
+	    response().setHeader("Content-disposition","attachment; filename=" + orderProductFiles.file_name); 
+	    response().setHeader("Content-Length",String.valueOf(new File(orderProductFiles.storage_path).length()));
+	    try{
+	      orderProductFiles.has_been_downloaded = true;
+	      orderProductFiles.download_date = new Date();
+	      orderProductFiles.saveProductFile();
+	      return ok(new File(orderProductFiles.storage_path));
+	    }catch(Exception ex){
+	      flash("orderproductfiledownloaderror","File error. Please try again");
+	      return ok();
+	    }
+	    
+	  }
+	  
+	  public static Result adminDownloadOrderFile(Long file_id){
+	    OrderFiles orderFiles = OrderFiles.getOrderFileById(file_id);
+	    if(orderFiles == null){
+	      flash("orderfiledownloaderror","File error. Please try again");
+	      return ok();
+	    }
+	    response().setContentType(orderFiles.content_type);  
+	    response().setHeader("Content-disposition","attachment; filename=" + orderFiles.file_name); 
+	    response().setHeader("Content-Length",String.valueOf(new File(orderFiles.storage_path).length()));
+	    try{
+	      return ok(new File(orderFiles.storage_path));
+	    }catch(Exception ex){
+	      flash("orderfiledownloaderror","File error. Please try again");
+	      return ok();
+	    }
+	  }
+	  
+	  public static Date orderSupportLocalTime(Date date,String support_email){
+	    //This is a deadline 
+	    AdminUser admin_user = AdminUser.findByEmail(support_email);
+	    Date utcTime = date;
+	    int client_offset = Integer.parseInt(admin_user.admin_user_offset);
+	    Calendar calender = Calendar.getInstance();
+	    calender.setTimeInMillis(utcTime.getTime());
+	    calender.add(Calendar.MINUTE,(client_offset*(-1)));//get local time
+	    Date localTime = calender.getTime();
+	    //order.order_deadline = localTime;
+	    return localTime;
+	  }
 }

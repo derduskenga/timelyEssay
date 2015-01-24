@@ -82,7 +82,7 @@ public class ClientMails{
 					
 		}
 		
-		public void sendClientResetPasswordMail(String email, String token){
+		public void sendClientResetPasswordMail(final String email, final String token){
 			Thread t = new Thread() {
 						public void run() {
 										MandrillApi mandrillApi = new MandrillApi("qB6SN2vnpORIxTIjmlIoFA");
@@ -125,7 +125,7 @@ public class ClientMails{
 					t.start();
 		}
 		
-		public void sendPasswordChangedMail(String email){
+		public void sendPasswordChangedMail(final String email){
 						Thread t = new Thread() {
 						public void run() {
 										MandrillApi mandrillApi = new MandrillApi("qB6SN2vnpORIxTIjmlIoFA");

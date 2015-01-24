@@ -25,6 +25,8 @@ POST											/login											controllers.admincontrollers.Application.authent
 GET												/logout											controllers.admincontrollers.Application.logout()
 POST		/manageorder/askforextrapages/:pages/:order_code/:date  	controllers.admincontrollers.ManageOrdersActions.AskForExtraPages(pages:Int,order_code:Long,date:String)
 POST		/manageorder/askfordeadlineextensionadmin/:deadline/:date/:reason/:order_code		controllers.admincontrollers.ManageOrdersActions.AskForDeadlineExtension(deadline:String,date:String,reason:String,order_code:Long)
+GET		/manageorder/downloadproductfile/:file_id				controllers.admincontrollers.ManageOrdersActions.downloadProductFile(file_id:Long)
+GET		/manageorder/downloadOrderfile/:file_id			controllers.admincontrollers.ManageOrdersActions.adminDownloadOrderFile(file_id:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 #GET     /assets/*file               controllers.admincontrollers.Assets.versioned(path="/public", file: Asset)

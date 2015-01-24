@@ -91,7 +91,7 @@ public class OrderMessages extends Model{
 					return  orderMessagesFinder.where()
 							.eq("orders.order_code",order_code)
 							.or(Expr.eq("msg_to", MessageParticipants.CLIENT),Expr.eq("msg_from", MessageParticipants.CLIENT))
-							.orderBy("sent_on").findList();
+							.orderBy("sent_on desc").findList();
 		}
 		
 		public int getUnreadMessages(Long order_code){
@@ -185,6 +185,20 @@ public class OrderMessages extends Model{
 		  }
 		  return message_date;
 		}
+		
+		
+	  public static Date clientMessageLocalTime(Date date,String client_email){
+	    //This is a deadline 
+	    Client client = Client.getClient(client_email);
+	    Date utcTime = date;
+	    int client_offset = Integer.parseInt(client.client_time_zone_offset);
+	    Calendar calender = Calendar.getInstance();
+	    calender.setTimeInMillis(utcTime.getTime());
+	    calender.add(Calendar.MINUTE,(client_offset*(-1)));//get local time
+	    Date localTime = calender.getTime();
+	    //order.order_deadline = localTime;
+	    return localTime;
+	  }
 		
 		public enum ActionableMessageType{
 		  ADDITIONAL_PAGES,DEADLINE_EXTENSION,OTHER

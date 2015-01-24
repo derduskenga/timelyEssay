@@ -24,8 +24,7 @@ $(document).ready(function(event){
       }, {
 	offset:'75%'
       });
-    });
-    
+    });    
     
     $area.each(function(){ 
       var elemid = $(this).attr('id');
@@ -51,6 +50,33 @@ $(document).ready(function(event){
       });
     });
     
+    $(function () {
+      $(window).scroll(stickNewMessageButton);
+      if($('#button-sticky').length != 0){
+	stickNewMessageButton();
+      }
+    });
     
-    
+    if($('#message-form-div').length != 0){
+      scrollMessageFormToTop();
+    }
+      
 });
+
+function stickNewMessageButton(){
+  if($('#button-sticky').length != 0){
+      var window_top = $(window).scrollTop();
+      var div_top = $('#button-sticky').offset().top;
+      if (window_top > div_top) {
+	  $('#message-form-div').addClass('stick');
+      } else {
+	  $('#message-form-div').removeClass('stick');
+      }
+  }
+}
+
+function scrollMessageFormToTop(){
+    $('#new-message-btn').click(function(){
+      $('html, body').animate({scrollTop:0}, 'slow');
+    });
+}
