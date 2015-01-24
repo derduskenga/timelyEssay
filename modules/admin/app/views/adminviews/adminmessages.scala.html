@@ -17,7 +17,7 @@
 					@for(message <- orderMessages){
 					@if(message.msg_from != models.orders.MessageParticipants.SUPPORT){
 							@if(message.msg_from == models.orders.MessageParticipants.CLIENT){
-								<div class="message-shared-class from-client-msg @if(message.status){read}else{unread}" id="to-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
+								<div class="message-shared-class from-client-msg @if(message.msg_to==models.orders.MessageParticipants.SUPPORT){msg-to-support} @if(message.status){read}else{unread} @if(message.status){read}else{unread}" id="@orders.order_code-@message.id">
 									<div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize  <small>to</small> @message.msg_to.toString().toLowerCase().capitalize <small>on</small>  @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
 									<div class="bubble">
 									<pre>@Html(message.message)</pre>
@@ -25,7 +25,7 @@
 									</div>     
 								</div> 
 							}else{
-								<div class="message-shared-class from-writer-msg @if(message.status){read}else{unread}" id="to-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
+								<div class="message-shared-class from-writer-msg @if(message.msg_to==models.orders.MessageParticipants.SUPPORT){msg-to-support} @if(message.status){read}else{unread}" id="@orders.order_code-@message.id">
 									<div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize to @message.msg_to.toString().toLowerCase().capitalize<small>on</small>  @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
 									<div class="bubble">
 									<pre>@Html(message.message)</pre>

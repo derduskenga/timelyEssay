@@ -24,8 +24,10 @@ GET				/manageorder/:order_code			    			controllers.admincontrollers.ManageOrde
 POST			/manageorder/uploadfile/:order_code			controllers.admincontrollers.ManageOrdersActions.uploadProductFile(order_code: Long)
 
 #admin manage order messages
-GET				/manageorder/messages/:order_code		controllers.admincontrollers.ManageOrdersActions.orderMessages(order_code: Long)
-POST			/manageorder/messages/:order_code		controllers.admincontrollers.ManageOrdersActions.saveAdminMessage(order_code: Long)
+GET				/manageorder/messages/:order_code				controllers.admincontrollers.ManageOrdersActions.orderMessages(order_code: Long)
+POST			/manageorder/messages/:order_code				controllers.admincontrollers.ManageOrdersActions.saveAdminMessage(order_code: Long)
+POST			/manageorder/messages/markread/:msg_id		controllers.admincontrollers.ManageOrdersActions.markMessageRead(msg_id: Long)
+
 #admin login logout actions
 GET												/login											controllers.admincontrollers.Application.login()
 POST											/login											controllers.admincontrollers.Application.authenticate()
