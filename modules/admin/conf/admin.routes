@@ -23,14 +23,17 @@ GET			/manageorders			   controllers.admincontrollers.ManageOrdersActions.manage
 GET				/manageorder/:order_code			    			controllers.admincontrollers.ManageOrdersActions.manageOrder(order_code: Long)
 POST			/manageorder/uploadfile/:order_code			controllers.admincontrollers.ManageOrdersActions.uploadProductFile(order_code: Long)
 
+#admin manage order messages
+GET				/manageorder/messages/:order_code				controllers.admincontrollers.ManageOrdersActions.orderMessages(order_code: Long)
+POST			/manageorder/messages/:order_code				controllers.admincontrollers.ManageOrdersActions.saveAdminMessage(order_code: Long)
+POST			/manageorder/messages/markread/:msg_id		controllers.admincontrollers.ManageOrdersActions.markMessageRead(msg_id: Long)
+
 #admin login logout actions
 GET												/login											controllers.admincontrollers.Application.login()
 POST											/login											controllers.admincontrollers.Application.authenticate()
 GET												/logout											controllers.admincontrollers.Application.logout()
 POST		/manageorder/askforextrapages/:pages/:order_code/:date  	controllers.admincontrollers.ManageOrdersActions.AskForExtraPages(pages:Int,order_code:Long,date:String)
 POST		/manageorder/askfordeadlineextensionadmin/:deadline/:date/:reason/:order_code		controllers.admincontrollers.ManageOrdersActions.AskForDeadlineExtension(deadline:String,date:String,reason:String,order_code:Long)
-GET		/manageorder/downloadproductfile/:file_id				controllers.admincontrollers.ManageOrdersActions.downloadProductFile(file_id:Long)
-GET		/manageorder/downloadOrderfile/:file_id			controllers.admincontrollers.ManageOrdersActions.adminDownloadOrderFile(file_id:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 #GET     /assets/*file               controllers.admincontrollers.Assets.versioned(path="/public", file: Asset)
