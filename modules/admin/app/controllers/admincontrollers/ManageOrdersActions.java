@@ -297,8 +297,6 @@ public class ManageOrdersActions extends Controller{
 			orderMessages = OrderMessages.getAdminOrderMessages(order_code);
 			return orderMessages;
 	}
-<<<<<<< HEAD
-=======
 	
 	public static Result markMessageRead(Long msg_id){
 			OrderMessages ordermsg = new OrderMessages().getMessageById(msg_id);
@@ -308,8 +306,44 @@ public class ManageOrdersActions extends Controller{
 			}
 			return ok();
 	}
->>>>>>> sam-branch
 
+	 public static Result adminDownloadOrderFile(Long file_id){
+	    OrderFiles orderFiles = OrderFiles.getOrderFileById(file_id);
+	    if(orderFiles == null){
+	      flash("orderfiledownloaderror","File error. Please try again");
+	      return ok();
+	    }
+	    response().setContentType(orderFiles.content_type);  
+	    response().setHeader("Content-disposition","attachment; filename=" + orderFiles.file_name); 
+	    response().setHeader("Content-Length",String.valueOf(new File(orderFiles.storage_path).length()));
+	    try{
+	      return ok(new File(orderFiles.storage_path));
+	    }catch(Exception ex){
+	      flash("orderfiledownloaderror","File error. Please try again");
+	      return ok();
+	    }
+	  }
+	  
+	  public static Result downloadProductFile(Long file_id){
+	    OrderProductFiles orderProductFiles = OrderProductFiles.getOrderProductFiles(file_id);
+	    if(orderProductFiles == null){
+	      flash("adminorderproductfiledownloaderror","File error. Please try again");
+	      return ok();
+	    }
+	    response().setContentType(orderProductFiles.content_type);  
+	    response().setHeader("Content-disposition","attachment; filename=" + orderProductFiles.file_name); 
+	    response().setHeader("Content-Length",String.valueOf(new File(orderProductFiles.storage_path).length()));
+	    try{
+	      orderProductFiles.has_been_downloaded = true;
+	      orderProductFiles.download_date = new Date();
+	      orderProductFiles.saveProductFile();
+	      return ok(new File(orderProductFiles.storage_path));
+	    }catch(Exception ex){
+	      flash("orderproductfiledownloaderror","File error. Please try again");
+	      return ok();
+	    }
+	    
+	  } 
 	public static Result saveAdminMessage(Long order_code){
 			Form<OrderMessages> newBoundMessageForm = Form.form(OrderMessages.class).bindFromRequest();
 			Orders orders = Orders.getOrderByCode(order_code);
