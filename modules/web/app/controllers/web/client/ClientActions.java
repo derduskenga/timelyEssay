@@ -98,6 +98,7 @@ public class ClientActions extends Controller{
 			orderMessages = OrderMessages.getClientOrderMessages(order_code);
 			return orderMessages;
 	}
+	
 	public static Result orderMessages(Long order_code){
 	   return ok(clientmessages.render(Orders.getOrderByCode(order_code),newMessageForm, OrderMessages.getReceipientsMap("CLIENT"),getOrderMessages(order_code)));
 	}
