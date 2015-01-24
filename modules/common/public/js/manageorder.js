@@ -1,16 +1,40 @@
 $(document).ready(function(){
+  setInterval(setFileLocalTime, 5000);
   validateUploadFile();
   askDeadlineExtensionAdmin();
   askForExtraPages();
   
   submitAskForExtraPages();
   submitAskForDeadlineExtension();
+  adminProductFileDownload();
+  adminOrderFileDownload(); 
   
   jQuery('#order_deadline_admin').datetimepicker({
     format:'Y-m-d H:i'
   });
   
 });
+
+function adminOrderFileDownload(){
+  $('.order-file-shared-class').click(function(e){
+    e.preventDefault();
+    var file_id = this.id.split("-")[2];
+    window.location.href = "/manageorder/downloadOrderfile/" + file_id;
+  });
+}
+
+
+function adminProductFileDownload(){
+  $('.admin-product-file-shared-class').click(function(e){
+    e.preventDefault();
+    var file_id = this.id.split("-")[2];
+    window.location.href = "/manageorder/downloadproductfile/" + file_id;
+  });
+}
+
+function setFileLocalTime(){
+  $('#file_local_date').val(new Date().getTime());
+}
 
 function submitAskForDeadlineExtension(){
    $('#btn-deadline-extension-admin').click(function(event){

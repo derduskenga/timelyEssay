@@ -61,9 +61,19 @@ public class ClientActions extends Controller{
 	
 	public static Result saveClientMessage(Long order_code){
 	  ObjectNode result = Json.newObject();
+
 	  Form<OrderMessages> newBoundMessageForm = form(OrderMessages.class).bindFromRequest();
+	  
+	  Map<String,String> messageFormDataMap = new HashMap<String,String>();
+	  messageFormDataMap = newBoundMessageForm.data();
+	  String client_local_date = messageFormDataMap.get("client_local_time");
 	  Orders orders = Orders.getOrderByCode(order_code);
 	  if(orders == null){
+	    return badRequest(clientmessages.render(orders,newBoundMessageForm, OrderMessages.getReceipientsMap("CLIENT"), getOrderMessages(order_code)));
+	  }
+	  
+	  Client client = Client.getClient(session().get("email"));
+	  if(client == null){
 	    return badRequest(clientmessages.render(orders,newBoundMessageForm, OrderMessages.getReceipientsMap("CLIENT"), getOrderMessages(order_code)));
 	  }
 	  if(newBoundMessageForm.hasErrors()) {
@@ -75,6 +85,7 @@ public class ClientActions extends Controller{
 	  orderMessage.msg_from = MessageParticipants.CLIENT;
 	  orderMessage.orders = orders;
 	  orderMessage.message_promise_value = "none";
+	  orderMessage.sent_on = OrderMessages.computeMessageUtcTime(client.client_time_zone_offset,client_local_date);
 	  orderMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
 	  if(orderMessage.saveClientMessage()){
 		  return redirect(controllers.web.client.routes.ClientActions.orderMessages(order_code));
@@ -172,6 +183,9 @@ public class ClientActions extends Controller{
 	    return redirect(controllers.web.client.routes.ClientActions.clientViewOrder(order_code));
 	  }
 	  Form<OrderFiles> orderFileBoundForm = orderFilesForm.bindFromRequest();
+	   Map<String,String> clientOrderFileMap = new HashMap<String,String>();
+	   clientOrderFileMap = orderFileBoundForm.data();
+	   String file_local_time = clientOrderFileMap.get("file_upload_local_time");
 	  if(orderFileBoundForm.hasErrors()) {
 	    flash("fileuploadresponseerror","There was an error.");
 	    return badRequest(clientvieworder.render(orders.orderClientLocalTime(orders),orderFileBoundForm,new OrderMessages().getUnreadMessages(order_code)));
@@ -204,7 +218,7 @@ public class ClientActions extends Controller{
 		//order_file.renameTo(new File(uploadPath + file_name));
 		orderFiles.file_name = file_name;
 		orderFiles.content_type = contentType;
-		orderFiles.upload_date = new Date();
+		orderFiles.upload_date = OrderMessages.computeMessageUtcTime(orders.client.client_time_zone_offset,file_local_time);
 		File destination = new File(uploadPath, order_file.getName());
 		orderFiles.file_size = order_file.length();
 		orderFiles.storage_path = destination.toPath().toString();

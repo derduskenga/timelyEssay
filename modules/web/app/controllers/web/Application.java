@@ -13,12 +13,7 @@ import play.mvc.Http.Request;
 import play.api.mvc.Cookie;
 import play.api.mvc.DiscardingCookie;
 import play.data.validation.ValidationError;
-import views.html.home;
-import views.html.orderSummary;
-import views.html.forgotpassword;
-import views.html.resetpassword;
-import views.html.errorpage;
-import views.html.orderClientForm;
+import views.html.*;
 import models.client.Client;
 import play.data.validation.Constraints;
 import models.orders.Orders;
@@ -54,10 +49,89 @@ public class Application extends Controller{
 	static Form<Orders> orderForm = form(Orders.class);
 	static Form<Client> clientForm = form(Client.class);
 	static Map<String,List<ValidationError>> error = new LinkedHashMap<String,List<ValidationError>>();
+	
 	public static Result index(){
 		return ok(home.render(loginForm));
 	}
 	
+	public static Result disclamer(){
+	      return ok(disclamer.render(loginForm));
+	}
+	
+	public static Result privacyPolicy(){
+	      return ok(privacypolicy.render(loginForm));
+	}
+	
+	public static Result termsAndConditions(){
+	      return ok(termsandconditions.render(loginForm));
+	}
+	
+	public static Result essay(){
+	      return ok(essay.render(loginForm));
+	}
+	
+	public static Result bookReport(){
+	      return ok(bookreport.render(loginForm));
+	}
+	
+	public static Result researchPaper(){
+	      return ok(researchpaper.render(loginForm));
+	}
+	
+	public static Result coursework(){
+	    return ok(coursework.render(loginForm)); 
+	}
+	
+	public static Result editing(){
+	    return ok(editing.render(loginForm));
+	}
+	
+	public static Result admision(){
+	    return ok(admision.render(loginForm));
+	}
+	
+	public static Result dissertation(){
+	    return ok(dissertation.render(loginForm));
+	}
+	
+	public static Result termPaper(){
+	  return ok(termpaper.render(loginForm));
+	}
+
+	public static Result mathProblem(){
+	  return ok(mathproblem.render(loginForm));
+	}	
+	public static Result programming(){
+	  return ok(programming.render(loginForm));
+	}	
+	public static Result proofReading(){
+	  return ok(proofreading.render(loginForm));
+	}	
+	public static Result homework(){
+	  return ok(homework.render(loginForm));
+	}	
+	public static Result labReport(){
+	  return ok(labreport.render(loginForm));
+	}
+	public static Result reviewWriting(){
+	  return ok(reviewwriting.render(loginForm));
+	}
+	
+	public static Result articleCritique(){
+	    return ok(articlecritique.render(loginForm));
+	}
+	public static Result presentation(){
+	  return ok(presentation.render(loginForm));
+	}
+	public static Result prices(){
+	  return ok(prices.render(loginForm));
+	}
+	public static Result howItWorks(){
+	  return ok(howitworks.render(loginForm));
+	}
+	public static Result aboutUs(){
+	  return ok(aboutus.render(loginForm));
+	}
 	public static Result logout(){
 		session().clear();
 		return redirect(routes.Application.index());

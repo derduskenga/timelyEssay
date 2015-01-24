@@ -27,7 +27,25 @@
     border-radius: 0.5ex;
     background-color: #D6D6FF;
 }
+
 #sticky.stick {
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    border-radius: 0 0 0.5em 0.5em;
+}
+
+#message-form-div {
+    padding: 0.009ex;
+    font-size: 2em;
+    border-radius: 0.5ex;
+    background-color: #FFFFFF;
+    width:100%;
+    padding-top:20px;
+    padding-bottom:0px;
+}
+
+#message-form-div.stick {
     position: fixed;
     top: 0;
     z-index: 10000;

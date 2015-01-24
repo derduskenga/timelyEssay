@@ -159,10 +159,10 @@
 	    }
 	      <legend>Upload your order files</legend>
 	      <div>
-		@orderfileupload(orderFilesForm("order_file"),
+		@orderfileupload(orderFilesForm("order_file"), 
 		  label = "Upload order File",
 		  divClass="col-sm-5")
-		  
+		  <input type="hidden" id="file_upload_local_time" name="file_upload_local_time">
 		<div class="col-sm-2 form-group">
 		  <input type="submit" class="btn btn-primary" value="Upload file" id = "order-file-form-submit">
 		</div>
@@ -197,7 +197,7 @@
 	    <td> @productFiles.owner.name()</td>
 	    <td> @productFiles.file_name  <a href="#" title="download" class="product-file-shared-class" id="product-file-@productFiles.id"><span class="fa fa-download file-download-icon"> </span></a></td>
 	    <td> @(Math.round((productFiles.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB</td>
-	    <td> @(productFiles.upload_date.format("YYYY-MM-dd HH:mm"))</td>
+	    <td>@(OrderMessages.clientMessageLocalTime(productFiles.upload_date,session.get("email")).format("YYYY-MM-dd HH:mm a"))</td>
 	
 	  </tr>
 	  }	  

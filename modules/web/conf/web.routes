@@ -3,9 +3,33 @@
 # ~~~~
 
 # Home page
-GET							/																	controllers.web.Application.index()
-POST	   					/login															controllers.web.Application.authenticate()
-GET	   						/logout															controllers.web.Application.logout()
+GET							/				controllers.web.Application.index()
+POST	   						/login				controllers.web.Application.authenticate()
+GET	   						/logout				controllers.web.Application.logout()
+GET							/disclamer			controllers.web.Application.disclamer()
+GET							/privacypolicy			controllers.web.Application.privacyPolicy()
+GET							/termsandconditions		controllers.web.Application.termsAndConditions()
+GET							/essay				controllers.web.Application.essay()
+GET							/bookreport			controllers.web.Application.bookReport()
+GET							/researchpaper			controllers.web.Application.researchPaper()
+GET							/coursework			controllers.web.Application.coursework()
+GET							/editing			controllers.web.Application.editing()
+GET							/admision			controllers.web.Application.admision()
+GET							/dissertation			controllers.web.Application.dissertation()
+GET							/termpaper			controllers.web.Application.termPaper()
+GET							/mathproblem			controllers.web.Application.mathProblem()
+
+GET							/programming			controllers.web.Application.programming()
+GET							/proofreading			controllers.web.Application.proofReading()
+GET							/homework			controllers.web.Application.homework()
+GET							/labreport			controllers.web.Application.labReport()
+GET							/reviewwriting			controllers.web.Application.reviewWriting()
+GET							/articlecritique		controllers.web.Application.articleCritique()
+GET							/presentation			controllers.web.Application.presentation()
+GET							/prices				controllers.web.Application.prices()
+GET							/howitworks			controllers.web.Application.howItWorks()
+GET							/aboutus			controllers.web.Application.aboutUs()
+
 
 #client pages
 GET	   		/mydashboard				controllers.web.client.ClientActions.index()
@@ -17,11 +41,11 @@ GET			/mydashboard/preferredwriters		controllers.web.client.ClientActions.prefer
 POST			/mydashboard/savepreferredwriter	controllers.web.client.ClientActions.savePreferredWriter()
 
 #client reset password
-GET 				/reset-password									controllers.web.Application.resetPassword(token:String?="")					
+GET 			/reset-password									controllers.web.Application.resetPassword(token:String?="")					
 POST 			/reset-password									controllers.web.Application.saveResetPassword()
 
 #placing a new order 
-GET				/neworder					   controllers.web.Application.newOrder()	
+GET			/neworder					   controllers.web.Application.newOrder()	
 POST			/submitorder					   controllers.web.Application.saveClientOrder()
 POST			/fetch/countriesjson				   controllers.web.Application.fetchCountries()
 POST			/fetch/orderdocument/:docId			   controllers.web.Application.fetchDocument(docId:Long)
