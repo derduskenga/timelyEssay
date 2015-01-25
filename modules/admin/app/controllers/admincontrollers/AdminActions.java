@@ -47,19 +47,20 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import models.admin.security.NoUserDeadboltHandler;
 
 @Security.Authenticated(AdminSecured.class)
-@Restrict({@Group({"Super Admin"})})
 public class AdminActions extends Controller{
 	
 	public static Result index(){
 			return ok(adminhome.render());
 	}
 	
+	@Restrict({@Group({"Super Admin"})})
 	public static Result createNewAdminUser(){
 			Form<AdminUser> adminUserForm = Form.form(AdminUser.class);
 			AdminUser adminUser = new AdminUser();
 			return ok(createadminuser.render(adminUserForm,adminUser.getAdminRoles(adminUser.getRoles())));
 	}
 	
+	@Restrict({@Group({"Super Admin"})})
 	public static Result saveNewAdminUser(){			
 			Form<AdminUser> 	adminUserForm = form(AdminUser.class).bindFromRequest();	
 			AdminUser adminUser = new AdminUser();
@@ -94,23 +95,23 @@ public class AdminActions extends Controller{
 									
 					 }
 			}
-			
 			RandomString randomString = new RandomString(8);
 			String random = randomString.nextString();
-			
-			try{
-					String hashedPassword =PasswordHash.createHash(random);
-					String[] params = hashedPassword.split(":");
-					adminUser.password = params[0];
-					adminUser.salt = params[1];
-			}catch(Exception e){
-					Logger.error("Error creating hashed password",e);
+			if(adminUser.admin_user_id==null){
+					try{
+							String hashedPassword =PasswordHash.createHash(random);
+							String[] params = hashedPassword.split(":");
+							adminUser.password = params[0];
+							adminUser.salt = params[1];
+							AdminMails am = new AdminMails();
+							am.sendRegisteredAdminFirstEmail(adminUser,random);
+					}catch(Exception e){
+							Logger.error("Error creating hashed password and sending mail for new admin user.",e);
+							Logger.info(String.format("Error: Admin mail and password %s %s", adminUser.email, random));
+					}
 			}
-			
 			if(adminUser.saveAdminUser()){
 				Ebean.saveManyToManyAssociations(adminUser,"roles");
-				AdminMails am = new AdminMails();
-				am.sendRegisteredAdminFirstEmail(adminUser,random);
 				flash("success", "Admin user successfully saved.");
 				return redirect(controllers.admincontrollers.routes.AdminActions.createNewAdminUser());
 			}
@@ -118,6 +119,7 @@ public class AdminActions extends Controller{
 			return redirect(controllers.admincontrollers.routes.AdminActions.createNewAdminUser());
 	}
 	
+	@Restrict({@Group({"Super Admin"})})
 	public static Result manageAdminUsers(){
 			AdminUser users = new AdminUser();
 			List<AdminUser> list = users.fetchAll();
@@ -128,6 +130,7 @@ public class AdminActions extends Controller{
 			return ok(adminprofile.render(AdminUser.findByEmail(session().get("admin_email"))));
 	}
 	
+	@Restrict({@Group({"Super Admin"})})
 	public static Result deactivateAdminUser(Long admin_user_id){
 				ObjectNode result = Json.newObject();
 				AdminUser user = new AdminUser();
@@ -176,12 +179,14 @@ public class AdminActions extends Controller{
 			return ok(createadminuser.render(filledUserForm,adminUser.getAdminRoles(user.getRoles())));
 	}
 	
+	@Restrict({@Group({"Super Admin"})})
 	public static Result newAdminRole(){
 			Form<SecurityRole> securityRoleForm = Form.form(SecurityRole.class);
 			List<SecurityRole> securityRoles = new SecurityRole().getAllSecurityRoles();
 			return ok(adminroles.render(securityRoleForm, securityRoles));
 	}
 	
+	@Restrict({@Group({"Super Admin"})})
 	public static Result saveNewAdminRole(){
 			Form<SecurityRole> boundForm = Form.form(SecurityRole.class).bindFromRequest();
 			if(boundForm.hasErrors()){
