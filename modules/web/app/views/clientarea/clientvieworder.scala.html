@@ -189,18 +189,18 @@
 	    <td><strong> Name </strong></td>
 	    <td><strong> Size </strong></td>
 	    <td><strong> Upload date </strong></td>
+	    <td><strong>Product Approval</strong></td>
 	  </tr>
 	  @for(productFiles <- clientOrders.orderProductFiles){
 	  <tr>
-	  <!--width="28" height="22"  -->
-	    <td> @productFiles.product_file_type.name() </td>
-	    <td> @productFiles.owner.name()</td>
-	    <td> @productFiles.file_name  <a href="#" title="download" class="product-file-shared-class" id="product-file-@productFiles.id"><span class="fa fa-download file-download-icon"> </span></a></td>
+	    <td>@productFiles.product_file_type.name() </td>
+	    <td>@productFiles.owner.name()</td>
+	    <td>@productFiles.file_name<a href="#" title="download" class="product-file-shared-class" id="product-file-@productFiles.id"><span class="fa fa-download file-download-icon"></span></a></td>
 	    <td> @(Math.round((productFiles.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB</td>
 	    <td>@(OrderMessages.clientMessageLocalTime(productFiles.upload_date,session.get("email")).format("YYYY-MM-dd HH:mm a"))</td>
-	
+	    <td><a class="btn btn-warning"><span class="fa fa-download file-download-icon"></span>Approve</a></td>	
 	  </tr>
-	  }	  
+	  }
 	</table>
 	      <a href="#" title="extend deadline" id="extend-deadline-link"> <img height="25" width="25" src="@routes.Assets.at("images/extend-deadline.png")"/>&nbsp;&nbsp;Extend deadline</a> &nbsp;&nbsp;&nbsp;
 	      @if(clientOrders.is_complete){<a href="#" class='' title="Ask for revision" id="ask-for-revision-link"> <img height="25" width="25" src="@routes.Assets.at("images/revise.png")"/>&nbsp;&nbsp;Ask for revision</a> &nbsp;&nbsp;&nbsp;
