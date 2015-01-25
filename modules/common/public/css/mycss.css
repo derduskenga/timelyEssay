@@ -154,3 +154,15 @@ footer .footer-below {
 #mainbody{
 	padding-top:00px;
 }
+
+.btn.btn-warning{
+	 background-color:#B28000;
+	 border-color:#B28000;
+}
+
+.order-text{
+	color:#B28000;
+}
+li.active a span.order-text{
+	color:#fff;
+}
