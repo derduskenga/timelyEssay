@@ -10,9 +10,9 @@ object GlobalWeb extends GlobalSettings {
 		play.mvc.Http.Context.current.set(play.core.j.JavaHelpers.createJavaContext(request));
 		var arrays = request.uri.split("/").toList.contains("mydashboard");
 		if(arrays)
-			Future.successful(NotFound(views.html.web.errors.dashboardOnHandlerNotFound(request)))
+			Future.successful(NotFound(views.html.errors.dashboardOnHandlerNotFound(request)))
 		else
-			Future.successful(NotFound(views.html.web.errors.onHandlerNotFound(request)))
+			Future.successful(NotFound(views.html.errors.onHandlerNotFound(request)))
 	}
 	
 	// 500 - internal server error
@@ -20,9 +20,9 @@ object GlobalWeb extends GlobalSettings {
 		play.mvc.Http.Context.current.set(play.core.j.JavaHelpers.createJavaContext(request));
 		var arrays = request.uri.split("/").toList.contains("mydashboard");
 		if(arrays)
-			Future.successful(InternalServerError(views.html.web.errors.dashboardOnError(throwable)))
+			Future.successful(InternalServerError(views.html.errors.dashboardOnError(throwable)))
 		else	
-			Future.successful(InternalServerError(views.html.web.errors.onError(throwable))	)
+			Future.successful(InternalServerError(views.html.errors.onError(throwable))	)
 	}
 	
 	// called when a route is found, but it was not possible to bind the request parameters
@@ -30,8 +30,8 @@ object GlobalWeb extends GlobalSettings {
 		var arrays = request.uri.split("/").toList.contains("mydashboard");
 		play.mvc.Http.Context.current.set(play.core.j.JavaHelpers.createJavaContext(request));
 		if(arrays)
-			Future.successful(BadRequest(views.html.web.errors.dashboardbadrequest.render()));
+			Future.successful(BadRequest(views.html.errors.dashboardbadrequest.render()));
 		else
-		Future.successful(BadRequest(views.html.web.errors.webbadrequest.render()))
+		Future.successful(BadRequest(views.html.errors.webbadrequest.render()))
 	}
 }
