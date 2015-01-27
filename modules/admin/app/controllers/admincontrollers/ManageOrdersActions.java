@@ -74,14 +74,14 @@ public class ManageOrdersActions extends Controller{
 				//get the order by order_code
 			Orders orders = Orders.getOrderByCode(order_code);
 			Form<OrderProductFiles> orderProductFileBoundForm = Form.form(OrderProductFiles.class);
-			Map<String,String> clientProductFileMap = new HashMap<String,String>();
-			clientProductFileMap = orderProductFileBoundForm.data();
-			String file_local_date = clientProductFileMap.get("file_local_date");
-
 
 			if(orders==null)
 				return badRequest(manageorder.render(null,orderProductFileBoundForm));
 			orderProductFileBoundForm =orderProductFileBoundForm.bindFromRequest();
+			Map<String,String> clientProductFileMap = new HashMap<String,String>();
+			clientProductFileMap = orderProductFileBoundForm.data();
+			String file_local_date = clientProductFileMap.get("file_local_date");
+			Logger.info("file_local_date:" + file_local_date);
 			if(orderProductFileBoundForm.hasErrors()) {
 				flash("fileuploadresponseerror","There was an error.");
 				return badRequest(manageorder.render(orders,orderProductFileBoundForm));

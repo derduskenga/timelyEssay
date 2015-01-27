@@ -287,7 +287,7 @@ values
 (3,2,'order is paid per question for Multiple Choice questions (time-bound/non-time bound)');
 ----deadlines
 insert into order_deadlines(id,deadline_value,deadline_unit,seconds_elapsing_to_deadline) values
-(1,10,'days',864000),(2,20,'days',1728000),(3,7,'days',604800),(4,1,'day',86400),(5,12,'hours',43200),(6,6,'hours',21600),(7,3,'hours',10800),(8,2,'months',51840000);
+(1,10,'days',864000),(2,20,'days',1728000),(3,7,'days',604800),(4,1,'day',86400),(5,12,'hours',43200),(6,6,'hours',21600),(7,3,'hours',10800),(8,2,'months',5184000);
 
 ---deadline categories
 insert into order_deadline_category (id,order_deadline_category_name,order_deadline_category_description) values
@@ -344,3 +344,5 @@ insert into fine_type(id,fine_name,fine_percentage,fine_description) values
 ----Additinal qurries 
 insert into order_product_files (id,owner,file_size,file_name,file_sent_to,storage_path,content_type,upload_date,download_date,product_file_type,has_been_downloaded,plagiarism,orders_order_id) values
 (1,1,76456123,'play for java book.pdf',0,'/home/derdus/orderfiles/multipartBody230397776683012302asTemporaryFile','application/pdf','2014-12-28 21:27:32.483','2014-12-28 22:31:41.247',1,true,0,1);
+
+ALTER TABLE orders add column approved boolean DEFAULT false;

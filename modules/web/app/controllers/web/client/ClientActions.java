@@ -487,6 +487,22 @@ public class ClientActions extends Controller{
 	 }
 	}
 	
+	public static Result approveOrderProduct(Long order_code){
+	    //Logger.info("order_code:" + order_code);
+	    Orders orders = Orders.getOrderByCode(order_code);
+	    JSONObject jobject = new JSONObject();
+	    if(orders == null){
+	      jobject.put("success",0);
+	      jobject.put("message","An error occured. Please try again");
+	      return ok(Json.parse(jobject.toString()));
+	    }
+	    orders.approved = true;
+	    orders.saveOrder();  
+	    jobject.put("success",1);
+	    jobject.put("message","Thank you for approving this order");
+	    return ok(Json.parse(jobject.toString()));  
+	}
+	
 	public static Result pay(Long order_code){
 	  return TODO;
 	}

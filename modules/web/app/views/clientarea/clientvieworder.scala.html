@@ -189,7 +189,6 @@
 	    <td><strong> Name </strong></td>
 	    <td><strong> Size </strong></td>
 	    <td><strong> Upload date </strong></td>
-	    <td><strong>Product Approval</strong></td>
 	  </tr>
 	  @for(productFiles <- clientOrders.orderProductFiles){
 	  <tr>
@@ -197,14 +196,23 @@
 	    <td>@productFiles.owner.name()</td>
 	    <td>@productFiles.file_name<a href="#" title="download" class="product-file-shared-class" id="product-file-@productFiles.id"><span class="fa fa-download file-download-icon"></span></a></td>
 	    <td> @(Math.round((productFiles.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB</td>
-	    <td>@(OrderMessages.clientMessageLocalTime(productFiles.upload_date,session.get("email")).format("YYYY-MM-dd HH:mm a"))</td>
-	    <td><a class="btn btn-warning"><span class="fa fa-download file-download-icon"></span>Approve</a></td>	
+	    <td>@(OrderMessages.clientMessageLocalTime(productFiles.upload_date,session.get("email")).format("YYYY-MM-dd HH:mm a"))</td>	
 	  </tr>
 	  }
+	  
+	  @if(clientOrders.is_complete){<tr><td colspan="5"><p align="center"><a href="#" id="approve-order-@clientOrders.order_code" class="btn btn-warning approve-order-class" @if(clientOrders.approved){disabled}>@if(clientOrders.approved){<i class="fa fa-thumbs-up"></i>
+ You have approved Order Product}else{Approve Order Product}</a></p></td></tr>}
+	  
 	</table>
-	      <a href="#" title="extend deadline" id="extend-deadline-link"> <img height="25" width="25" src="@routes.Assets.at("images/extend-deadline.png")"/>&nbsp;&nbsp;Extend deadline</a> &nbsp;&nbsp;&nbsp;
-	      @if(clientOrders.is_complete){<a href="#" class='' title="Ask for revision" id="ask-for-revision-link"> <img height="25" width="25" src="@routes.Assets.at("images/revise.png")"/>&nbsp;&nbsp;Ask for revision</a> &nbsp;&nbsp;&nbsp;
-	      <a href="#" class='' title="Fill feedback survey" id="fill-feedback-survey-link"> <img height="25" width="25" src="@routes.Assets.at("images/feedback.jpg")"/>&nbsp;&nbsp;Fill feedback survey</a>&nbsp;&nbsp;&nbsp;}
+	      @if(!clientOrders.approved){<a href="#" title="extend deadline" id="extend-deadline-link"> <img height="25" width="25" src="@routes.Assets.at("images/extend-deadline.png")"/>&nbsp;&nbsp;Extend deadline</a> &nbsp;&nbsp;&nbsp;}
+	      
+	      @if(clientOrders.is_complete){
+	      
+		  @if(!clientOrders.approved){<a href="#" class='' title="Ask for revision" id="ask-for-revision-link"> <img height="25" width="25" src="@routes.Assets.at("images/revise.png")"/>&nbsp;&nbsp;Ask for revision</a> &nbsp;&nbsp;&nbsp;}
+		  
+		  <a href="#" class='' title="Fill feedback survey" id="fill-feedback-survey-link"> <img height="25" width="25" src="@routes.Assets.at("images/feedback.jpg")"/>&nbsp;&nbsp;Fill feedback survey</a>&nbsp;&nbsp;&nbsp;
+	      }
+	      
 	      <a href="@controllers.web.client.routes.ClientActions.orderMessages(clientOrders.order_code)" title="Send message to writer" id="message-to-writer-link"> <img height="25" width="25" src="@routes.Assets.at("images/message.png")"/>&nbsp;&nbsp;Send a message</a>	      
       </div>
       

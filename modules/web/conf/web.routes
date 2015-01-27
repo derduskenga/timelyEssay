@@ -71,9 +71,11 @@ POST			/mydashboard/order/surveyfeedback/:order_code/:rating		controllers.web.cl
 GET			/mydashboard/profile					controllers.web.client.ClientActions.myProfile()
 POST			/mydashboard/profile/changepassword			controllers.web.client.ClientActions.changePassword()
 POST			/mydashboard/profile/editprofile			controllers.web.client.ClientActions.editProfile()
+POST		/mydashboard/order/approveorder/:order_code	controllers.web.client.ClientActions.approveOrderProduct(order_code:Long)
 POST		/mydashboard/order/:order_code/:message_id		controllers.web.client.ClientActions.viewOrderMessage(order_code:Long,message_id:Long)
 POST		/mydashboard/order/messages/messagesactionpages/:status/:date/:message_id/:order_code	controllers.web.client.ClientMessageActions.respondToAdditionalPages(status:Boolean,date:String,message_id:Long,order_code:Long)		
 POST		/mydashboard/order/messages/messagesactionextenddeadline/:status/:date/:message_id/:order_code	controllers.web.client.ClientMessageActions.respondToExtendDeadlineExtension(status:Boolean,date:String,message_id:Long,order_code:Long)
+
 
 
 
