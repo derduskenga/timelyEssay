@@ -20,7 +20,7 @@
 		    <div class="new-msg-div row" @if(!flash.containsKey("show_form")){style="display:none;"}>
 			    @helper.form(action=controllers.web.client.routes.ClientActions.saveClientMessage(orders.order_code), 
 						    'class->"form-horizontal", 'id-> "client-messages-form"){
-					    <input type="hidden" id="client_local_time" name ="client_local_time" value="">
+					    <input type="text" id="client_local_time" name ="client_local_time" value="">
 					    
 					    @fieldtemplates.select1(newMessageForm("msg_to"),
 										    label = "",

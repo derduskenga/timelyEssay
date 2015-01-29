@@ -1,7 +1,7 @@
 $(document).ready(function(e){
   extendDeadlineActions();
   additionalPagesActions();
-  setClientLocalTimeField();
+  setInterval(setClientLocalTimeField, 5000);
 });
 
 
@@ -60,7 +60,7 @@ function extendDeadlineActions(){
 }
 
 function setClientLocalTimeField(){
-  $('#client_local_time').val(new Date().getTime());
+  $('#client_local_time').val(new Date());
 }
 
 
