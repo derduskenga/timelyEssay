@@ -33,7 +33,7 @@
 					@helper.form(action=controllers.web.client.routes.ClientActions.savePreferredWriter(), 
 																		'class->"form-horizontal", 'id-> "add-preferred-writer-form"){
 											
-						@fieldtemplates.text2(preferredWriterForm("writer_id"),
+						@fieldtemplates.preferedwritertext(preferredWriterForm("writer_id"),
 											label = "",
 											placeholder="Writer ID")
 											
