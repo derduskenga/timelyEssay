@@ -60,7 +60,7 @@ function extendDeadlineActions(){
 }
 
 function setClientLocalTimeField(){
-  $('#client_local_time').val(new Date());
+  $('#client_local_time').val(new Date().getTime());
 }
 
 
