@@ -19,5 +19,4 @@ libraryDependencies ++= Seq(
   javaWs,
   "be.objectify" %% "deadbolt-java" % "2.3.2"
 )
-	
 
