@@ -186,7 +186,7 @@ public class OrderMessages extends Model{
 		  //Logger.info("server time" + message_date.toString());
 		  try{
 		    message_date = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(date))));
-		    calender.setTimeInMillis(message_date.getTime());
+		    calender.setTimeInMillis(Long.valueOf(date));
 		    Logger.info("before time" + calender.getTime().toString());
 		    int offset = Integer.parseInt(client_time_zone_offset);
 		    calender.add(Calendar.MINUTE,offset);//get UTC time to be stored
@@ -195,7 +195,8 @@ public class OrderMessages extends Model{
 		  }catch(ParseException pe){
 		    Logger.info(pe.getMessage().toString());
 		  }
-		  return message_date;
+		  return calender.getTime();
+		  //return message_date;
 		}
 		
 		
