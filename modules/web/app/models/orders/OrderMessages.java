@@ -181,6 +181,9 @@ public class OrderMessages extends Model{
 		
 		public static Date computeMessageUtcTime(String client_time_zone_offset, String date){
 		  Calendar calender = Calendar.getInstance();
+		  Timezone tz = calender.getTimeZone();
+		  int host_offset = tz.getRawOffset();
+		  Logger.info("host:" + host_offset);
 		  Date message_date = new Date(Long.valueOf(date));
 		  Logger.info("before time:" + message_date.toString());
 		  //try{
