@@ -173,7 +173,7 @@ public class OrderMessages extends Model{
 		    return message_text;
 		  }
 		    message_text = "<strong>Dear writer,</strong><br><br>" +
-				   "Unfortunately, the client refised to extended the deadline as you had requested.<br>" +
+				   "Unfortunately, the client refused to extended the deadline as you had requested.<br>" +
 				   "We, therefore, ask you to complete this order based on its current deadline" + 
 				   "If you have any questions, do not hesitate to talk to us"; 
 		    return message_text;
@@ -183,6 +183,7 @@ public class OrderMessages extends Model{
 		  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		  Calendar calender = Calendar.getInstance();
 		  Date message_date = new Date();
+		  Logger.info("server time" + message_date.toString());
 		  try{
 		    message_date = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(date))));
 		    calender.setTimeInMillis(message_date.getTime());

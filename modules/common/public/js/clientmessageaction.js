@@ -61,7 +61,7 @@ function extendDeadlineActions(){
 
 function setClientLocalTimeField(){
   $('#client_local_time').val(new Date().getTime());
-  alert((new Date()).toUTCString());
+  //alert((new Date()).toUTCString());
 }
 
 
