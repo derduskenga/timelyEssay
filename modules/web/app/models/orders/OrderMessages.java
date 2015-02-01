@@ -180,22 +180,25 @@ public class OrderMessages extends Model{
 		}
 		
 		public static Date computeMessageUtcTime(String client_time_zone_offset, String date){
+		  SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		  Calendar calender = Calendar.getInstance();
-		  Timezone tz = calender.getTimeZone();
+		  TimeZone tz = calender.getTimeZone();
 		  int host_offset = tz.getRawOffset();
 		  Logger.info("host:" + host_offset);
-		  Date message_date = new Date(Long.valueOf(date));
-		  Logger.info("before time:" + message_date.toString());
-		  //try{
-		    calender.setTimeInMillis(Long.valueOf(date));
+		  
+		  
+		  try{
+		    Date message_date = formatter.parse(date);
+		    Logger.info("before time::" + message_date.toString());
+		    calender.setTimeInMillis(message_date.getTime());
 		    //Logger.info("before time" + calender.getTime().toString());
 		    int offset = Integer.parseInt(client_time_zone_offset);
 		    calender.add(Calendar.MINUTE,offset);//get UTC time to be stored
-		    Logger.info("after time" + calender.getTime().toString());
+		    Logger.info("after time::" + calender.getTime().toString());
 		    message_date = calender.getTime();
-		  //}catch(ParseException pe){
-		    //Logger.info(pe.getMessage().toString());
-		  //}
+		  }catch(ParseException pe){
+		    Logger.info(pe.getMessage().toString());
+		  }
 		  return calender.getTime();
 		  //return message_date;
 		}
