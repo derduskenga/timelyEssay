@@ -60,13 +60,15 @@ border-bottom:#a7cf3;
 
 }
 #myform{
-
 	background-color: #e6e6e6;
 	padding-top: 10px;
 	padding-bottom: 10px;
-  border-style: solid;
-  border-radius: 10px;
-  border-color: #FFF;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 6px;
+	border-color: #FFF;
+	  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
 }
 
 
@@ -152,7 +154,7 @@ footer .footer-below {
 	  padding-right:0px;
 }
 #mainbody{
-	padding-top:00px;
+	padding-top:0px;
 }
 
 .btn.btn-warning{
@@ -165,4 +167,58 @@ footer .footer-below {
 }
 li.active a span.order-text{
 	color:#fff;
+}
+
+.right-section{
+	padding-right:0px;
+}
+.why-choose-us{
+	border-radius:6px;
+		  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+.r-section{
+	margin-bottom:16px;
+}
+
+.why-choose-us div.panel-body ul{
+	padding:10px;
+}
+
+.why-choose-us div.panel-body ul li{
+	list-style:none;
+}
+
+payment-options { 
+	list-style: none; padding-left: 0; 
+}
+
+payment-options span{ 
+	display: inline-block; 
+}
+.left-panel-section{
+	margin-bottom:16px;
+}
+
+.trustwave-logo{
+	padding:10px;
+}
+
+.panel-empty {
+    border: 1px solid #E8E8E8;
+    border-radius: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.panel{
+	 border: 1px solid #E8E8E8;
+}
+
+.glyphicon-time{
+	font-size: 50px;
+}
+
+.urgency-left-section{
+	padding: 10px;
 }
