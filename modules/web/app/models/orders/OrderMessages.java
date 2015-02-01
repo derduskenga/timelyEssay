@@ -182,8 +182,8 @@ public class OrderMessages extends Model{
 		public static Date computeMessageUtcTime(String client_time_zone_offset, String date){
 		  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		  Calendar calender = Calendar.getInstance();
-		  Date message_date = new Date();
-		  Logger.info("server time" + message_date.toString());
+		  Date message_date = null;
+		  //Logger.info("server time" + message_date.toString());
 		  try{
 		    message_date = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(date))));
 		    calender.setTimeInMillis(message_date.getTime());
