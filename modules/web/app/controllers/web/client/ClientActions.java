@@ -16,7 +16,7 @@ import models.common.mailing.Mailing;
 import models.writer.FreelanceWriter;
 import models.client.Client;
 import models.client.Countries;
-import models.utility.Utilities;
+import models.utility.*;
 import java.io.*;
 import play.data.validation.ValidationError;
 
@@ -57,8 +57,72 @@ public class ClientActions extends Controller{
 	    return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
 	  } 
 	  return(ok(clienthome.render(null,null,null)));
-	}	
+	}
 	
+	public static Result postFrom2Checkout(){    
+	  if(session().get("email") != null){
+	    Orders order = new Orders();
+	    Long client_id = Client.getClient(session().get("email")).id;
+	    //Post parameters from 2checkout start==========================================
+	    Map<String, String[]> checkout_post_parameters = new HashMap<String,String[]>();
+	    checkout_post_parameters = request().body().asFormUrlEncoded();
+	    if(!checkout_post_parameters.isEmpty()){
+		  boolean credit_card_approved = false;
+		  //order_code
+		  String li_0_product_id[] = checkout_post_parameters.get("li_0_product_id");
+		  String order_code = li_0_product_id[0];
+		  //invoice_id
+		  String invoice_id_array[] = checkout_post_parameters.get("invoice_id");
+		  String invoice_id = invoice_id_array[0];
+		  //MD5 key
+		  String key_array[] = checkout_post_parameters.get("key");
+		  String key = key_array[0];
+		  //order total
+		  String total_array[] = checkout_post_parameters.get("total"); 
+		  String total = total_array[0];
+		  //order_number
+		  String order_number_array[] = checkout_post_parameters.get("order_number");
+		  String order_number = key_array[0];
+		  //credit_card_processed (Y/N)
+		  String credit_card_processed_array[] = checkout_post_parameters.get("credit_card_processed");
+		  String credit_card_processed = credit_card_processed_array[0];
+		  
+		  if(credit_card_processed.equals("Y")){
+		    credit_card_approved = true;
+		  }
+		  
+		  //start check returned key
+		  HashMap params = new HashMap();
+		  params.put("sid", Utilities.OUR_MERCHANT_ACCOUNT_NO);
+		  params.put("total", total);
+		  params.put("order_number","1");
+		  params.put("key",key);
+		  
+		  boolean result = TwocheckoutReturn.check(params, Utilities.OUR_CO_SECRET_WORD);		  
+		  //end check returned key 
+		  
+		  if(credit_card_approved && result){
+			flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ". Thank you for choosing us.");
+			Orders paidOrder = Orders.getOrderByCode(Long.valueOf(order_code));
+			paidOrder.invoice_id = invoice_id;
+			paidOrder.is_paid = true;
+			paidOrder.saveOrder();
+			Logger.info("order code:" + order_code + " and invoice id is:" + invoice_id + "result:" + result + "credit_card_approved:" + credit_card_approved);
+			return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
+		  }
+		  Logger.info("order code:" + order_code + " and invoice id is:" + invoice_id + " result:" + result + " credit_card_approved:" + credit_card_approved + " key:" + key);
+		  flash("orderpaymentfailresponse","There was a problem and your payment may have not been received");
+		  return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
+		  
+	    }
+	    //End of 2checkout post parameters===============================================
+	    flash("orderpaymentfailresponse","Unfortunately, your payment was has not been processsed");
+	    return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
+	  } 
+	  return(ok(clienthome.render(null,null,null)));
+	  
+	}
+		
 	public static Result saveClientMessage(Long order_code){
 	  ObjectNode result = Json.newObject();
 
@@ -85,7 +149,7 @@ public class ClientActions extends Controller{
 	  orderMessage.msg_from = MessageParticipants.CLIENT;
 	  orderMessage.orders = orders;
 	  orderMessage.message_promise_value = "none";
-	  orderMessage.sent_on = OrderMessages.computeMessageUtcTime(client.client_time_zone_offset,client_local_date);
+	  orderMessage.sent_on = Utilities.computeUtcTime(client.client_time_zone_offset,client_local_date);
 	  orderMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
 	  if(orderMessage.saveClientMessage()){
 		  return redirect(controllers.web.client.routes.ClientActions.orderMessages(order_code));
@@ -438,7 +502,7 @@ public class ClientActions extends Controller{
 	}
 	
 	public static Result changePassword(){
-	    JSONObject jobject = new JSONObject();
+	  JSONObject jobject = new JSONObject();
 	  try{
 	  Map<String, String[]> change_password_values = new HashMap<String,String[]>();
 	  change_password_values = request().body().asFormUrlEncoded();

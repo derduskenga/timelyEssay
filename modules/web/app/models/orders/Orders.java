@@ -47,6 +47,7 @@ public class Orders extends Model{
 	public int client_feedback;
 	public int additional_pages = 0;
 	public String source_domain;
+	public String invoice_id;
 	public boolean approved = false;
 	//Order Files and types of files (e.g for revision, additional files, reference materials, order product,draft)
 	//Order fines is an entity(id,date,amount,reason,removed)

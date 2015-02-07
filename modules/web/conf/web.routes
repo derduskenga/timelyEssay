@@ -33,6 +33,7 @@ GET							/aboutus			controllers.web.Application.aboutUs()
 
 #client pages
 GET	   		/mydashboard				controllers.web.client.ClientActions.index()
+POST			/mydashboard				controllers.web.client.ClientActions.postFrom2Checkout()
 POST			/mydashboard/savemessage/:order_code	controllers.web.client.ClientActions.saveClientMessage(order_code:Long)
 GET			/mydashboard/order/messages/:order_code	controllers.web.client.ClientActions.orderMessages(order_code:Long)
 GET			/mydashboard/affiliateprogram		controllers.web.client.ClientActions.affiliateProgram()

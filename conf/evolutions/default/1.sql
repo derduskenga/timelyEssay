@@ -256,6 +256,7 @@ create table orders (
   client_feedback           integer,
   additional_pages          integer,
   source_domain             varchar(255),
+  invoice_id                varchar(255),
   approved                  boolean,
   client_id                 bigint,
   order_level_of_writing_id bigint,

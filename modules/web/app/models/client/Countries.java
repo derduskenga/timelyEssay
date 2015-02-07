@@ -6,6 +6,7 @@ import javax.persistence.*;
 import play.db.ebean.Model;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import play.Logger;
 
 @Entity
@@ -39,9 +40,9 @@ public class Countries extends Model{
   
   public static Map<Map<Long,String>,Boolean> fetchCountriesMap(){
     List<Countries> countriesList = Countries.find().orderBy("nicename").findList();
-    Map<Map<Long,String>,Boolean> countriesMap = new HashMap<Map<Long,String>,Boolean>();       
+    Map<Map<Long,String>,Boolean> countriesMap = new LinkedHashMap<Map<Long,String>,Boolean>();       
     for(int i = 0; i < countriesList.size(); i++){
-      Map<Long,String> innerMap = new HashMap<Long,String>(); 
+      Map<Long,String> innerMap = new LinkedHashMap<Long,String>(); 
       innerMap.put(countriesList.get(i).id,countriesList.get(i).nicename + "-" + countriesList.get(i).phonecode);
       countriesMap.put(innerMap,false);
     }    

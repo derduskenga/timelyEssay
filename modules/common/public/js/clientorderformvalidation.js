@@ -17,6 +17,9 @@ $(document).ready(function(e){
       validateForPerPageBasis();
     }
   });  
+  
+    setInterval(setClientLocalTime, 5000);
+  
 });
 
 
@@ -373,7 +376,7 @@ function setTimeZoneCookie(){
 }
 
 function setClientLocalTime(){
-  $("#client_local_time").val(new Date().getTime());
+  $("#client_local_time").val(new Date().toString("yyyy-MM-dd HH:mm:ss"));
   //alert(moment().format("YYYY-MM-DD HH:mm:ss"));
   //alert(new Date().getTime());
 }

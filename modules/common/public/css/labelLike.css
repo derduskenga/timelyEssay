@@ -71,3 +71,11 @@ ul li span {
   font-size:11px;
   margin-left:100px;
 }
+.right {
+    float: right;
+}
+
+.center{
+  float:center;
+  
+}

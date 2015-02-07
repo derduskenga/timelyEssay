@@ -1,5 +1,9 @@
 package models.utility;
 
+import java.util.*;
+import java.text.*;
+import play.Logger;
+
 public class Utilities{
   public static int ORDER_UNITS = 200;
   public static int PAGE_WORD_COUNT = 280;//double spaced
@@ -11,6 +15,33 @@ public class Utilities{
 						    "Peanuts PHP framework"};
   public static String DATABASE [] = {"MySQL","Postgres","Oracle","Mongo Non-SQL DB","MS Access","DB2","SQL Server","couchDB","SQLite","Sybase","None","Any","Other"};
   public static Long ORDER_CODE_CONSTANT = 30000L;
-  public static Long FILE_UPLOAD_SIZE_LIMIT = 25L * 1024L * 1024L;//unit in MegaBytes expressed in bytes
+  public static Long FILE_UPLOAD_SIZE_LIMIT = 25L * 1024L * 1024L;//Unit in MegaBytes expressed in bytes
   public static String WRITER_TIMEZONE_OFFSET =  "-180";
+  
+  public static String CHECKOUT_URL = "https://www.2checkout.com/checkout/purchase";//live
+  //public static String CHECKOUT_URL = "https://sandbox.2checkout.com/checkout/purchase ";//sandbox
+  public static String OUR_MERCHANT_ACCOUNT_NO = "202462784";//live or seller ID
+  //public static String OUR_MERCHANT_ACCOUNT_NO = "901264062";//sandbox
+  public static String OUR_CO_SECRET_WORD = "samkenga2015$s";
+ 
+		
+  public static Date computeUtcTime(String client_time_zone_offset, String date){
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	Calendar calender = Calendar.getInstance();
+	TimeZone tz = calender.getTimeZone();
+	int host_offset = tz.getRawOffset();
+	try{
+	    Date message_date = formatter.parse(date);
+	    //Logger.info("before time::" + message_date.toString());
+	    calender.setTimeInMillis(message_date.getTime());
+	    //Logger.info("before time" + calender.getTime().toString());
+	    int offset = Integer.parseInt(client_time_zone_offset);
+	    calender.add(Calendar.MINUTE,offset);
+	    //Logger.info("after time::" + calender.getTime().toString());
+	    message_date = calender.getTime();
+	}catch(ParseException pe){
+	    Logger.info(pe.getMessage().toString());
+	}
+	return calender.getTime();
+  }  
 }

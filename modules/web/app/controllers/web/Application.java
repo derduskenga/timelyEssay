@@ -419,25 +419,23 @@ public class Application extends Controller{
 	  Calendar calender = Calendar.getInstance();
 	  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	  isoFormat.setTimeZone(tz); 
-	  Date orderDate = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(client_local_time))));
+	  //Date orderDate = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(client_local_time))));
 	  //compute the order deadline
-	  calender.setTimeInMillis(orderDate.getTime());
-	  calender.add(Calendar.MINUTE,timezone_offset);//get UTC time to be stored
+	  //calender.setTimeInMillis(orderDate.getTime());
+	  //calender.add(Calendar.MINUTE,timezone_offset);//get UTC time to be stored
 	  //Logger.info("zone ID or getDisplayName:" + calender.getTimeZone().getDisplayName());
-	  newOrders.order_date = calender.getTime();
+	  //newOrders.order_date = calender.getTime();
+	  newOrders.order_date = Utilities.computeUtcTime(client_time_zone_offset,client_local_time);
 	  Logger.info("document deadline:" + newOrders.document_deadline);
-	  newOrders.order_deadline = newOrders.computeDeadline(calender.getTime(),newOrders.document_deadline);
+	  newOrders.order_deadline = newOrders.computeDeadline(newOrders.order_date,newOrders.document_deadline);
 	  if(newClient.id == null){
-	    newClient.created_on = calender.getTime();
+	    newClient.created_on = Utilities.computeUtcTime(client_time_zone_offset,client_local_time);
 	    newClient.client_time_zone = time_zone_string;
-	    newClient.client_time_zone_offset= client_time_zone_offset;
+	    newClient.client_time_zone_offset = client_time_zone_offset;
 	    newClient.client_time_zone_real = tz;
 	  }
 	 
 	  //Logger.info("date date date: " + String.format(orderDate));
-	  }catch(ParseException pe){
-	  Logger.info("parse Exception");
-	  Logger.error("parse error:" + pe.getMessage().toString());
 	  }catch(Exception ex){
 	  Logger.info("parse Exception");
 	  }

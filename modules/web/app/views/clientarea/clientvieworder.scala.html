@@ -9,7 +9,7 @@
 	@if(clientOrders.is_paid == false){
 	  <tr>
 	    <td><p class="phone-number">Order NOT PAID</p></td>
-	    <td><a class="btn btn-danger" href="@controllers.web.client.routes.ClientActions.pay(clientOrders.order_code)">Pay for Order</a></td>
+	    <td><a class="btn btn-danger" href="@controllers.web.client.routes.ClientActions.proceedToPay(clientOrders.order_code)">Pay for Order</a></td>
 	  </tr>
 	}
 	<tr>

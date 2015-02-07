@@ -271,7 +271,7 @@ insert into order_currence values
 (1,'US Dollar', 'USD','$',1.0),
 (2,'Euro','EUR','€',0.8),
 (3,'British pound sterling','GBP','£',0.64),
-(4,'Australian dollar','AUD','A$',1.16);
+(4,'Australian dollar','AUD','A$',1.36);
 
 ---level of writing 
 insert into order_level_of_writing (id,order_level,additional_price,description) values 
@@ -345,4 +345,10 @@ insert into fine_type(id,fine_name,fine_percentage,fine_description) values
 insert into order_product_files (id,owner,file_size,file_name,file_sent_to,storage_path,content_type,upload_date,download_date,product_file_type,has_been_downloaded,plagiarism,orders_order_id) values
 (1,1,76456123,'play for java book.pdf',0,'/home/derdus/orderfiles/multipartBody230397776683012302asTemporaryFile','application/pdf','2014-12-28 21:27:32.483','2014-12-28 22:31:41.247',1,true,0,1);
 
+
+
 ALTER TABLE orders add column approved boolean DEFAULT false;
+ALTER TABLE orders add column invoice_id;
+
+//change return URL to domain
+//change order_number from "1" to real
