@@ -102,7 +102,7 @@ public class ClientActions extends Controller{
 		  //end check returned key 
 		  
 		  if(credit_card_approved && result){
-			flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ". Thank you for choosing us.");
+			flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ". A writer will be assigned to your order shorlty. Thank you for choosing us.");
 			Orders paidOrder = Orders.getOrderByCode(Long.valueOf(order_code));
 			paidOrder.invoice_id = invoice_id;
 			paidOrder.is_paid = true;
