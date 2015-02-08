@@ -8,6 +8,7 @@ import models.orders.OrderMessages;
 import models.common.security.PasswordHash;
 import play.Logger;
 import models.client.PreferredWriter;
+import models.client.ReferralCode;
 
 @Entity
 public class Client extends Model{ 
@@ -53,6 +54,9 @@ public class Client extends Model{
 	
 	@OneToOne
 	public Countries country;
+	
+	@OneToOne(mappedBy="client")
+	public ReferralCode referralCode;
 	
 	@OneToMany(mappedBy="client")
 	public List<PreferredWriter> preferredWriter;  

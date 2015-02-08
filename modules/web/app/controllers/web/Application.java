@@ -630,6 +630,7 @@ public class Application extends Controller{
 				ClientMails cm = new ClientMails();
 				cm.sendPasswordChangedMail(client.email);
 				flash("success","You have successfully changed your password.");
+				Logger.info("password:"+password1);
 				Form<Login> loginForm = Form.form(Login.class);
 				return ok(home.render(loginForm));
 			}catch(Exception e){

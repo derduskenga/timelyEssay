@@ -14,6 +14,10 @@ GET												/editadminuser			    			controllers.admincontrollers.AdminActions
 GET												/adminroles			    					controllers.admincontrollers.AdminActions.newAdminRole()
 POST											/adminroles			    					controllers.admincontrollers.AdminActions.saveNewAdminRole()
 
+#admin marketing email
+GET											/marketingemail					    					controllers.admincontrollers.AdminActions.marketingEmail()
+POST											/marketingemail/sendmail			    		controllers.admincontrollers.AdminActions.sendMarketingEmail()
+
 #admin profile actions
 GET												/myprofile			    					controllers.admincontrollers.AdminActions.myProfile()
 POST											/changepassword						controllers.admincontrollers.AdminActions.changePassword()
@@ -27,6 +31,8 @@ POST			/manageorder/uploadfile/:order_code			controllers.admincontrollers.Manage
 GET				/manageorder/messages/:order_code				controllers.admincontrollers.ManageOrdersActions.orderMessages(order_code: Long)
 POST			/manageorder/messages/:order_code				controllers.admincontrollers.ManageOrdersActions.saveAdminMessage(order_code: Long)
 POST			/manageorder/messages/markread/:msg_id		controllers.admincontrollers.ManageOrdersActions.markMessageRead(msg_id: Long)
+
+
 
 #admin login logout actions
 GET												/login											controllers.admincontrollers.Application.login()

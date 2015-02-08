@@ -5,9 +5,11 @@ import views.html.adminviews.createadminuser;
 import views.html.adminviews.manageusers;
 import views.html.adminviews.adminerror;
 import views.html.adminviews.adminprofile;
+import views.html.adminviews.marketingemail;
 import views.html.adminviews.adminroles;
 import views.html.adminviews.addrole;
 
+import play.data.validation.Constraints;
 import play.*;
 import play.mvc.*;
 import play.data.Form;
@@ -28,11 +30,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import play.libs.Json;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import models.admin.adminmodels.AdminUser;
 import models.common.security.PasswordHash;
@@ -253,5 +250,33 @@ public class AdminActions extends Controller{
 							jobject.put("message","An error occured. Try again.");
 							return ok(Json.parse(jobject.toString()));
 			}
+	}
+	
+	public static Result marketingEmail(){
+			Form<NewEmail> newMailForm = form(NewEmail.class);
+			AdminUser adminUser = AdminUser.findByEmail(session().get("admin_email"));
+			String text = new AdminMails().getClientMarketingEmailString("{insert code}", adminUser.first_name);
+			return ok(marketingemail.render(newMailForm, text));
+	}
+	
+	public static Result sendMarketingEmail(){
+			Form<NewEmail> newMailForm = form(NewEmail.class).bindFromRequest();
+			if(newMailForm.hasErrors()){
+				flash("client_marketing_mail_error", "Could not send email. Please correct the form below.");
+				return ok(marketingemail.render(newMailForm, ""));
+			}
+			NewEmail newMail = newMailForm.get();
+			AdminMails mail = new AdminMails();
+			mail.sendClientMarketingMail(newMail.email, newMail.message);
+			flash("client_marketing_mail_success", "Email sent successfully.");
+			return redirect(controllers.admincontrollers.routes.AdminActions.marketingEmail());		
+	}
+	
+	public static class NewEmail{
+		@Constraints.Required(message="Please enter email.")
+		@Constraints.Email(message="The email you entered does not look valid.")
+		public String email;
+		@Constraints.Required(message="Please enter write your message.")
+		public String message;
 	}
 }

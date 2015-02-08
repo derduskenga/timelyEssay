@@ -37,13 +37,16 @@ POST			/mydashboard				controllers.web.client.ClientActions.postFrom2Checkout()
 POST			/mydashboard/savemessage/:order_code	controllers.web.client.ClientActions.saveClientMessage(order_code:Long)
 GET			/mydashboard/order/messages/:order_code	controllers.web.client.ClientActions.orderMessages(order_code:Long)
 GET			/mydashboard/affiliateprogram		controllers.web.client.ClientActions.affiliateProgram()
-POST			/mydashboard/sendinvitationmail		controllers.web.client.ClientActions.sendInvitationEmail()
+POST			/mydashboard/affiliateprogram/sendinvitationmail		controllers.web.client.ClientActions.sendInvitationEmail()
 GET			/mydashboard/preferredwriters		controllers.web.client.ClientActions.preferredWriters()
 POST			/mydashboard/savepreferredwriter	controllers.web.client.ClientActions.savePreferredWriter()
 
 #client reset password
 GET 			/reset-password									controllers.web.Application.resetPassword(token:String?="")					
 POST 			/reset-password									controllers.web.Application.saveResetPassword()
+
+#generate unique referral code 
+GET			/mydashboard/generatecode				controllers.web.client.ClientActions.generateUniqueCode()
 
 #placing a new order 
 GET			/neworder					   controllers.web.Application.newOrder()	

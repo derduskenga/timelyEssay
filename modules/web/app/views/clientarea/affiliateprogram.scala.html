@@ -1,4 +1,4 @@
-@(newMailForm: Form[web.client.ClientActions.NewEmail])
+@(newMailForm: Form[web.client.ClientActions.NewEmail])(text:String)
 
 @clientmain("Affiliate Program"){
 			<div class="affiliate-program-div">
@@ -6,7 +6,7 @@
 				<hr/>
 				<p>With our affiliate program, you become partner. Earn $20 for every successful referral.
 				Your friend also gets a $10 discount when he/she places his/her first order.</p>
-				<p>Request a coupon code</p>
+				<p>@if(models.client.Client.getClient(session.get("email")).referralCode==null){<a href="@controllers.web.client.routes.ClientActions.generateUniqueCode()">Request a coupon code</a>}else{Your coupon code is <b>@models.client.Client.getClient(session.get("email")).referralCode.code</b>}</p>
 				<div class="referal-balance-div">
 					<hr/>
 						<h3>Your Balance: $0.00</h3>
@@ -41,8 +41,9 @@
 														label = "Email: ",
 														placeholder="Email")
 														
-									@fieldtemplates.textarea1(newMailForm("message"),
+									@fieldtemplates.textarea2(newMailForm("message"),
 														rows = "5",
+														value = text,
 														label = "Message",
 														placeholder="")
 														

@@ -39,9 +39,11 @@ public class ResetPassword extends Model{
 		if(id == null){
 			date_generated = new Date();
 			save();
+			Logger.info("ID is null");
 			return token;
 		}else{
-		update();
+			update();
+			Logger.info("ID is not null");
 			return token;
 		}
 	}
