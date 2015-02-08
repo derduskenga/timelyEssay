@@ -15,13 +15,17 @@ import models.client.PreferredWriter;
 import models.common.mailing.Mailing;
 import models.writer.FreelanceWriter;
 import models.client.Client;
+import models.client.ReferralCode;
 import models.client.Countries;
 import models.utility.*;
+import models.client.ClientMails;
+import models.utility.Utilities;
 import java.io.*;
 import play.data.validation.ValidationError;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import org.clapper.util.html.HTMLUtil;
 
 import java.util.*;
 import java.text.*;
@@ -168,7 +172,9 @@ public class ClientActions extends Controller{
 	}
 	public static Result affiliateProgram(){
 			Form<NewEmail> newMailForm = form(NewEmail.class);
-			return ok(affiliateprogram.render(newMailForm));
+			Client client = Client.getClient(session().get("email"));
+			String text = new ClientMails().getClientInvitationEmailString(client.referralCode==null? "":client.referralCode.code, client.f_name);
+			return ok(affiliateprogram.render(newMailForm, text));
 	}
 	
 	public static Result sendInvitationEmail(){
@@ -176,11 +182,11 @@ public class ClientActions extends Controller{
 			if(newMailForm.hasErrors()){
 				flash("client_mail_invitation_error", "Could not send email. Please correct the form below.");
 				flash("show_form", "true");
-				return redirect(controllers.web.client.routes.ClientActions.affiliateProgram());
+				return ok(affiliateprogram.render(newMailForm, ""));
 			}
 			NewEmail newMail = newMailForm.get();
-			Mailing mail = new Mailing();
-			mail.sendClientInvitationMail(newMail.email);
+			ClientMails mail = new ClientMails();
+			mail.sendClientInvitationMail(newMail.email, newMail.message);
 			flash("client_mail_invitation_success", "Thanks! Email sent successfully.");
 			flash("show_form", "true");
 			return redirect(controllers.web.client.routes.ClientActions.affiliateProgram());		
@@ -567,7 +573,16 @@ public class ClientActions extends Controller{
 	    return ok(Json.parse(jobject.toString()));  
 	}
 	
+	public static Result generateUniqueCode(){
+			Client client = new Client().getClient(session().get("email"));
+			String str = new ReferralCode().generateString(new java.util.Random(), 5);
+			ReferralCode rc = new ReferralCode(str);
+			rc.client=client;
+			rc.saveReferralCode();
+			return redirect(controllers.web.client.routes.ClientActions.affiliateProgram());
+	}
+	
 	public static Result pay(Long order_code){
-	  return TODO;
+	  return TODO;	
 	}
 }

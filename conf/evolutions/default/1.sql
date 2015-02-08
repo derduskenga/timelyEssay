@@ -274,6 +274,14 @@ create table preferred_writer (
   constraint pk_preferred_writer primary key (preferred_writer_entry_id))
 ;
 
+create table referral_code (
+  referral_code_id          bigint not null,
+  code                      varchar(255) not null,
+  date_generated            timestamp not null,
+  client_id                 bigint,
+  constraint pk_referral_code primary key (referral_code_id))
+;
+
 create table reset_password (
   id                        bigint not null,
   token                     varchar(255) not null,
@@ -394,6 +402,8 @@ create sequence orders_seq;
 
 create sequence preferred_writer_seq;
 
+create sequence referral_code_seq;
+
 create sequence reset_password_seq;
 
 create sequence security_role_seq;
@@ -444,8 +454,10 @@ alter table preferred_writer add constraint fk_preferred_writer_client_19 foreig
 create index ix_preferred_writer_client_19 on preferred_writer (client_id);
 alter table preferred_writer add constraint fk_preferred_writer_freelance_20 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
 create index ix_preferred_writer_freelance_20 on preferred_writer (freelance_writer_freelance_writer_id);
-alter table reset_password add constraint fk_reset_password_client_21 foreign key (client_id) references client (id);
-create index ix_reset_password_client_21 on reset_password (client_id);
+alter table referral_code add constraint fk_referral_code_client_21 foreign key (client_id) references client (id);
+create index ix_referral_code_client_21 on referral_code (client_id);
+alter table reset_password add constraint fk_reset_password_client_22 foreign key (client_id) references client (id);
+create index ix_reset_password_client_22 on reset_password (client_id);
 
 
 
@@ -535,6 +547,8 @@ drop table if exists orders cascade;
 
 drop table if exists preferred_writer cascade;
 
+drop table if exists referral_code cascade;
+
 drop table if exists reset_password cascade;
 
 drop table if exists security_role cascade;
@@ -592,6 +606,8 @@ drop sequence if exists order_subject_category_seq;
 drop sequence if exists orders_seq;
 
 drop sequence if exists preferred_writer_seq;
+
+drop sequence if exists referral_code_seq;
 
 drop sequence if exists reset_password_seq;
 

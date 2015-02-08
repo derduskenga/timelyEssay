@@ -26,9 +26,6 @@ $(document).ready(function(){
 		}
 	});
 
-<<<<<<< HEAD
-});
-=======
 	markMessages();
 	
 });
@@ -52,7 +49,6 @@ function markMessages(){
       });
 });
 }
->>>>>>> sam-branch
 
 function alternateNewMessageView(panel){
 		$('.messages-action').hide(1000);
