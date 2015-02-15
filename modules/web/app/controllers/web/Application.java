@@ -151,12 +151,20 @@ public class Application extends Controller{
 			flash("error", "Wrong email/password");
 			return redirect(routes.Application.index());
 		}
-		//Context context = Context.current();
-		//String referrer = context.session().get("referrer");
+		
+		Context context = Context.current();
+		String referrer = context.session().get("referrer");
+					
 		session().clear();
 		session("email", email);
 		session("f_name", client.f_name);
 		session("l_name", client.l_name);
+		
+		if(referrer != null){
+				try{
+					return redirect(referrer);
+				}catch(Exception e){return redirect(routes.Application.index());}
+		}	
 		return redirect(controllers.web.client.routes.ClientActions.index());	
 	}
 	
