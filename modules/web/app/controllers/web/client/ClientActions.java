@@ -22,6 +22,7 @@ import models.client.ClientMails;
 import models.utility.Utilities;
 import java.io.*;
 import play.data.validation.ValidationError;
+import models.client.ClientSentMail;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -178,15 +179,22 @@ public class ClientActions extends Controller{
 	}
 	
 	public static Result sendInvitationEmail(){
+			//check if client has a coupon code
+			Client client = Client.getClient(session().get("email"));
+			boolean send = true;
+			if(client.referralCode == null){
+					send = false;
+			}
 			Form<NewEmail> newMailForm = form(NewEmail.class).bindFromRequest();
-			if(newMailForm.hasErrors()){
-				flash("client_mail_invitation_error", "Could not send email. Please correct the form below.");
+			if(newMailForm.hasErrors() || !send){
+				flash("client_mail_invitation_error", !send? "Please request a coupon code using the link above before proceeding.": "Could not send email. Please correct the form below.");
 				flash("show_form", "true");
 				return ok(affiliateprogram.render(newMailForm, ""));
 			}
 			NewEmail newMail = newMailForm.get();
 			ClientMails mail = new ClientMails();
 			mail.sendClientInvitationMail(newMail.email, newMail.message);
+			new ClientActions().saveClientSentMessage(client, newMail.email, newMail.message);
 			flash("client_mail_invitation_success", "Thanks! Email sent successfully.");
 			flash("show_form", "true");
 			return redirect(controllers.web.client.routes.ClientActions.affiliateProgram());		
@@ -584,5 +592,14 @@ public class ClientActions extends Controller{
 	
 	public static Result pay(Long order_code){
 	  return TODO;	
+	}
+	
+	public void saveClientSentMessage(Client client, String email, String message){
+			ClientSentMail csm = new ClientSentMail();
+			csm.client = client;
+			csm.message = message;
+			csm.sent_to = email;
+			csm.sent_on = new Date();
+			csm.saveClientSentMail();
 	}
 }

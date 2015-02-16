@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -35,6 +36,7 @@ import models.admin.adminmodels.AdminUser;
 import models.common.security.PasswordHash;
 import models.common.security.RandomString;
 import models.admin.adminmodels.AdminMails;
+import models.admin.adminmodels.AdminSentMail;
 import controllers.admincontrollers.AdminSecured;
 import models.admin.userpermissions.SecurityRole;
 import be.objectify.deadbolt.java.actions.SubjectNotPresent;
@@ -268,8 +270,19 @@ public class AdminActions extends Controller{
 			NewEmail newMail = newMailForm.get();
 			AdminMails mail = new AdminMails();
 			mail.sendClientMarketingMail(newMail.email, newMail.message);
+			AdminUser adminUser = AdminUser.findByEmail(session().get("admin_email"));
+			new AdminActions().saveAdminMarketingEmail(adminUser, newMail.email, newMail.message);
 			flash("client_marketing_mail_success", "Email sent successfully.");
 			return redirect(controllers.admincontrollers.routes.AdminActions.marketingEmail());		
+	}
+	
+	public void saveAdminMarketingEmail(AdminUser adminUser, String email, String message){
+			AdminSentMail asm = new AdminSentMail();
+			asm.adminUser = adminUser;
+			asm.sent_to = email;
+			asm.message = message;
+			asm.sent_on = new Date();
+			asm.saveAdminSentMail();
 	}
 	
 	public static class NewEmail{
