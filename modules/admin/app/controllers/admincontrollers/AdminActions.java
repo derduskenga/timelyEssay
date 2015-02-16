@@ -275,6 +275,8 @@ public class AdminActions extends Controller{
 			NewEmail newMail = newMailForm.get();
 			AdminMails mail = new AdminMails();
 			mail.sendClientMarketingMail(newMail.email, newMail.message);
+			AdminUser adminUser = AdminUser.findByEmail(session().get("admin_email"));
+			new AdminActions().saveAdminMarketingEmail(adminUser, newMail.email, newMail.message);
 			flash("client_marketing_mail_success", "Email sent successfully.");
 			return redirect(controllers.admincontrollers.routes.AdminActions.marketingEmail());		
 	}
