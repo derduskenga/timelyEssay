@@ -1,6 +1,7 @@
 @(orderForm: Form[orders.Orders])(clientForm:Form[client.Client])(loginForm: Form[web.Application.Login])(countryMap:Map[Map[Long,String],Boolean])(documentMap:Map[Map[Long,String],Boolean])(documentDeadlines:Map[Map[Long,String],Boolean])(documentSubjects:Map[Map[Long,String],Boolean])(numberOfUnitsMap:Map[Map[Long,String],Boolean])(levelOfWriting:Map[Map[Long,String],Boolean])(currenceList:Map[orders.OrderCurrence,Boolean])(spacinList:Map[orders.Spacing,Boolean])(styleMap:Map[String,Boolean])(languageMap:Map[String,Boolean])(databaseMap:Map[String,Boolean])(refMap:Map[Integer,Boolean])(additionsList:Map[orders.Additions,Boolean])
 @import fieldtemplates._
 @import models.orders._
+@import models.client._
 @import helper._
 @import java.util._
 @import java.util.Map
@@ -213,11 +214,25 @@
 	  }
 	  <hr>
 	  
+	  <div id="coupon-code-message" style="padding-left:12em;padding-bottom:5px;" >
+
+	  </div>
+	  <div class="@if(session.get("email")!=null && Client.getClient(session.get("email")).orders.size()>0){hidden}"> 
+	      @fieldtemplates.text(orderForm("coupon_code"),
+		label = "Coupon code",
+		placeholder="Type or paste your coupon code here",
+		divClass="col-sm-9",
+		help="If you have a coupon code, enter it here and you will get a 12% discount when you pay for your first order")
+	  </div>
+
+	  
 	  @fieldtemplates.text(orderForm("prefered_writer"),
 	    label = "Prefered writer ID",
 	    placeholder="Leave blank if you do not have prefered writer",
 	    divClass="col-sm-9",
 	    help="If you have already used this writing service, enter the Id of the writer you would love to complete your work. If your prefered writer acceptes this order, you will pay 10% more, which will go directly to the writer")
+	    
+	    
 	  
       </div>
       <hr>

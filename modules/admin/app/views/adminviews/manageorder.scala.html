@@ -1,4 +1,4 @@
-@(clientOrders: models.orders.Orders)(orderFilesForm:Form[models.orders.OrderProductFiles])
+@(clientOrders: models.orders.Orders)(orderFilesForm:Form[models.orders.OrderProductFiles])(unread_messages:Int)
 @import models.orders._
 @import controllers.admincontrollers.ManageOrdersActions
 @import fieldtemplates._
@@ -46,11 +46,27 @@
       <table>
 		<tr>
 			<td><p class="phone-number">Payment Status</p></td>
-			<td><p>@if(clientOrders.is_paid == false){<strong class="text-danger">NOT PAID</strong>}else{Paid}</p></td>
+			<td><p>@if(!clientOrders.is_writer_assigned){
+			     <input type="hidden" value="" name="assign_order_local_time" id="assign_order_local_time">
+			     @if(clientOrders.is_paid == false){<strong class="text-danger">NOT PAID</strong>}else{<strong class="text-success">PAID</strong> @if(clientOrders.prefered_writer.equals("")){<a class="btn btn-warning" id="no-prefered-writer-assign-btn" title="Assign this order to writer" href="#">Assign to Writer <i class="fa fa-user-md fa-lg"></i>
+			      </a> <span id="assign-writer-response-message"></span> 
+
+			      <div id="assign-order-form" class="hidden">
+				   <form id="assign_order_form" name="assign_order_form" class="form-horizontal">
+				   <input id="assigned-order-code" type="hidden" value="@clientOrders.order_code">
+				    Writer ID: <input type="text" name="assigning_writer_id" id="assigning-writer-id" placeholder="Writer ID" size="7">
+				    <input id="order-assign-btn" type="submit" value="Assign">
+				    </form>
+			      </div>
+
+			      }else{<a href="#" id="btn-assign-for-prefered-writer" title="Assign this order to writer @clientOrders.prefered_writer" class="btn btn-warning">Writer @clientOrders.prefered_writer is prefered. Assign <i class="fa fa-user-md fa-lg"></i></a> <input id="assigned-order-code-for-prefered" type="hidden" value="@clientOrders.order_code"> <input id="prefered-writer-id" type="hidden" value="@clientOrders.prefered_writer"> <span id="assign-writer-response-message-for-prefered-writer"></span>}}}else{
+				  <strong class="text-success">PAID</strong>  <span class="text-success">Order has been assigned to @clientOrders.freelanceWriter.writer_id</span>
+			      }
+		      </p></td>
 		</tr>
 		<tr>
 			<td>Order code</td>
-			<td>@clientOrders.order_code</td>
+			<td>#@clientOrders.order_code</td>
 		</tr>
 		
 		<tr>
@@ -156,8 +172,8 @@
 	}      
 
 	  <tr>
-	    <td>Messages</td>
-	    <td><a href="#">0(all Messages) (0 Unread (those sent to support by writers and client))</a></td>
+	    <td>Messages</td> 
+	    <td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(clientOrders.order_code)">@OrderMessages.getAdminOrderMessages(clientOrders.order_code).size() (<span class="phone-number">@unread_messages Unread</span>)</a> <a href="@controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(clientOrders.order_code)" class="btn btn-primary btn-sm"> Send message for this order </a></td>
 	  </tr>
       </table>
     </div>

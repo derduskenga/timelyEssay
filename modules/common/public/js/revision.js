@@ -16,7 +16,7 @@ function handleLinkClickAskRevision(){
     if($('#revision-form').hasClass('hidden')){
       $('#revision-form').removeClass("hidden");
       $('#deadline-form').addClass('hidden');
-      ('#feedback-form').addClass("hidden");
+      $('#feedback-form').addClass("hidden");
     }else{
       $('#revision-form').addClass("hidden");
     }

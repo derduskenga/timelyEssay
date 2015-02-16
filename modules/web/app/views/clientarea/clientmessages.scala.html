@@ -2,7 +2,7 @@
 @import helper._
 @import models.orders._
 
-@(orders:models.orders.Orders)( newMessageForm: Form[models.orders.OrderMessages])(messageReceipients:Map[String,Boolean])(orderMessages: List[models.orders.OrderMessages])
+@(orders:models.orders.Orders)(newMessageForm: Form[models.orders.OrderMessages])(messageReceipients:Map[String,Boolean])(orderMessages: List[models.orders.OrderMessages])
 @clientmain("Timely Essay | Messages"){
 	@if(orders == null){
 	      <div id="" class="" style="margin-top:20px">
@@ -49,7 +49,7 @@
 			    @for(message <- orderMessages){
 				@if(message.msg_from != models.orders.MessageParticipants.CLIENT){
 					      <div class="message-shared-class to-client-msg @if(message.status){read}else{unread}" id="to-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
-						      <div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize <small>on</small>  @OrderMessages.clientMessageLocalTime(message.sent_on,session.get("email")).format("dd/MM/YYYY") <small>@@</small> @OrderMessages.clientMessageLocalTime(message.sent_on,session.get("email")).format("HH:mm a") &nbsp;&nbsp;</div>
+						      <div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize @if(message.msg_from == models.orders.MessageParticipants.WRITERS && orders.is_writer_assigned){-Writer ID:@orders.freelanceWriter.writer_id} <small>on</small>  @OrderMessages.clientMessageLocalTime(message.sent_on,session.get("email")).format("dd/MM/YYYY") <small>@@</small> @OrderMessages.clientMessageLocalTime(message.sent_on,session.get("email")).format("HH:mm a") &nbsp;&nbsp;</div>
 						      <div class="bubble">
 							<pre>@Html(message.message)</pre>
 							@if(message.message_type == OrderMessages.ActionableMessageType.ADDITIONAL_PAGES){

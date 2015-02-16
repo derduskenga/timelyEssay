@@ -6,6 +6,15 @@
 
 @clientmain("Timely Essay | Pay for Order"){
   @if(clientOrders.order_id!=null){
+	  
+	  <br>
+	  
+    @if(flash.containsKey("emailsenttonewuser")){
+      <div class="alert alert-success">
+	      @flash.get("emailsenttonewuser")
+      </div>
+    }
+	  
     <h5>Pay for Order #@clientOrders.order_code</h5>
     <div id="order-summary">
       <table>
@@ -32,27 +41,32 @@
 	  </tr>
 	}      
 	<tr>
-	  <td colspan="2"><h3 align="center">Order Total: @clientOrders.orderCurrence.currency_symbol_2 @(Math.round(clientOrders.order_total*clientOrders.orderCurrence.convertion_rate*100)/100.00)</h3></td>
+	  <td colspan="2"><h3 align="center">Order Total: @clientOrders.orderCurrence.currency_symbol_2 @(Math.round(clientOrders.order_total*clientOrders.orderCurrence.convertion_rate*100)/100.00)
+	  
+	  @if(clientOrders.qualifiesForDiscount(clientOrders)){(Your discount: @clientOrders.orderCurrence.currency_symbol_2 @(Math.round(clientOrders.computeOrderDiscount(clientOrders)*clientOrders.orderCurrence.convertion_rate*100)/100.00))}</h3></td>
 	</tr>      
       </table>     
       <table>
 	<tr>
-	  <td><span class="right"><a href="@controllers.web.routes.Application.editOrder(clientOrders.order_code)" class="btn btn-primary">&lt;&lt; Edit Order</a></span></td>
+	  <td><span class="right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="@controllers.web.routes.Application.editOrder(clientOrders.order_code)" class="btn btn-primary">&lt;&lt;Edit Order</a></span></td>
 	  <td>
 		<form action='@Utilities.CHECKOUT_URL' method='post'>
-		    <input type='hidden' name='sid' value='@Utilities.OUR_MERCHANT_ACCOUNT_NO'/>
-		    <input type='hidden' name='mode' value='2CO'/>
-		    <input type='hidden' name='li_0_type' value='product'/>
-		    <input type='hidden' name='li_0_name' value='Order No. #@clientOrders.order_code'/>
-		    <input type='hidden' name='li_0_price' value='@(Math.round(clientOrders.order_total*clientOrders.orderCurrence.convertion_rate*100)/100.00)'/>
-		    <input type='hidden' name='card_holder_name' value='@clientOrders.client.f_name @clientOrders.client.l_name'/>		    
-		    <input type='hidden' name='country' value='@clientOrders.client.country.iso3'/>
-		    <input type='hidden' name='currency_code' value='@clientOrders.orderCurrence.currency_symbol'/>
-		    <input type='hidden' name='li_0_product_id' value="@clientOrders.order_code"/>
-		    <input type='hidden' name='email' value="@clientOrders.client.email"/>
-		    <input type='hidden' name='li_0_description' value="Payment for order #@clientOrders.order_code: @clientOrders.topic"/>
-		    <input type='hidden' name='phone' value='@clientOrders.client.country_code-@clientOrders.client.area_code-@clientOrders.client.phone_number'/>    
-		    <input class="btn btn-primary" name='submit' type='submit' value='Pay for Order &gt;&gt;'/>
+		      <input type='hidden' name='sid' value='@Utilities.OUR_MERCHANT_ACCOUNT_NO'/>
+		      <input type='hidden' name='mode' value='2CO'/>
+		      <input type='hidden' name='li_0_type' value='product'/>
+		      @if(clientOrders.qualifiesForDiscount(clientOrders)){
+			    <input type='hidden' name='li_0_startup_fee' value='-@(Math.round(clientOrders.computeOrderDiscount(clientOrders)*clientOrders.orderCurrence.convertion_rate*100)/100.00)'/>
+		      }
+		      <input type='hidden' name='li_0_name' value='Order No. #@clientOrders.order_code'/>
+		      <input type='hidden' name='li_0_price' value='@(Math.round(clientOrders.order_total*clientOrders.orderCurrence.convertion_rate*100)/100.00)'/>
+		      <input type='hidden' name='card_holder_name' value='@clientOrders.client.f_name @clientOrders.client.l_name'/>		    
+		      <input type='hidden' name='country' value='@clientOrders.client.country.iso3'/>
+		      <input type='hidden' name='currency_code' value='@clientOrders.orderCurrence.currency_symbol'/>
+		      <input type='hidden' name='li_0_product_id' value="@clientOrders.order_code"/>
+		      <input type='hidden' name='email' value="@clientOrders.client.email"/>
+		      <input type='hidden' name='li_0_description' value="Payment for order #@clientOrders.order_code: @clientOrders.topic"/>
+		      <input type='hidden' name='phone' value='@clientOrders.client.country_code-@clientOrders.client.area_code-@clientOrders.client.phone_number'/>    
+		      <input class="btn btn-primary" name='submit' type='submit' value='Pay for Order &gt;&gt;'/> <a class="where-i-go-from-here" href="" title="By clicking 'Pay for Order', you will be redirected to *2checkout.com* for secure processing of your payment. You will then be redirected back to this website once you confirm your payment."><span>Where do I go from here?</span></a>
 		</form>
 	  </td>
 	</tr>        

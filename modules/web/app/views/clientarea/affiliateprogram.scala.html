@@ -1,22 +1,25 @@
+@import models.client._
 @(newMailForm: Form[web.client.ClientActions.NewEmail])(text:String)
 
 @clientmain("Affiliate Program"){
 			<div class="affiliate-program-div">
 				<h2>How It Works</h2>
 				<hr/>
-				<p>With our affiliate program, you become partner. Earn $20 for every successful referral.
-				Your friend also gets a $10 discount when he/she places his/her first order.</p>
+				<p>With our affiliate program, you become partner. Earn $10 for every successful referral.
+				Your friend also gets a 12% discount when he/she places his/her first order.</p>
 				<p>@if(models.client.Client.getClient(session.get("email")).referralCode==null){<a href="@controllers.web.client.routes.ClientActions.generateUniqueCode()">Request a coupon code</a>}else{Your coupon code is <b>@models.client.Client.getClient(session.get("email")).referralCode.code</b>}</p>
 				<div class="referal-balance-div">
 					<hr/>
-						<h3>Your Balance: $0.00</h3>
+						<h3>
+							Your Balance: 			$@((Math.round(ClientReferalEarning.getClientReferalEarning(session.get("email")))*100)/100.00)0
+						</h3>
 					<hr/>
 				</div>
 				<div class="referal-div">
 					<h2>Invite Friends</h2>
 					<hr/>
 					<p>There are two ways of inviting your friends to try out our service. </p>
-					<p>The first is by sending them an invitation email. We will send them a unique link which is only associated with you. When they place their first order through that link, you earn $20.</p>
+					<p>The first is by sending them an invitation email. We will send them the email with your a unique coupon code . When they place their first order and use the coupon code, you earn $10 and they a 12% discount.</p>
 					
 					<div class="email-invitation-div" @if(flash.containsKey("show_form")){style="display:none;"}>
 							<button class="btn invite-friends-btn" onClick="alternateInvationMailView('btn_action')">Invite friends via Email</button>
@@ -55,7 +58,10 @@
 							 }	
 						</div>
 					</div><!--Close Client Mail Invitation Div-->
-					<p>The second is by giving them your unique coupon code. When they use it when placing an order, you earn $20.</p>
+					<p>The second is by giving them your unique coupon code. If they use it while placing an order, you earn $10 and they get a 12% on their first order.</p>
+					<p>Note that you qualify for this benefits if your referals place an order worthy $60 or more.</p>
+					<h2>How You May Use Your Affiliate Program Earnings</h2>
+					<p>You can use your earnings to place new orders or withdraw your cash when your total reaches $200</p>
 					
 				</div>
 			</div>

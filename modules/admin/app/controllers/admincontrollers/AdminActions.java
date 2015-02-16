@@ -8,7 +8,9 @@ import views.html.adminviews.adminprofile;
 import views.html.adminviews.marketingemail;
 import views.html.adminviews.adminroles;
 import views.html.adminviews.addrole;
-
+import views.html.adminviews.admincouponcode;
+import views.html.adminviews.freelancewriter;
+import views.html.adminviews.writers;
 import play.data.validation.Constraints;
 import play.*;
 import play.mvc.*;
@@ -42,9 +44,17 @@ import be.objectify.deadbolt.java.actions.SubjectPresent;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import models.admin.security.NoUserDeadboltHandler;
+import models.admincoupon.AdminReferalCode;
+import models.client.ReferralCode;
+import models.writer.FreelanceWriter;
 
 @Security.Authenticated(AdminSecured.class)
 public class AdminActions extends Controller{
+	static Form<AdminReferalCode> adminCouponForm = form(AdminReferalCode.class);
+	
+	static Form<FreelanceWriter> freelanceWriterForm = form(FreelanceWriter.class);
+	
+	static List<AdminReferalCode> adminReferalCodeList = new ArrayList<AdminReferalCode>();
 	
 	public static Result index(){
 			return ok(adminhome.render());
@@ -270,6 +280,88 @@ public class AdminActions extends Controller{
 			mail.sendClientMarketingMail(newMail.email, newMail.message);
 			flash("client_marketing_mail_success", "Email sent successfully.");
 			return redirect(controllers.admincontrollers.routes.AdminActions.marketingEmail());		
+	}
+	
+	public static Result generateAdminCouponCode(){
+		Form<AdminReferalCode> adminCouponBoundForm = adminCouponForm.bindFromRequest();
+		if(session().get("admin_email") != null){
+			adminReferalCodeList = new AdminReferalCode().getAdminCouponCodesByAdminId(AdminUser.findByEmail(session().get("admin_email")).admin_user_id);
+			//Logger.info("user email:" + )
+		}
+		if(adminCouponBoundForm.hasErrors()){
+			return ok(admincouponcode.render(adminCouponBoundForm,adminReferalCodeList));
+		}
+		
+		AdminReferalCode adminReferalCode = adminCouponBoundForm.get();
+		//generate the coupon code
+		String coupon_code = new ReferralCode().generateString(new java.util.Random(),5);
+		adminReferalCode.code = coupon_code;
+		
+		AdminUser adminUser = AdminUser.findByEmail(session().get("admin_email"));
+		if(adminUser == null){
+			return ok(admincouponcode.render(adminCouponForm,adminReferalCodeList));
+		}
+		adminReferalCode.admin_id = adminUser.admin_user_id;
+		adminReferalCode.saveAdminReferalCode();
+		flash("save-admin-code-success","You have created a coupon code.");
+		//return ok(admincouponcode.render(adminCouponForm,adminReferalCodeList));
+		return redirect(controllers.admincontrollers.routes.AdminActions.newAdminCouponCode());
+	}
+	public static Result newAdminCouponCode(){
+		if(session().get("admin_email") == null){
+			return ok(admincouponcode.render(adminCouponForm,adminReferalCodeList));
+		}
+		adminReferalCodeList = new AdminReferalCode().getAdminCouponCodesByAdminId(AdminUser.findByEmail(session().get("admin_email")).admin_user_id);
+		return ok(admincouponcode.render(adminCouponForm,adminReferalCodeList));		
+	}
+	public static Result deleteCouponCode(String coupon_code){
+		final AdminReferalCode referral_code = new AdminReferalCode().getReferralCode(coupon_code);
+		if(referral_code == null){
+			flash("admin-code-not-found","This coupon code was not found!");
+			return redirect(controllers.admincontrollers.routes.AdminActions.newAdminCouponCode()); 
+		}
+		flash("admin-code-deleted","A coupon code has been deleted");
+		referral_code.deleteCode(referral_code);
+		return redirect(controllers.admincontrollers.routes.AdminActions.newAdminCouponCode());
+	}
+	
+	public static Result saveWriter(){
+		Form<FreelanceWriter> freelanceWriterBoundForm = freelanceWriterForm.bindFromRequest();
+		if(freelanceWriterBoundForm.hasErrors()){
+			return ok(freelancewriter.render(freelanceWriterBoundForm));
+		}
+		FreelanceWriter freelance_writer = freelanceWriterBoundForm.get();
+		//generate unique writer_id 
+		flash("writer-registered","Writer has been registered");
+		if(freelance_writer.freelance_writer_id == null){
+			freelance_writer.writer_id = freelance_writer.generateRandomLongWriterId();
+			freelance_writer.saveFreelanceWriter();
+			return redirect(controllers.admincontrollers.routes.AdminActions.newWriter());
+			
+		}
+		freelance_writer.saveFreelanceWriter();
+		return redirect(controllers.admincontrollers.routes.AdminActions.allWriters());
+		
+	}
+	public static Result newWriter(){
+		if(session().get("admin_email") == null){
+			return ok(freelancewriter.render(freelanceWriterForm));
+		}
+		return ok(freelancewriter.render(freelanceWriterForm));
+	}
+	public static Result allWriters(){
+		List<FreelanceWriter> freelance_writer_list = new ArrayList<FreelanceWriter>();
+		freelance_writer_list = FreelanceWriter.getAllWriters();
+		return ok(writers.render(freelance_writer_list));
+	}
+	public static Result editWriter(Long writer_id){
+		FreelanceWriter freelance_writer = new FreelanceWriter().getWriterByWriterId(writer_id);
+		if(freelance_writer == null){
+			flash("writer-not-found","This writer was not found");
+			return redirect(controllers.admincontrollers.routes.AdminActions.allWriters());
+		}
+		Form<FreelanceWriter> filledFreelanceWriterForm = freelanceWriterForm.fill(freelance_writer);
+		return ok(freelancewriter.render(filledFreelanceWriterForm));
 	}
 	
 	public static class NewEmail{

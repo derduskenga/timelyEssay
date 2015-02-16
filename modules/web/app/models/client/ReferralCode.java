@@ -1,7 +1,6 @@
 package models.client;
 
-import java.util.Date;
-
+import java.util.*;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -13,6 +12,9 @@ import play.db.ebean.Model;
 import play.Logger;
 import models.orders.Orders;
 import java.util.Random;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import models.admincoupon.*;
 
 @Entity
 public class ReferralCode extends Model{ 
@@ -26,7 +28,7 @@ public class ReferralCode extends Model{
 	public Date date_generated;
 	
 	@OneToMany(mappedBy="referralCode")
-	public Orders order;
+	public List<ClientReferalEarning> clientReferalEarning;
 	
 	@Column(nullable=false)
 	@OneToOne
@@ -74,4 +76,44 @@ public class ReferralCode extends Model{
 	
 	@Transient
 	public String alphabet    = "abcdefghijklmnopqrstuvwxyz";
+	
+	public static JSONArray getReferralCodeArray(){
+	  List<ReferralCode> codeList = new ArrayList<ReferralCode>();
+	  codeList =  ReferralCode.find.findList();
+	  JSONArray jArray = new JSONArray();
+	  for(int i = 0; i<codeList.size();i++){
+	    JSONObject jObject = new JSONObject();
+	    jObject.put("id",codeList.get(i).referral_code_id);
+	    jObject.put("code",codeList.get(i).code);
+	    jArray.add(jObject);
+	  } 
+	  return jArray;  
+	}
+	
+	public String determineTypeOfCode(Orders orders){
+		/*This function should only be called once you are sure that a coupon code is corect*/
+		boolean found = false;
+								      
+		List<ReferralCode> clientCodeList = new ArrayList<ReferralCode>();
+		clientCodeList =  ReferralCode.find.findList();
+		
+		List<AdminReferalCode> adminCodeList = new ArrayList<AdminReferalCode>();
+		adminCodeList =  AdminReferalCode.find.findList();
+		
+		if(!clientCodeList.isEmpty()){
+			for(ReferralCode referralCode:clientCodeList){
+				if(orders.coupon_code.equals(referralCode.code)){
+					found = true;
+				}
+			}
+		}
+		
+		if(found){
+			Logger.info("client code");
+			return "CLIENT";
+		}
+		Logger.info("ADMIN code");
+		return "ADMIN";
+
+	}
 } 

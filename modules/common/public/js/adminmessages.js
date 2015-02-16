@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	
+	setInterval(setUploadTime, 5000);
 	$('#client-messages-form').bootstrapValidator({
 		message: 'This value is not valid',
         live: 'disabled',
@@ -22,7 +23,14 @@ $(document).ready(function(){
                         message: 'Please type your message.'
                     }
                 }
-            }	
+            },
+	    sender:{
+	      validators:{
+		notEmpty:{
+		  message:'Select sender.'
+		}
+	      }
+	    }
 		}
 	});
 
@@ -60,4 +68,8 @@ function alternateNewMessageView(panel){
 			//$('.new-msg-div').removeClass('hidden');
 			$('.new-msg-div').show(1000);
 		}
+}
+
+function setUploadTime(){
+	$('#admin_message_upload_date').val(new Date().toString("yyyy-MM-dd HH:mm:ss"));
 }

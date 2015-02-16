@@ -42,6 +42,16 @@ POST		/manageorder/askforextrapages/:pages/:order_code/:date  	controllers.admin
 POST		/manageorder/askfordeadlineextensionadmin/:deadline/:date/:reason/:order_code		controllers.admincontrollers.ManageOrdersActions.AskForDeadlineExtension(deadline:String,date:String,reason:String,order_code:Long)
 GET		/manageorder/downloadproductfile/:file_id				controllers.admincontrollers.ManageOrdersActions.downloadProductFile(file_id:Long)
 GET		/manageorder/downloadOrderfile/:file_id			controllers.admincontrollers.ManageOrdersActions.adminDownloadOrderFile(file_id:Long)
+GET		/newadmincouponcodes					controllers.admincontrollers.AdminActions.newAdminCouponCode()
+POST		/submitadmincouponcodes					controllers.admincontrollers.AdminActions.generateAdminCouponCode()
+DELETE		/deleteadmincouponcode/:code				controllers.admincontrollers.AdminActions.deleteCouponCode(code:String)
+GET		/newwriter						controllers.admincontrollers.AdminActions.newWriter()
+POST		/submitwriter						controllers.admincontrollers.AdminActions.saveWriter()
+GET		/writer						controllers.admincontrollers.AdminActions.allWriters()
+GET		/writer/edit/:writer_id				controllers.admincontrollers.AdminActions.editWriter(writer_id:Long)
+POST		/manageorder/fetchwriter/			controllers.admincontrollers.ManageOrdersActions.fetchAllWriters()
+POST		/manageorder/assign/:date/:order_code/:writer_id	controllers.admincontrollers.ManageOrdersActions.assignOrderToWriter(date:String,order_code:Long,writer_id:Long)
+
 
 
 

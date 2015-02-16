@@ -15,6 +15,7 @@ import play.api.mvc.DiscardingCookie;
 import play.data.validation.ValidationError;
 import views.html.*;
 import models.client.Client;
+import models.client.ReferralCode;
 import play.data.validation.Constraints;
 import models.orders.Orders;
 import models.orders.OrderDocumentType;
@@ -35,6 +36,7 @@ import play.mvc.Http.Context;
 import models.utility.Utilities;
 import models.orders.OrderDeadlines;
 import controllers.web.client.*;
+import models.admincoupon.AdminReferalCode;
 import static play.data.Form.form;
 import play.Logger;
 import play.Logger.ALogger;
@@ -161,25 +163,25 @@ public class Application extends Controller{
 	}
 	
 	public static Result newOrder(){
-	  Map<Map<Long,String>,Boolean> mapDocuments = new HashMap<Map<Long,String>,Boolean>();
+	  Map<Map<Long,String>,Boolean> mapDocuments = new LinkedHashMap<Map<Long,String>,Boolean>();
 	  if(OrderDocumentType.fetchDocumentMap().size()>0){
 	    mapDocuments = OrderDocumentType.fetchDocumentMap(); 
 	  }
-	  Map<Map<Long,String>,Boolean> documentDeadlines = new HashMap<Map<Long,String>,Boolean>();
+	  Map<Map<Long,String>,Boolean> documentDeadlines = new LinkedHashMap<Map<Long,String>,Boolean>();
 	  if(TempStore.getDocumentDeadlines().size()>0){
 	    documentDeadlines = TempStore.getDocumentDeadlines();
 	  }
-	  Map<Map<Long,String>,Boolean> documentSubjects = new HashMap<Map<Long,String>,Boolean>();
+	  Map<Map<Long,String>,Boolean> documentSubjects = new LinkedHashMap<Map<Long,String>,Boolean>();
 	  if(TempStore.getDocumentSubjects().size()>0){
 	    documentSubjects = TempStore.getDocumentSubjects(); 
 	  }
 	  
-	  Map<Map<Long,String>,Boolean> numberOfUnitsMap = new HashMap<Map<Long,String>,Boolean>();
+	  Map<Map<Long,String>,Boolean> numberOfUnitsMap = new LinkedHashMap<Map<Long,String>,Boolean>();
 	  if(TempStore.getNumberOfUnits().size()>0){
 	    numberOfUnitsMap = TempStore.getNumberOfUnits();
 	  }
 	  
-	  Map<Map<Long,String>,Boolean> mapLevel= new HashMap<Map<Long,String>,Boolean>(); 
+	  Map<Map<Long,String>,Boolean> mapLevel= new LinkedHashMap<Map<Long,String>,Boolean>(); 
 	  if(OrderLevelOfWriting.fetchLevelMap().size()>0){
 	    mapLevel = OrderLevelOfWriting.fetchLevelMap();
 	  }
@@ -200,7 +202,7 @@ public class Application extends Controller{
 	  }
 	  //Session session = Scope.Session.current();
 	  if(session().get("email") == null){//a new user who is not logged/has no account
-	    Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
+	    Map<Map<Long,String>,Boolean> mapCountries = new LinkedHashMap<Map<Long,String>,Boolean>(); 
 	    if(Countries.fetchCountriesMap().size()>0){
 	      mapCountries = Countries.fetchCountriesMap();
 	    }
@@ -215,7 +217,7 @@ public class Application extends Controller{
 	      Logger.info("user logged in and email is:" + session().get("email"));
 	      Logger.info("f_name is:" + client.f_name);
 	      //Countries map
-	      Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
+	      Map<Map<Long,String>,Boolean> mapCountries = new LinkedHashMap<Map<Long,String>,Boolean>(); 
 	      mapCountries = Countries.fetchCountriesMapForErrorForm(client.country.id);
 	      
 	      return ok(orderClientForm.render(orderForm,filledClientForm,loginForm,mapCountries,
@@ -223,7 +225,7 @@ public class Application extends Controller{
 	      spacingMap,StaticData.getStyles(),StaticData.getLanguages(),StaticData.getDatabase(),StaticData.getReferenceCount(),additionsList));	    
 	    }else{
 	      session().clear();
-	      Map<Map<Long,String>,Boolean> mapCountries = new HashMap<Map<Long,String>,Boolean>(); 
+	      Map<Map<Long,String>,Boolean> mapCountries = new LinkedHashMap<Map<Long,String>,Boolean>(); 
 	      if(Countries.fetchCountriesMap().size()>0){
 		mapCountries = Countries.fetchCountriesMap();
 	      }
@@ -534,8 +536,10 @@ public class Application extends Controller{
 			  client.password = params[0];
 			  client.salt = params[1];
 			  client.saveClient();
+			  Logger.info("pass:" + random);
 			  ClientMails cm = new ClientMails();
 			  cm.sendRegisteredClientFirstEmail(client,random);
+			  flash("emailsenttonewuser","We have sent you a password to the email address you provided us. You can change it by clicking on 'My Profile'. If you cannot find the email in your inbox, please check it in your spam folder");
 	    }catch(Exception e){
 			  Logger.error("Error creating hashed password",e);
 	    }
@@ -645,6 +649,15 @@ public class Application extends Controller{
 	  session("f_name", orders.client.f_name);
 	  session("l_name", orders.client.l_name);
 	}
+	
+	public static Result fetchClientReferalCode(){
+	  return ok(Json.parse(ReferralCode.getReferralCodeArray().toString()));
+	}
+	
+	public static Result fetchAdminReferalCode(){
+	  return ok(Json.parse(AdminReferalCode.getAdminReferalCodeArray().toString()));
+	}
+	
 	public static class Login {
 		public String email;
 		public String password;

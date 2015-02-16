@@ -12,7 +12,7 @@ public class PreferredWriter extends Model{
 	@Id
 	public Long preferred_writer_entry_id;
 	@ManyToOne
-	Client client;
+	public Client client;
 	@ManyToOne
 	public FreelanceWriter freelanceWriter;
 	

@@ -3,11 +3,13 @@ import java.util.*;
 import play.data.validation.*;
 import javax.persistence.*;
 import play.db.ebean.Model;
-import models.client.Client;
+import models.client.*;
 import models.utility.Utilities;
 import play.Logger;
 import com.avaje.ebean.*;
 import java.text.*;
+import models.admincoupon.*;
+import models.writer.FreelanceWriter;
 
 
 @Entity
@@ -49,6 +51,9 @@ public class Orders extends Model{
 	public String source_domain;
 	public String invoice_id;
 	public boolean approved = false;
+	public String coupon_code;
+	public boolean prefered_writer_value_paid = false;
+	
 	//Order Files and types of files (e.g for revision, additional files, reference materials, order product,draft)
 	//Order fines is an entity(id,date,amount,reason,removed)
 	//order revisions (id,revision instructions)
@@ -84,6 +89,15 @@ public class Orders extends Model{
 	public List<OrderFines> orderFines;
 	@OneToMany(mappedBy="orders")
 	public List<OrderRevision> orderRevision;
+	@OneToOne(mappedBy="orders")
+	public ClientReferalEarning clientReferalEarning; 
+	@OneToOne(mappedBy="orders")
+	public AdminReferalEarning adminReferalEarning;
+	@ManyToOne
+	public FreelanceWriter freelanceWriter;
+	
+	@ManyToOne
+	public ReferralCode referralCode;
 	
 	@PrePersist
 	protected void onCreate(){
@@ -436,5 +450,77 @@ public class Orders extends Model{
 	  return order;
 	}
 	
+	public boolean qualifiesForDiscount(Orders orders){
+		/*check if an order qualifies for a discount*/
+		boolean qualify = false;
+		/*	RULES:
+			#order total is greater than or equal to $60
+			#is the clients first order
+			#order code used is correct
+		*/
+		
+		Client client = orders.client;
+		double order_total_ = orders.order_total * orders.orderCurrence.convertion_rate;
+		int no_of_orders = client.orders.size();
+		
+		
+		
+		if(no_of_orders<2 && order_total_>=Utilities.MINIMUN_ORDER_VALUE_FOR_DISCOUNT && isOrderCodeCorrect(orders)){
+			qualify = true;
+			Logger.info("qualify");
+		}
+		return qualify;
+	}
+	
+	public double computeOrderDiscount(Orders orders){
+		/*compute discount if customer qualifyes*/
+		double client_discount = 0.00;
+		if(qualifiesForDiscount(orders)){
+			client_discount = orders.order_total * Utilities.FIRST_ORDER_DISCOUNT;
+		}
+		return client_discount;
+	}
+	
+	public boolean isOrderCodeCorrect(Orders orders){
+		boolean found = false;
+		if(orders.coupon_code.equals("")){
+			return false;
+		}
+		List<ReferralCode> clientCodeList = new ArrayList<ReferralCode>();
+		clientCodeList =  ReferralCode.find.findList();
+		
+		List<AdminReferalCode> adminCodeList = new ArrayList<AdminReferalCode>();
+		adminCodeList =  AdminReferalCode.find.findList();
+		
+		if(!clientCodeList.isEmpty()){
+			for(ReferralCode referralCode:clientCodeList){
+				if(orders.coupon_code.equals(referralCode.code)){
+					found = true;
+				}
+			}
+		}		
+		//proceed		
+		if(!found){/*code was not found in the first list*/
+			//proceed and search in the next list
+			if(!adminCodeList.isEmpty()){
+				for(AdminReferalCode adminReferalCode:adminCodeList){
+					if(orders.coupon_code.equals(adminReferalCode.code)){
+						found = true;
+					}
+				}
+			}
+
+		}
+		return found;
+		
+	}
+	
+	public void assignOrder(Long order_code, Long writer_id){
+		Orders orders = Orders.getOrderByCode(order_code);
+		FreelanceWriter fw = new FreelanceWriter().getWriterByWriterId(writer_id);
+		orders.freelanceWriter = fw;
+		orders.is_writer_assigned = true;
+		orders.saveOrder();
+	}
 } 
  

@@ -21,6 +21,7 @@
 							<td>@user.email</td>
 							<td>@for(role <- user.roles){@role.name,}</td>
 							<td><a class="activation-link"  onClick='deactivateUser("@controllers.admincontrollers.routes.AdminActions.deactivateAdminUser(user.admin_user_id)")'><span data-toggle="tooltip" data-placement="bottom" title="@if(user.active){Deactivate User}else{Activate User}" ><i id="span-@user.admin_user_id" class="fa @if(user.active){fa-check}else{fa-ban} span-icons"></i></span></a><span class="user-state-text" id="status-@user.admin_user_id">@if(user.active){ Active}else{Deactivated}</span></td>
+							
 							<td><a href="@controllers.admincontrollers.routes.AdminActions.editAdminUser(user.admin_user_id)"><span data-toggle="tooltip" data-placement="bottom" title="Edit User Details"><i class="fa fa-pencil-square-o"></i></span></a></td>
 					</tr>
 			 }

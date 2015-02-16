@@ -350,5 +350,5 @@ insert into order_product_files (id,owner,file_size,file_name,file_sent_to,stora
 ALTER TABLE orders add column approved boolean DEFAULT false;
 ALTER TABLE orders add column invoice_id varchar(32);
 
-//change return URL to domain
-//change order_number from "1" to real
+--change return URL to domain
+--change order_number from "1" to real

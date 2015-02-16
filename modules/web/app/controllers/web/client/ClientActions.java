@@ -19,6 +19,7 @@ import models.client.ReferralCode;
 import models.client.Countries;
 import models.utility.*;
 import models.client.ClientMails;
+import models.client.ClientReferalEarning;
 import models.utility.Utilities;
 import java.io.*;
 import play.data.validation.ValidationError;
@@ -42,6 +43,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+import models.admincoupon.*;
 
 import static play.data.Form.form;
 @Security.Authenticated(Secured.class)
@@ -57,6 +59,10 @@ public class ClientActions extends Controller{
 	public static Result index(){  
 	  if(session().get("email") != null){
 	    Orders order = new Orders();
+	    Client client = Client.getClient(session().get("email"));
+	    if(client == null){
+			return(ok(clienthome.render(null,null,null)));
+	    }
 	    Long client_id = Client.getClient(session().get("email")).id;
 	    return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
 	  } 
@@ -95,7 +101,7 @@ public class ClientActions extends Controller{
 		    credit_card_approved = true;
 		  }
 		  
-		  //start check returned key
+		  //start checking returned key
 		  HashMap params = new HashMap();
 		  params.put("sid", Utilities.OUR_MERCHANT_ACCOUNT_NO);
 		  params.put("total", total);
@@ -103,7 +109,7 @@ public class ClientActions extends Controller{
 		  params.put("key",key);
 		  
 		  boolean result = TwocheckoutReturn.check(params, Utilities.OUR_CO_SECRET_WORD);		  
-		  //end check returned key 
+		  //end checking returned key 
 		  
 		  if(credit_card_approved && result){
 			flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ". A writer will be assigned to your order shorlty. Thank you for choosing us.");
@@ -112,7 +118,30 @@ public class ClientActions extends Controller{
 			paidOrder.is_paid = true;
 			paidOrder.saveOrder();
 			Logger.info("order code:" + order_code + " and invoice id is:" + invoice_id + "result:" + result + "credit_card_approved:" + credit_card_approved);
+			//if order qualifies for a discont, reward the coupon codes
+			if(paidOrder.qualifiesForDiscount(paidOrder)){
+				if(new ReferralCode().determineTypeOfCode(paidOrder).equals("CLIENT")){
+					//store a client earning
+					ClientReferalEarning clientReferalEarning = new ClientReferalEarning();
+					clientReferalEarning.orders = paidOrder;
+					clientReferalEarning.referralCode = new ReferralCode().getReferralCode(paidOrder.coupon_code);
+					clientReferalEarning.date_earned = new Date();
+					clientReferalEarning.referal_earning_value = Utilities.MARKETER_EARNING_PER_CLIENT_FIRST_ORDER;
+					clientReferalEarning.saveclientReferalEarning();
+				}
+				
+				if(new ReferralCode().determineTypeOfCode(paidOrder).equals("ADMIN")){
+					//store an admin earning
+					AdminReferalEarning adminReferalEarning = new AdminReferalEarning();
+					adminReferalEarning.admin_earning_value = Utilities.MARKETER_EARNING_PER_CLIENT_FIRST_ORDER;
+					adminReferalEarning.date_earned = new Date();
+					adminReferalEarning.adminReferalCode = new AdminReferalCode().getReferralCode(paidOrder.coupon_code);
+					adminReferalEarning.orders = paidOrder;
+					adminReferalEarning.saveAdminReferalEarning();
+				}
+			}
 			return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
+
 		  }
 		  Logger.info("order code:" + order_code + " and invoice id is:" + invoice_id + " result:" + result + " credit_card_approved:" + credit_card_approved + " key:" + key);
 		  flash("orderpaymentfailresponse","There was a problem and your payment may have not been received");
@@ -193,29 +222,40 @@ public class ClientActions extends Controller{
 	}
 	
 	public static Result preferredWriters(){
-		return ok(preferredwriters.render(prefWriterForm,  Client.getPreferedWriters()));	
+		if(session().get("email") == null){
+			return redirect(controllers.web.client.routes.ClientActions.index());
+		}
+		Client client = Client.getClient(session().get("email"));
+		
+		return ok(preferredwriters.render(prefWriterForm,  Client.getPreferedWriters(client)));	
 	}
 	
 	public static Result savePreferredWriter(){
+		if(session().get("email") == null){
+			return redirect(controllers.web.client.routes.ClientActions.index());
+		}
 		Form<PreferredWriterForm> preferredWriterForm = form(PreferredWriterForm.class).bindFromRequest();		
 		if(preferredWriterForm.hasErrors()){
 			flash("show_form","true");
-			return badRequest(preferredwriters.render(preferredWriterForm,  Client.getPreferedWriters()));	
+			Client client = Client.getClient(session().get("email"));
+			return badRequest(preferredwriters.render(preferredWriterForm,  Client.getPreferedWriters(client)));	
 		}
 		PreferredWriterForm prefWriter = preferredWriterForm.get();
 		FreelanceWriter freelanceWriter = new FreelanceWriter();
-		freelanceWriter = freelanceWriter.findFreelanceWriterById(prefWriter.writer_id);
+		freelanceWriter = freelanceWriter.getWriterByWriterId(prefWriter.writer_id);
+		//Logger.info("prefere writer:" + prefWriter.writer_id);
 		if(freelanceWriter == null){
-			flash("writer_not_found_error","Writer ID  "+prefWriter.writer_id+" not found");
+			flash("writer_not_found_error","Writer ID  "+prefWriter.writer_id + " not found");
 			flash("show_form","true");
 			prefWriterForm=preferredWriterForm;
 			return redirect(controllers.web.client.routes.ClientActions.preferredWriters());
 		}
 		PreferredWriter preferredWriter = new PreferredWriter();
 		preferredWriter.freelanceWriter = freelanceWriter;
+		preferredWriter.client = Client.getClient(session().get("email"));
 		preferredWriter.save();
 		flash("show_form","true");
-		flash("writer_added_success","Successfully added writer "+freelanceWriter.freelance_writer_id+" to your preferred writers.");
+		flash("writer_added_success","Successfully added writer "+freelanceWriter.writer_id + " to your preferred writers.");
 		return redirect(controllers.web.client.routes.ClientActions.preferredWriters());	
 	}	
 	public static class NewEmail{

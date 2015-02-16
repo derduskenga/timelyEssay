@@ -57,6 +57,10 @@ POST			/fetch/currency					   controllers.web.Application.fetchCurrency()
 POST			/fetch/additions				   controllers.web.Application.fetchAdditions()
 POST			/fetch/level					   controllers.web.Application.fetchLevelOfWriting()
 POST 			/fetch/spacing					   controllers.web.Application.fetchSpacing()
+
+POST			/fetch/clientcoupons				   controllers.web.Application.fetchClientReferalCode()
+POST			/fetch/admincoupons				   controllers.web.Application.fetchAdminReferalCode()
+
 GET			/neworder/ordersummary/:order_code		   controllers.web.Application.previewOrder(order_code:Long)
 GET			/neworder/edit/:order_code			   controllers.web.Application.editOrder(order_code:Long)
 GET			/forgotpassword					   controllers.web.Application.forgotPassword()

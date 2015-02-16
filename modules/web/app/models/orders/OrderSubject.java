@@ -6,6 +6,7 @@ import javax.persistence.*;
 import play.db.ebean.Model;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import play.Logger;
 import play.Logger.ALogger;
 
@@ -41,7 +42,7 @@ public class OrderSubject extends Model{
 	public static Map<Map<Long,String>,Boolean> getOrderSubjectsForErrorForm(Long subject_selected,Long document_selected){
 	  OrderDocumentType documentObject = OrderDocumentType.find().byId(document_selected);
 	  List<OrderSubject> subjectsList = documentObject.orderSubject;	  
-	  Map<Map<Long,String>,Boolean> documentSubjects = new HashMap<Map<Long,String>,Boolean>();
+	  Map<Map<Long,String>,Boolean> documentSubjects = new LinkedHashMap<Map<Long,String>,Boolean>();
 	    for(int i = 0; i< subjectsList.size(); i++){
 	      Map<Long,String> innerSubjects = new HashMap<Long,String>();
 	      innerSubjects.put(subjectsList.get(i).id,subjectsList.get(i).subject_name);

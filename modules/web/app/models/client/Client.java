@@ -60,7 +60,8 @@ public class Client extends Model{
 	
 	@OneToMany(mappedBy="client")
 	public List<PreferredWriter> preferredWriter;  
-	
+	//@OneToMany(mappedBy="client")
+	//public List<ClientReferalEarning> clientReferalEarning;
 	
 	public static Finder<Long, Client> finder = new Finder<Long, Client>(Long.class, Client.class);
 	
@@ -112,8 +113,10 @@ public class Client extends Model{
 	
 	public static Finder<Long, PreferredWriter> preferredWriterFinder = new Finder<Long, PreferredWriter>(Long.class, PreferredWriter.class);
 	
-	public static List<PreferredWriter> getPreferedWriters(){
-		return preferredWriterFinder.all();
+	public static List<PreferredWriter> getPreferedWriters(Client client){
+		List<PreferredWriter> writerList = new ArrayList<PreferredWriter>();
+		writerList = client.preferredWriter;
+		return writerList;
 	}
 	
 		

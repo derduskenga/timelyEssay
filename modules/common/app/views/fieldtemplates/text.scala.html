@@ -10,7 +10,7 @@
              value="@field.value.getOrElse("")"
              placeholder="@placeholder" 
              @fieldcontrolattr/>
-      <span class="help-block">@help</span>
+      <span class="help-block"><small>@help</small></span>
       <span class="help-block">@{field.error.map { error => error.message }}</span>
     </div>
   </div>

@@ -47,6 +47,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import models.admin.security.NoUserDeadboltHandler;
 
 import models.orders.OrderMessages;
+import models.writer.FreelanceWriter;
 
 import com.avaje.ebean.Page;
 import org.json.simple.JSONObject;
@@ -67,7 +68,7 @@ public class ManageOrdersActions extends Controller{
 	public static Result manageOrder(Long order_code){
 			Form<OrderProductFiles> orderFilesForm = Form.form(OrderProductFiles.class);
 			Orders order = new Orders().getOrderByCode(order_code);
-			return ok(manageorder.render(order,orderFilesForm));
+			return ok(manageorder.render(order,orderFilesForm,new OrderMessages().getAdminUnreadMessages(order_code)));
 	}
 		
 	public static Result uploadProductFile(Long order_code){
@@ -76,7 +77,7 @@ public class ManageOrdersActions extends Controller{
 			Form<OrderProductFiles> orderProductFileBoundForm = Form.form(OrderProductFiles.class);
 
 			if(orders==null)
-				return badRequest(manageorder.render(null,orderProductFileBoundForm));
+				return badRequest(manageorder.render(null,orderProductFileBoundForm,new OrderMessages().getAdminUnreadMessages(order_code)));
 			orderProductFileBoundForm =orderProductFileBoundForm.bindFromRequest();
 			Map<String,String> clientProductFileMap = new HashMap<String,String>();
 			clientProductFileMap = orderProductFileBoundForm.data();
@@ -84,7 +85,7 @@ public class ManageOrdersActions extends Controller{
 			Logger.info("file_local_date:" + file_local_date);
 			if(orderProductFileBoundForm.hasErrors()) {
 				flash("fileuploadresponseerror","There was an error.");
-				return badRequest(manageorder.render(orders,orderProductFileBoundForm));
+				return badRequest(manageorder.render(orders,orderProductFileBoundForm,new OrderMessages().getAdminUnreadMessages(order_code)));
 			}
 			OrderProductFiles orderFiles = orderProductFileBoundForm.get();
 			MultipartFormData body = request().body().asMultipartFormData();
@@ -94,12 +95,12 @@ public class ManageOrdersActions extends Controller{
 				
 				if(order_file.length() > Utilities.FILE_UPLOAD_SIZE_LIMIT){
 				  flash("fileuploadresponseerror","Please attach a file not exceeding 25 MB");
-				  return badRequest(manageorder.render(orders,orderProductFileBoundForm));
+				  return badRequest(manageorder.render(orders,orderProductFileBoundForm,new OrderMessages().getAdminUnreadMessages(order_code)));
 				}   
 				
 				if(part.getContentType().equals("application/x-ms-dos-executable")){
 				  flash("fileuploadresponseerror","File type not allowed!");
-				  return badRequest(manageorder.render(orders,orderProductFileBoundForm));
+				  return badRequest(manageorder.render(orders,orderProductFileBoundForm,new OrderMessages().getAdminUnreadMessages(order_code)));
 				}
 				try{
 				  //orderFiles.order_file = Files.toByteArray(order_file);
@@ -124,7 +125,7 @@ public class ManageOrdersActions extends Controller{
 				  String product_file_type = form().bindFromRequest().get("product_file_type");
 				  if(product_file_type.equals("")){
 					  flash("fileuploadresponseerror","Could not upload file. Select File type.");
-					  return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
+					  return badRequest(manageorder.render(orders,orderProductFileBoundForm,new OrderMessages().getAdminUnreadMessages(order_code))); 
 				  }
 				  if(product_file_type.equals("PRODUCT")){
 					  orderFiles.product_file_type=FileType.ProductFileType.PRODUCT;
@@ -150,16 +151,16 @@ public class ManageOrdersActions extends Controller{
 				}catch (IOException ioe) {
 				  Logger.error("Server error on file upload: " + ioe.getMessage().toString());
 				  flash("fileuploadresponseerror","Server error. Please try again");
-				  return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
+				  return badRequest(manageorder.render(orders,orderProductFileBoundForm,new OrderMessages().getAdminUnreadMessages(order_code))); 
 				}catch(Exception ex){
 				  Logger.error("Server error on file upload: " + ex.getMessage().toString());
 				  flash("fileuploadresponseerror","Server error. Please try again");
-				  return badRequest(manageorder.render(orders,orderProductFileBoundForm)); 
+				  return badRequest(manageorder.render(orders,orderProductFileBoundForm,new OrderMessages().getAdminUnreadMessages(order_code))); 
 				}
 				
 			}
 			flash("fileuploadresponseerror","No file was selected");
-			return badRequest(manageorder.render(orders,orderProductFileBoundForm));
+			return badRequest(manageorder.render(orders,orderProductFileBoundForm,new OrderMessages().getAdminUnreadMessages(order_code)));
 		}
 	public static Result AskForExtraPages(int pages, Long order_code, String date){
 		Orders order = Orders.getOrderByCode(order_code);
@@ -420,16 +421,68 @@ public class ManageOrdersActions extends Controller{
 				flash("error", "Please correct the form below.");
 				flash("show_form", "true");
 				return badRequest(adminmessages.render(orders,newBoundMessageForm, OrderMessages.getReceipientsMap("SUPPORT"), getOrderMessages(order_code)));
-			}	
+			}
+			
 			OrderMessages orderMessage = newBoundMessageForm.get();
-			orderMessage.msg_from = MessageParticipants.SUPPORT;
+			Map<String,String> adminMessageMap = new HashMap<String,String>();
+			adminMessageMap = newBoundMessageForm.data();
+			if(adminMessageMap.get("sender") == null || adminMessageMap.get("admin_message_upload_date") == null){
+				  flash("admin-message-error","Could not save message.");
+				  return redirect(controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order_code));
+			}
+			String sender = adminMessageMap.get("sender");
+			String local_time = adminMessageMap.get("admin_message_upload_date");
+			
+			if(sender.equals("SUPPORT")){
+				orderMessage.msg_from = MessageParticipants.SUPPORT;
+			}else{
+				orderMessage.msg_from = MessageParticipants.WRITERS;
+			}
+			
 			orderMessage.orders = orders;
 			orderMessage.message_promise_value = "none";
 			orderMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
+			orderMessage.sent_on = Utilities.computeUtcTime(Utilities.WRITER_TIMEZONE_OFFSET,local_time);
 			if(orderMessage.saveClientMessage()){
 				return redirect(controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order_code));
 			}
 			flash("admin-message-error","Could not save message.");
 			return redirect(controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order_code));
+	}
+	
+	public static Result fetchAllWriters(){
+		 return ok(Json.parse(FreelanceWriter.getAllWriterCodes().toString()));
+	}
+	
+	public static Result assignOrderToWriter(String date,Long order_code,Long writer_id){
+		JSONObject jo = new JSONObject();
+		if(session().get("admin_email") == null){
+			  jo.put("success",3);
+			  jo.put("message","Session expired");
+			  return ok(Json.parse(jo.toString()));
+		}
+		//check writer id and order code
+		if(new FreelanceWriter().getWriterByWriterId(writer_id) == null || Orders.getOrderByCode(order_code) == null){
+			jo.put("success",0);
+			jo.put("message","Writer/order not found");
+			return ok(Json.parse(jo.toString()));
+		}
+		if(!Orders.getOrderByCode(order_code).is_paid){
+			jo.put("success",0);
+			jo.put("message","You cannot assign this order because the client has not paid for the order");
+			return ok(Json.parse(jo.toString()));
+		}
+		
+		if(Orders.getOrderByCode(order_code).is_writer_assigned){
+			jo.put("success",0);
+			jo.put("message","Order already assigned");
+			return ok(Json.parse(jo.toString()));
+		}
+		new Orders().assignOrder(order_code,writer_id);
+		OrderMessages.sendAssignmentMessageToClient(Orders.getOrderByCode(order_code),date,AdminUser.findByEmail(session().get("admin_email")).admin_user_offset);
+		jo.put("success",1);
+		jo.put("message","Order has been assigned to " + writer_id);
+		return ok(Json.parse(jo.toString()));
+		
 	}
 }

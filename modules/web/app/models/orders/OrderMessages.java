@@ -6,6 +6,7 @@ import play.db.ebean.Model;
 import models.client.Client;
 import models.writer.FreelanceWriter;
 import models.support.WriterSupport;
+import models.utility.*;
 import play.*;
 import play.mvc.*;
 
@@ -94,12 +95,13 @@ public class OrderMessages extends Model{
 						.orderBy("sent_on desc").findList();
 	}
 	
+	
 	//for now, get all messages associated with this order.
 	//hence the commented out part of the code below
 	public static List<OrderMessages> getAdminOrderMessages(Long order_code){
 				return  orderMessagesFinder.where()
 						.eq("orders.order_code",order_code)
-					//	.or(Expr.eq("msg_to", MessageParticipants.SUPPORT),Expr.eq("msg_from", MessageParticipants.SUPPORT))
+						//.or(Expr.eq("msg_to", MessageParticipants.SUPPORT),Expr.eq("msg_from", MessageParticipants.SUPPORT))
 						.orderBy("sent_on").findList();
 	}
 	
@@ -117,6 +119,22 @@ public class OrderMessages extends Model{
 	  }
 	  return unread;
 	}
+	
+	public static int getAdminUnreadMessages(Long order_code){
+	  Orders order = Orders.getOrderByCode(order_code);
+	  if(order == null){
+	    return 0;
+	  }  
+	  List<OrderMessages> orderList = OrderMessages.getAdminOrderMessages(order_code);  
+	  int unread = 0;
+	  for(OrderMessages messages:orderList){
+	    if(!messages.status && (messages.msg_to == MessageParticipants.SUPPORT || messages.msg_to == MessageParticipants.WRITERS)){//unread messages
+	      unread = unread + 1;
+	    }
+	  }
+	  return unread;
+	}
+	
 	public static String getAdditinalPagesMessageTemplate(Orders order, int pages){
 	  String message_text = "<strong>Dear " + order.client.l_name + ",</strong> <br><br>" +
 				"Our writer is asking you give " + pages + " additinal page(s) to your work so as to fulfill your requirements<br>" +
@@ -141,6 +159,17 @@ public class OrderMessages extends Model{
 	  return message_text;
 	}
 	
+	
+	public static void sendAssignmentMessageToClient(Orders order, String date, String client_time_zone_offset){
+		OrderMessages message = new OrderMessages();
+		message.orders = order;
+		message.sent_on = Utilities.computeUtcTime(client_time_zone_offset,date);
+		message.msg_from = MessageParticipants.SUPPORT; 
+		message.msg_to = MessageParticipants.CLIENT;
+		message.message = orderAssignedMessageTemplate(order);
+		message.saveClientMessage();
+	}
+	
 	public static String getMessageTemplateForAcceptedAdditionalPagesToWriter(Orders order, boolean status){
 	  String message_text = "";
 	  if(status){
@@ -159,7 +188,7 @@ public class OrderMessages extends Model{
 	public static String getMessageTemplateForClientPayForAdditionalPages(Orders order){
 	  String message_text = "<strong>Dear " + order.client.l_name + ",</strong><br><br>" +
 				"You raised the number pages of order <a href='/mydashboard/order/view/" + order.order_code + "'>#" + order.order_code + "</a> by " + order.additional_pages + " upon our writers request.<br>" +
-				"We kindly ask you to make the additinal payment.";
+				"We kindly ask you to make the additinal payment. <a href='/mydashboard/order/proceedtopay/" + order.order_code + "'>PAY NOW</a>";
 	  return message_text;
 	}
 	
@@ -177,6 +206,24 @@ public class OrderMessages extends Model{
 			    "We, therefore, ask you to complete this order based on its current deadline" + 
 			    "If you have any questions, do not hesitate to talk to us"; 
 	    return message_text;
+	}
+	
+	public static String orderAssignedMessageTemplate(Orders order){
+		  String message_text = "";
+		  if(order.prefered_writer.equals("")){
+			  //no prefered writer so send a plain message
+			  message_text = "<strong>Dear " + order.client.l_name + ",</strong><br><br>" +
+					  "Your order has been assigned to writer " + order.freelanceWriter.writer_id + " <br>" +
+					  "Feel free to communicate with the writer directly";
+			  return message_text;
+					  
+		  }
+		  
+		  message_text = "<strong>Dear " + order.client.l_name + ",</strong><br><br>" + 
+				  "Your order has been assigned your prefered writer-" + order.freelanceWriter.writer_id + " <br>" +
+				  "We are requesting you to pay a 10%(" + order.orderCurrence. currency_symbol_2 + " " + order.orderCurrence.convertion_rate*(order.order_total/10) + ") of your order value, which goes <br>" +
+				  "directly to your prefered writer. <a href='/mydashboard/order/proceedtopay/" + order.order_code + "'>PAY NOW</a>";
+		  return message_text;
 	}
 	
 	public static Date computeMessageUtcTime(String client_time_zone_offset, String date){
@@ -214,7 +261,7 @@ public class OrderMessages extends Model{
 	  //order.order_deadline = localTime;
 	  return localTime;
 	}
-	      
+		      
 	public enum ActionableMessageType{
 	  ADDITIONAL_PAGES,DEADLINE_EXTENSION,OTHER
 	}

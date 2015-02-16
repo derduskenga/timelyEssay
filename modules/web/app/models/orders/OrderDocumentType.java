@@ -57,19 +57,18 @@ public class OrderDocumentType extends Model{
 	public static Map<Map<Long,String>,Boolean> fetchDocumentMap(){	  
 	  List<OrderDocumentType> documentList = OrderDocumentType.find().orderBy("document_type_name").findList();	
 	  if(documentList.size()!=0){
-	    Map<Long,String> innerMap = new HashMap<Long,String>();  
+	    Map<Long,String> innerMap = new LinkedHashMap<Long,String>();  
 	    for(int i = 0; i < documentList.size(); i++){
 	      innerMap.put(documentList.get(i).id,documentList.get(i).document_type_name);
 	      //Logger.info("here " + documentList.get(i).id);
 	    }
 	    
 	    //get subject by documennt
-	    Map<Map<Long,String>,Boolean> subjects = new HashMap<Map<Long,String>,Boolean>();
+	    Map<Map<Long,String>,Boolean> subjects = new LinkedHashMap<Map<Long,String>,Boolean>();
 	    List<OrderSubject> subjectsForDocument = documentList.get(0).orderSubject;
 	    if(subjectsForDocument.size() > 0){
 	      for(int j = 0 ; j<subjectsForDocument.size(); j++){
-		//Logger.info("subject " + j + ": " + subjectsForDocument.get(j).subject_name);
-		Map<Long,String>subjectByDocumentMapInnerMap = new HashMap<Long,String>();
+		Map<Long,String>subjectByDocumentMapInnerMap = new LinkedHashMap<Long,String>();
 		subjectByDocumentMapInnerMap.put(subjectsForDocument.get(j).id, subjectsForDocument.get(j).subject_name);
 		subjects.put(subjectByDocumentMapInnerMap,false);
 	      }	     
@@ -81,7 +80,7 @@ public class OrderDocumentType extends Model{
 	    Collections.sort(documentList, new ListSort());
 	    
 	    //get dealines for document 
-	    Map<Map<Long,String>,Boolean> documentDeadlineMap = new HashMap<Map<Long,String>,Boolean>();
+	    Map<Map<Long,String>,Boolean> documentDeadlineMap = new LinkedHashMap<Map<Long,String>,Boolean>();
 	    documentDeadlineMap = OrderDeadlines.getDeadlines(documentList.get(0).orderDeadlineCategory);
 	    TempStore.setDocumentDeadlines(documentDeadlineMap);
 	    
@@ -109,11 +108,11 @@ public class OrderDocumentType extends Model{
 	public static Map<Map<Long,String>,Boolean> fetchDocumentMapForErrorForm(Long document_selected){
 	  List<OrderDocumentType> documentList = OrderDocumentType.find().orderBy("document_type_name").findList(); 
 	  Collections.sort(documentList, new ListSort());
-	  Map<Map<Long,String>,Boolean> documentMap = new HashMap<Map<Long,String>,Boolean>();
+	  Map<Map<Long,String>,Boolean> documentMap = new LinkedHashMap<Map<Long,String>,Boolean>();
 	  //innerMap is sorted by use of TreeMap the added to the documentMap   
 	  if(documentList.size()!=0){ 
 	    for(int i = 0; i < documentList.size(); i++){
-	      Map<Long,String> innerMap = new HashMap<Long,String>(); 
+	      Map<Long,String> innerMap = new LinkedHashMap<Long,String>(); 
 	      innerMap.put(documentList.get(i).id,documentList.get(i).document_type_name);
 	      if(documentList.get(i).id == document_selected){
 		documentMap.put((innerMap),true);
