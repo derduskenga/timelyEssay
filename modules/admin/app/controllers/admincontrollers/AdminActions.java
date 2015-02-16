@@ -363,6 +363,14 @@ public class AdminActions extends Controller{
 		Form<FreelanceWriter> filledFreelanceWriterForm = freelanceWriterForm.fill(freelance_writer);
 		return ok(freelancewriter.render(filledFreelanceWriterForm));
 	}
+	public void saveAdminMarketingEmail(AdminUser adminUser, String email, String message){
+			AdminSentMail asm = new AdminSentMail();
+			asm.adminUser = adminUser;
+			asm.sent_to = email;
+			asm.message = message;
+			asm.sent_on = new Date();
+			asm.saveAdminSentMail();
+	}
 	
 	public static class NewEmail{
 		@Constraints.Required(message="Please enter email.")
