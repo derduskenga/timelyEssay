@@ -10,7 +10,6 @@ create table additions (
   constraint pk_additions primary key (id))
 ;
 
-<<<<<<< HEAD
 create table admin_referal_code (
   id                        bigint not null,
   full_name                 varchar(255),
@@ -26,7 +25,8 @@ create table admin_referal_earning (
   admin_referal_code_id     bigint,
   orders_order_id           bigint,
   constraint pk_admin_referal_earning primary key (id))
-=======
+;
+
 create table admin_sent_mail (
   admin_sent_mail_id        bigint not null,
   admin_user_admin_user_id  bigint,
@@ -34,7 +34,6 @@ create table admin_sent_mail (
   sent_to                   varchar(255) not null,
   sent_on                   timestamp not null,
   constraint pk_admin_sent_mail primary key (admin_sent_mail_id))
->>>>>>> 128dc37308d34e90b647409da5a7cc71a9f1d0a8
 ;
 
 create table admin_user (
@@ -77,7 +76,6 @@ create table client (
   constraint pk_client primary key (id))
 ;
 
-<<<<<<< HEAD
 create table client_referal_earning (
   id                        bigint not null,
   referal_earning_value     float not null,
@@ -85,7 +83,8 @@ create table client_referal_earning (
   referral_code_referral_code_id bigint,
   orders_order_id           bigint,
   constraint pk_client_referal_earning primary key (id))
-=======
+;
+
 create table client_sent_mail (
   client_sent_mail_id       bigint not null,
   client_id                 bigint,
@@ -93,7 +92,6 @@ create table client_sent_mail (
   sent_to                   varchar(255) not null,
   sent_on                   timestamp not null,
   constraint pk_client_sent_mail primary key (client_sent_mail_id))
->>>>>>> 128dc37308d34e90b647409da5a7cc71a9f1d0a8
 ;
 
 create table countries (
@@ -408,13 +406,11 @@ create table orders_additions (
 ;
 create sequence additions_seq;
 
-<<<<<<< HEAD
 create sequence admin_referal_code_seq;
 
 create sequence admin_referal_earning_seq;
-=======
+
 create sequence admin_sent_mail_seq;
->>>>>>> 128dc37308d34e90b647409da5a7cc71a9f1d0a8
 
 create sequence admin_user_seq;
 
@@ -422,11 +418,9 @@ create sequence authorised_user_seq;
 
 create sequence client_seq;
 
-<<<<<<< HEAD
 create sequence client_referal_earning_seq;
-=======
+
 create sequence client_sent_mail_seq;
->>>>>>> 128dc37308d34e90b647409da5a7cc71a9f1d0a8
 
 create sequence countries_seq;
 
@@ -480,113 +474,66 @@ create sequence user_permission_seq;
 
 create sequence writer_support_seq;
 
-<<<<<<< HEAD
 alter table admin_referal_earning add constraint fk_admin_referal_earning_admin_1 foreign key (admin_referal_code_id) references admin_referal_code (id);
 create index ix_admin_referal_earning_admin_1 on admin_referal_earning (admin_referal_code_id);
 alter table admin_referal_earning add constraint fk_admin_referal_earning_order_2 foreign key (orders_order_id) references orders (order_id);
 create index ix_admin_referal_earning_order_2 on admin_referal_earning (orders_order_id);
-alter table client add constraint fk_client_country_3 foreign key (country_id) references countries (id);
-create index ix_client_country_3 on client (country_id);
-alter table client_referal_earning add constraint fk_client_referal_earning_refe_4 foreign key (referral_code_referral_code_id) references referral_code (referral_code_id);
-create index ix_client_referal_earning_refe_4 on client_referal_earning (referral_code_referral_code_id);
-alter table client_referal_earning add constraint fk_client_referal_earning_orde_5 foreign key (orders_order_id) references orders (order_id);
-create index ix_client_referal_earning_orde_5 on client_referal_earning (orders_order_id);
-alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__6 foreign key (order_deadlines_id) references order_deadlines (id);
-create index ix_deadline_deadline_category__6 on deadline_deadline_category_association (order_deadlines_id);
-alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__7 foreign key (order_deadline_category_id) references order_deadline_category (id);
-create index ix_deadline_deadline_category__7 on deadline_deadline_category_association (order_deadline_category_id);
-alter table order_document_type add constraint fk_order_document_type_orderDe_8 foreign key (order_deadline_category_id) references order_deadline_category (id);
-create index ix_order_document_type_orderDe_8 on order_document_type (order_deadline_category_id);
-alter table order_document_type add constraint fk_order_document_type_orderCp_9 foreign key (order_cpp_mode_id) references order_cpp_mode (id);
-create index ix_order_document_type_orderCp_9 on order_document_type (order_cpp_mode_id);
-alter table order_files add constraint fk_order_files_orders_10 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_files_orders_10 on order_files (orders_order_id);
-alter table order_fines add constraint fk_order_fines_fineType_11 foreign key (fine_type_id) references fine_type (id);
-create index ix_order_fines_fineType_11 on order_fines (fine_type_id);
-alter table order_fines add constraint fk_order_fines_orders_12 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_fines_orders_12 on order_fines (orders_order_id);
-alter table order_messages add constraint fk_order_messages_orders_13 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_messages_orders_13 on order_messages (orders_order_id);
-alter table order_product_files add constraint fk_order_product_files_orders_14 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_product_files_orders_14 on order_product_files (orders_order_id);
-alter table order_revision add constraint fk_order_revision_orders_15 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_revision_orders_15 on order_revision (orders_order_id);
-alter table order_subject add constraint fk_order_subject_orderSubject_16 foreign key (order_subject_category_id) references order_subject_category (id);
-create index ix_order_subject_orderSubject_16 on order_subject (order_subject_category_id);
-alter table orders add constraint fk_orders_client_17 foreign key (client_id) references client (id);
-create index ix_orders_client_17 on orders (client_id);
-alter table orders add constraint fk_orders_orderLevelOfWriting_18 foreign key (order_level_of_writing_id) references order_level_of_writing (id);
-create index ix_orders_orderLevelOfWriting_18 on orders (order_level_of_writing_id);
-alter table orders add constraint fk_orders_orderDocumentType_19 foreign key (order_document_type_id) references order_document_type (id);
-create index ix_orders_orderDocumentType_19 on orders (order_document_type_id);
-alter table orders add constraint fk_orders_orderCurrence_20 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
-create index ix_orders_orderCurrence_20 on orders (order_currence_order_currency_id);
-alter table orders add constraint fk_orders_spacing_21 foreign key (spacing_id) references spacing (id);
-create index ix_orders_spacing_21 on orders (spacing_id);
-alter table orders add constraint fk_orders_orderSubject_22 foreign key (order_subject_id) references order_subject (id);
-create index ix_orders_orderSubject_22 on orders (order_subject_id);
-alter table orders add constraint fk_orders_freelanceWriter_23 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
-create index ix_orders_freelanceWriter_23 on orders (freelance_writer_freelance_writer_id);
-alter table orders add constraint fk_orders_referralCode_24 foreign key (referral_code_referral_code_id) references referral_code (referral_code_id);
-create index ix_orders_referralCode_24 on orders (referral_code_referral_code_id);
-alter table preferred_writer add constraint fk_preferred_writer_client_25 foreign key (client_id) references client (id);
-create index ix_preferred_writer_client_25 on preferred_writer (client_id);
-alter table preferred_writer add constraint fk_preferred_writer_freelance_26 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
-create index ix_preferred_writer_freelance_26 on preferred_writer (freelance_writer_freelance_writer_id);
-alter table referral_code add constraint fk_referral_code_client_27 foreign key (client_id) references client (id);
-create index ix_referral_code_client_27 on referral_code (client_id);
-alter table reset_password add constraint fk_reset_password_client_28 foreign key (client_id) references client (id);
-create index ix_reset_password_client_28 on reset_password (client_id);
-=======
-alter table admin_sent_mail add constraint fk_admin_sent_mail_adminUser_1 foreign key (admin_user_admin_user_id) references admin_user (admin_user_id);
-create index ix_admin_sent_mail_adminUser_1 on admin_sent_mail (admin_user_admin_user_id);
-alter table client add constraint fk_client_country_2 foreign key (country_id) references countries (id);
-create index ix_client_country_2 on client (country_id);
-alter table client_sent_mail add constraint fk_client_sent_mail_client_3 foreign key (client_id) references client (id);
-create index ix_client_sent_mail_client_3 on client_sent_mail (client_id);
-alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__4 foreign key (order_deadlines_id) references order_deadlines (id);
-create index ix_deadline_deadline_category__4 on deadline_deadline_category_association (order_deadlines_id);
-alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__5 foreign key (order_deadline_category_id) references order_deadline_category (id);
-create index ix_deadline_deadline_category__5 on deadline_deadline_category_association (order_deadline_category_id);
-alter table order_document_type add constraint fk_order_document_type_orderDe_6 foreign key (order_deadline_category_id) references order_deadline_category (id);
-create index ix_order_document_type_orderDe_6 on order_document_type (order_deadline_category_id);
-alter table order_document_type add constraint fk_order_document_type_orderCp_7 foreign key (order_cpp_mode_id) references order_cpp_mode (id);
-create index ix_order_document_type_orderCp_7 on order_document_type (order_cpp_mode_id);
-alter table order_files add constraint fk_order_files_orders_8 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_files_orders_8 on order_files (orders_order_id);
-alter table order_fines add constraint fk_order_fines_fineType_9 foreign key (fine_type_id) references fine_type (id);
-create index ix_order_fines_fineType_9 on order_fines (fine_type_id);
-alter table order_fines add constraint fk_order_fines_orders_10 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_fines_orders_10 on order_fines (orders_order_id);
-alter table order_messages add constraint fk_order_messages_orders_11 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_messages_orders_11 on order_messages (orders_order_id);
-alter table order_product_files add constraint fk_order_product_files_orders_12 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_product_files_orders_12 on order_product_files (orders_order_id);
-alter table order_revision add constraint fk_order_revision_orders_13 foreign key (orders_order_id) references orders (order_id);
-create index ix_order_revision_orders_13 on order_revision (orders_order_id);
-alter table order_subject add constraint fk_order_subject_orderSubject_14 foreign key (order_subject_category_id) references order_subject_category (id);
-create index ix_order_subject_orderSubject_14 on order_subject (order_subject_category_id);
-alter table orders add constraint fk_orders_client_15 foreign key (client_id) references client (id);
-create index ix_orders_client_15 on orders (client_id);
-alter table orders add constraint fk_orders_orderLevelOfWriting_16 foreign key (order_level_of_writing_id) references order_level_of_writing (id);
-create index ix_orders_orderLevelOfWriting_16 on orders (order_level_of_writing_id);
-alter table orders add constraint fk_orders_orderDocumentType_17 foreign key (order_document_type_id) references order_document_type (id);
-create index ix_orders_orderDocumentType_17 on orders (order_document_type_id);
-alter table orders add constraint fk_orders_orderCurrence_18 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
-create index ix_orders_orderCurrence_18 on orders (order_currence_order_currency_id);
-alter table orders add constraint fk_orders_spacing_19 foreign key (spacing_id) references spacing (id);
-create index ix_orders_spacing_19 on orders (spacing_id);
-alter table orders add constraint fk_orders_orderSubject_20 foreign key (order_subject_id) references order_subject (id);
-create index ix_orders_orderSubject_20 on orders (order_subject_id);
-alter table preferred_writer add constraint fk_preferred_writer_client_21 foreign key (client_id) references client (id);
-create index ix_preferred_writer_client_21 on preferred_writer (client_id);
-alter table preferred_writer add constraint fk_preferred_writer_freelance_22 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
-create index ix_preferred_writer_freelance_22 on preferred_writer (freelance_writer_freelance_writer_id);
-alter table referral_code add constraint fk_referral_code_client_23 foreign key (client_id) references client (id);
-create index ix_referral_code_client_23 on referral_code (client_id);
-alter table reset_password add constraint fk_reset_password_client_24 foreign key (client_id) references client (id);
-create index ix_reset_password_client_24 on reset_password (client_id);
->>>>>>> 128dc37308d34e90b647409da5a7cc71a9f1d0a8
+alter table admin_sent_mail add constraint fk_admin_sent_mail_adminUser_3 foreign key (admin_user_admin_user_id) references admin_user (admin_user_id);
+create index ix_admin_sent_mail_adminUser_3 on admin_sent_mail (admin_user_admin_user_id);
+alter table client add constraint fk_client_country_4 foreign key (country_id) references countries (id);
+create index ix_client_country_4 on client (country_id);
+alter table client_referal_earning add constraint fk_client_referal_earning_refe_5 foreign key (referral_code_referral_code_id) references referral_code (referral_code_id);
+create index ix_client_referal_earning_refe_5 on client_referal_earning (referral_code_referral_code_id);
+alter table client_referal_earning add constraint fk_client_referal_earning_orde_6 foreign key (orders_order_id) references orders (order_id);
+create index ix_client_referal_earning_orde_6 on client_referal_earning (orders_order_id);
+alter table client_sent_mail add constraint fk_client_sent_mail_client_7 foreign key (client_id) references client (id);
+create index ix_client_sent_mail_client_7 on client_sent_mail (client_id);
+alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__8 foreign key (order_deadlines_id) references order_deadlines (id);
+create index ix_deadline_deadline_category__8 on deadline_deadline_category_association (order_deadlines_id);
+alter table deadline_deadline_category_association add constraint fk_deadline_deadline_category__9 foreign key (order_deadline_category_id) references order_deadline_category (id);
+create index ix_deadline_deadline_category__9 on deadline_deadline_category_association (order_deadline_category_id);
+alter table order_document_type add constraint fk_order_document_type_orderD_10 foreign key (order_deadline_category_id) references order_deadline_category (id);
+create index ix_order_document_type_orderD_10 on order_document_type (order_deadline_category_id);
+alter table order_document_type add constraint fk_order_document_type_orderC_11 foreign key (order_cpp_mode_id) references order_cpp_mode (id);
+create index ix_order_document_type_orderC_11 on order_document_type (order_cpp_mode_id);
+alter table order_files add constraint fk_order_files_orders_12 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_files_orders_12 on order_files (orders_order_id);
+alter table order_fines add constraint fk_order_fines_fineType_13 foreign key (fine_type_id) references fine_type (id);
+create index ix_order_fines_fineType_13 on order_fines (fine_type_id);
+alter table order_fines add constraint fk_order_fines_orders_14 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_fines_orders_14 on order_fines (orders_order_id);
+alter table order_messages add constraint fk_order_messages_orders_15 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_messages_orders_15 on order_messages (orders_order_id);
+alter table order_product_files add constraint fk_order_product_files_orders_16 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_product_files_orders_16 on order_product_files (orders_order_id);
+alter table order_revision add constraint fk_order_revision_orders_17 foreign key (orders_order_id) references orders (order_id);
+create index ix_order_revision_orders_17 on order_revision (orders_order_id);
+alter table order_subject add constraint fk_order_subject_orderSubject_18 foreign key (order_subject_category_id) references order_subject_category (id);
+create index ix_order_subject_orderSubject_18 on order_subject (order_subject_category_id);
+alter table orders add constraint fk_orders_client_19 foreign key (client_id) references client (id);
+create index ix_orders_client_19 on orders (client_id);
+alter table orders add constraint fk_orders_orderLevelOfWriting_20 foreign key (order_level_of_writing_id) references order_level_of_writing (id);
+create index ix_orders_orderLevelOfWriting_20 on orders (order_level_of_writing_id);
+alter table orders add constraint fk_orders_orderDocumentType_21 foreign key (order_document_type_id) references order_document_type (id);
+create index ix_orders_orderDocumentType_21 on orders (order_document_type_id);
+alter table orders add constraint fk_orders_orderCurrence_22 foreign key (order_currence_order_currency_id) references order_currence (order_currency_id);
+create index ix_orders_orderCurrence_22 on orders (order_currence_order_currency_id);
+alter table orders add constraint fk_orders_spacing_23 foreign key (spacing_id) references spacing (id);
+create index ix_orders_spacing_23 on orders (spacing_id);
+alter table orders add constraint fk_orders_orderSubject_24 foreign key (order_subject_id) references order_subject (id);
+create index ix_orders_orderSubject_24 on orders (order_subject_id);
+alter table orders add constraint fk_orders_freelanceWriter_25 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
+create index ix_orders_freelanceWriter_25 on orders (freelance_writer_freelance_writer_id);
+alter table orders add constraint fk_orders_referralCode_26 foreign key (referral_code_referral_code_id) references referral_code (referral_code_id);
+create index ix_orders_referralCode_26 on orders (referral_code_referral_code_id);
+alter table preferred_writer add constraint fk_preferred_writer_client_27 foreign key (client_id) references client (id);
+create index ix_preferred_writer_client_27 on preferred_writer (client_id);
+alter table preferred_writer add constraint fk_preferred_writer_freelance_28 foreign key (freelance_writer_freelance_writer_id) references freelance_writer (freelance_writer_id);
+create index ix_preferred_writer_freelance_28 on preferred_writer (freelance_writer_freelance_writer_id);
+alter table referral_code add constraint fk_referral_code_client_29 foreign key (client_id) references client (id);
+create index ix_referral_code_client_29 on referral_code (client_id);
+alter table reset_password add constraint fk_reset_password_client_30 foreign key (client_id) references client (id);
+create index ix_reset_password_client_30 on reset_password (client_id);
 
 
 
@@ -620,13 +567,11 @@ drop table if exists additions cascade;
 
 drop table if exists orders_additions cascade;
 
-<<<<<<< HEAD
 drop table if exists admin_referal_code cascade;
 
 drop table if exists admin_referal_earning cascade;
-=======
+
 drop table if exists admin_sent_mail cascade;
->>>>>>> 128dc37308d34e90b647409da5a7cc71a9f1d0a8
 
 drop table if exists admin_user cascade;
 
@@ -642,11 +587,9 @@ drop table if exists authorised_user_user_permission cascade;
 
 drop table if exists client cascade;
 
-<<<<<<< HEAD
 drop table if exists client_referal_earning cascade;
-=======
+
 drop table if exists client_sent_mail cascade;
->>>>>>> 128dc37308d34e90b647409da5a7cc71a9f1d0a8
 
 drop table if exists countries cascade;
 
@@ -704,13 +647,11 @@ drop table if exists writer_support cascade;
 
 drop sequence if exists additions_seq;
 
-<<<<<<< HEAD
 drop sequence if exists admin_referal_code_seq;
 
 drop sequence if exists admin_referal_earning_seq;
-=======
+
 drop sequence if exists admin_sent_mail_seq;
->>>>>>> 128dc37308d34e90b647409da5a7cc71a9f1d0a8
 
 drop sequence if exists admin_user_seq;
 
@@ -718,11 +659,9 @@ drop sequence if exists authorised_user_seq;
 
 drop sequence if exists client_seq;
 
-<<<<<<< HEAD
 drop sequence if exists client_referal_earning_seq;
-=======
+
 drop sequence if exists client_sent_mail_seq;
->>>>>>> 128dc37308d34e90b647409da5a7cc71a9f1d0a8
 
 drop sequence if exists countries_seq;
 

@@ -1,7 +1,7 @@
 @import fieldtemplates._
 @import helper._
 @import models.orders._
-@import models.admin.adminmodels._
+@import models.admin.adminutils._
 
 @(orders:models.orders.Orders)( newMessageForm: Form[models.orders.OrderMessages])(messageReceipients:Map[String,Boolean])(orderMessages: List[models.orders.OrderMessages])
 @adminmain("Timely Essay | Messages"){

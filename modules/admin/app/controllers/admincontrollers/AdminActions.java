@@ -18,11 +18,7 @@ import play.data.Form;
 import com.avaje.ebean.Ebean;
 import static play.data.Form.form;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -47,6 +43,7 @@ import models.admin.security.NoUserDeadboltHandler;
 import models.admincoupon.AdminReferalCode;
 import models.client.ReferralCode;
 import models.writer.FreelanceWriter;
+import models.admin.adminmodels.AdminSentMail;
 
 @Security.Authenticated(AdminSecured.class)
 public class AdminActions extends Controller{
@@ -371,6 +368,7 @@ public class AdminActions extends Controller{
 			asm.sent_on = new Date();
 			asm.saveAdminSentMail();
 	}
+
 	
 	public static class NewEmail{
 		@Constraints.Required(message="Please enter email.")
