@@ -86,7 +86,7 @@ public class ClientMails{
 										MandrillMessage message = new MandrillMessage();
 										message.setSubject("Timely Essay Login Details");
 										message.setFromEmail("info@timelyessay.com");
-										message.setFromName("sales@timelyessay.com");
+										message.setFromName("info@timelyessay.com");
 										try{
 										message.setHtml("<p><span style='font-size: 10pt; font-family: arial,helvetica,sans-serif;'>Dear "+client.f_name+",</span></p><p><span style='font-size: 10pt; font-family: arial,helvetica,sans-serif;'>Thank you for choosing Timely Essay for your professional academic writing services. </span></p><p><span style='font-size: 10pt; font-family: arial,helvetica,sans-serif;'>Your Login credentials are as follows:</span></p><p style='padding-left: 120px;'><span style='font-size: 10pt; font-family: arial,helvetica,sans-serif;'>Email: <strong>"+client.email+"</strong></span></p><p style='padding-left: 120px;'><span style='font-size: 10pt; font-family: arial,helvetica,sans-serif;'>Password: <strong>"+password+"</strong></span></p><p>&nbsp;</p><p><span style='font-size: 10pt; font-family: arial,helvetica,sans-serif;'>Kind Regards,</span></p><p><span style='font-size: 10pt; font-family: arial,helvetica,sans-serif;'>Your Friends at Timely Essay.</span></p><p>&nbsp;</p>");
 										message.setAutoText(true);

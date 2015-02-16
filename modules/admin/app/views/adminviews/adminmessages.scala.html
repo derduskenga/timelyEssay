@@ -1,7 +1,6 @@
 @import fieldtemplates._
 @import helper._
 @import models.orders._
-@import models.admin.adminutils._
 
 @(orders:models.orders.Orders)( newMessageForm: Form[models.orders.OrderMessages])(messageReceipients:Map[String,Boolean])(orderMessages: List[models.orders.OrderMessages])
 @adminmain("Timely Essay | Messages"){
@@ -18,19 +17,33 @@
 					@for(message <- orderMessages){
 					@if(message.msg_from != models.orders.MessageParticipants.SUPPORT){
 							@if(message.msg_from == models.orders.MessageParticipants.CLIENT){
+								@if(message.msg_to == models.orders.MessageParticipants.WRITERS){
 								<div class="message-shared-class from-client-msg @if(message.status){read}else{unread}" id="to-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
-								<div class="message-shared-class from-client-msg @if(message.msg_to==models.orders.MessageParticipants.SUPPORT){msg-to-support} @if(message.status){read}else{unread} @if(message.status){read}else{unread}" id="@orders.order_code-@message.id">
-									<div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize  <small>to</small> @message.msg_to.toString().toLowerCase().capitalize <small>on</small>  @AdminUtils.adminMessageLocalTime(message.sent_on,session.get("admin_email")).format("dd/MM/YYYY") <small>@@</small> @AdminUtils.adminMessageLocalTime(message.sent_on,session.get("admin_email")).format("HH:mm a") </div>
-									<div class="bubble">
-									<pre>@Html(message.message)</pre>
-									<br><br>
-									</div>     
-								</div> 
+									<div class="message-shared-class from-client-msg @if(message.msg_to==models.orders.MessageParticipants.WRITERS){msg-to-support} @if(message.status){read}else{unread} @if(message.status){read}else{unread}" id="@orders.order_code-@message.id">
+										<div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize  <small>to</small> @message.msg_to.toString().toLowerCase().capitalize <small>on</small>  @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
+											<div class="bubble">
+											<pre>@Html(message.message)</pre>
+											<br><br>
+											</div>     
+									  </div> 
+								</div>
+								}else{
+									<div class="message-shared-class from-client-msg @if(message.status){read}else{unread}" id="to-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
+									<div class="message-shared-class from-client-msg @if(message.msg_to==models.orders.MessageParticipants.SUPPORT){msg-to-writers} @if(message.status){read}else{unread} @if(message.status){read}else{unread}" id="@orders.order_code-@message.id">
+										<div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize  <small>to</small> @message.msg_to.toString().toLowerCase().capitalize <small>on</small>  @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
+											<div class="bubble">
+											<pre>@Html(message.message)</pre>
+											<br><br>
+											</div>     
+									  </div> 
+								</div>
+								
+								
+								}
 							}else{
 								<div class="message-shared-class from-writer-msg @if(message.status){read}else{unread}" id="to-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
 								<div class="message-shared-class from-writer-msg @if(message.msg_to==models.orders.MessageParticipants.SUPPORT){msg-to-support} @if(message.status){read}else{unread}" id="@orders.order_code-@message.id">
-									<div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize to @message.msg_to.toString().toLowerCase().capitalize<small> on </small>
-									@AdminUtils.adminMessageLocalTime(message.sent_on,session.get("admin_email")).format("dd/MM/YYYY") <small>@@</small> @AdminUtils.adminMessageLocalTime(message.sent_on,session.get("admin_email")).format("HH:mm a") </div>
+									<div class="to-client-msg-details">from @message.msg_from.toString().toLowerCase().capitalize to @message.msg_to.toString().toLowerCase().capitalize<small>on</small>  @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
 									<div class="bubble">
 									<pre>@Html(message.message)</pre>
 									<br><br>
@@ -39,7 +52,7 @@
 						 }	
 					}else{
 								<div class="message-shared-class from-client-msg" id="from-message-@orders.order_code-@message.id-@if(message.status){read}else{unread}">
-									<div class="from-client-msg-details">Support <small>to </small>@message.msg_to.toString().toLowerCase().capitalize<small> on </small> @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @AdminUtils.adminMessageLocalTime(message.sent_on,session.get("admin_email")).format("HH:mm a")</div>
+									<div class="from-client-msg-details">Support <small>to </small>@message.msg_to.toString().toLowerCase().capitalize<small> on</small> @message.sent_on.format("dd/MM/YYYY") <small>@@</small> @message.sent_on.format("HH:mm a") </div>
 									<div class="bubble2"><pre>@Html(message.message)</pre></div>
 								</div>
 					}
@@ -62,17 +75,6 @@
 											help="",
 											default="Select Receipient")
 											
-						
-						Send/Reply as: 
-						&nbsp;&nbsp;&nbsp;
-						<span>
-							<input type="radio" name="sender" value="SUPPORT"> SUPPORT
-							&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="sender" value="WRITERS"> WRITER
-						</span>
-						<input type="hidden" name="admin_message_upload_date" id="admin_message_upload_date" value="">
-						 <br><br>
-						 
 						@fieldtemplates.textarea1(newMessageForm("message"),
 											rows = "5",
 											label = "",
