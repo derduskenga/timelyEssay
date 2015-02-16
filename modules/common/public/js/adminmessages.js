@@ -31,7 +31,7 @@ $(document).ready(function(){
 });
 
 function markMessages(){
-	 $(".msg-to-support.unread").each(function(){ 
+	 $(".msg-to-writers.unread, .msg-to-support.unread").each(function(){ 
       var elemid = $(this).attr('id');
       $(this).waypoint(function(direction){
 					var elementArray = elemid.split('-');
