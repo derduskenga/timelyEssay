@@ -262,20 +262,25 @@ public class AdminActions extends Controller{
 	public static Result marketingEmail(){
 			Form<NewEmail> newMailForm = form(NewEmail.class);
 			AdminUser adminUser = AdminUser.findByEmail(session().get("admin_email"));
-			String text = new AdminMails().getClientMarketingEmailString("{insert code}", adminUser.first_name);
+			AdminReferalCode arc = new AdminReferalCode().getFirstAdminCouponCode(adminUser.admin_user_id);
+			String text = new AdminMails().getClientMarketingEmailString(arc==null?"{insert code}":arc.code, adminUser.first_name);
 			return ok(marketingemail.render(newMailForm, text));
 	}
 	
 	public static Result sendMarketingEmail(){
 			Form<NewEmail> newMailForm = form(NewEmail.class).bindFromRequest();
-			if(newMailForm.hasErrors()){
-				flash("client_marketing_mail_error", "Could not send email. Please correct the form below.");
+			boolean send = true;
+			AdminUser adminUser = AdminUser.findByEmail(session().get("admin_email"));
+			if(new AdminReferalCode().getAdminCouponCodesByAdminId(adminUser.admin_user_id).size()<1)
+				send = false;
+			if(newMailForm.hasErrors() || !send){
+				flash("client_marketing_mail_error", send? "Could not send email. Please correct the form below." : "Please generate at least one coupon code before sending marketing email.");
 				return ok(marketingemail.render(newMailForm, ""));
 			}
 			NewEmail newMail = newMailForm.get();
 			AdminMails mail = new AdminMails();
 			mail.sendClientMarketingMail(newMail.email, newMail.message);
-			AdminUser adminUser = AdminUser.findByEmail(session().get("admin_email"));
+			
 			new AdminActions().saveAdminMarketingEmail(adminUser, newMail.email, newMail.message);
 			flash("client_marketing_mail_success", "Email sent successfully.");
 			return redirect(controllers.admincontrollers.routes.AdminActions.marketingEmail());		

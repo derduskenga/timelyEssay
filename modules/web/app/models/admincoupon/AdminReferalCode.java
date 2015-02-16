@@ -37,6 +37,10 @@ public class AdminReferalCode extends Model{
 	    }
     }
     
+    public AdminReferalCode getFirstAdminCouponCode(Long admin_user_id){
+			return find.where().eq("admin_id", admin_user_id).orderBy("admin_id asc").setMaxRows(1).findUnique();
+    }
+    
     public List<AdminReferalCode> getAdminCouponCodesByAdminId(Long id){
 	    return find.where().eq("admin_id", id).findList();
     }
