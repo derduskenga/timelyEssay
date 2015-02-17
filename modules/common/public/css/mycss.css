@@ -222,3 +222,8 @@ payment-options span{
 .urgency-left-section{
 	padding: 10px;
 }
+
+.container{
+  max-width: none !important;
+  width:1170px;
+}

@@ -18,3 +18,7 @@
 .preferred-writers-list{
 	padding-left: 40px;
 }
+.container{
+  max-width: none !important;
+  width:1170px;
+}

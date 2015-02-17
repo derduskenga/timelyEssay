@@ -60,4 +60,7 @@ admin-main-content/* make sidebar nav vertical */
 	margin-top:10px;
 }
 
-
+.container{
+  max-width: none !important;
+  width:1170px;
+}

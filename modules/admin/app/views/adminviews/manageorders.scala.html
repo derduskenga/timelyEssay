@@ -1,4 +1,4 @@
-@(activeOrders:com.avaje.ebean.Page[models.orders.Orders])(completedOrders:com.avaje.ebean.Page[models.orders.Orders])(closedOrders:com.avaje.ebean.Page[models.orders.Orders])
+@(activeOrders:com.avaje.ebean.Page[models.orders.Orders])(writerAssignedOrders:com.avaje.ebean.Page[models.orders.Orders])(completedOrders:com.avaje.ebean.Page[models.orders.Orders])(closedOrders:com.avaje.ebean.Page[models.orders.Orders])
 @import models.orders._
 @import models.client._
 
@@ -9,6 +9,7 @@
         <li class="active"><a data-toggle="tab" href="#new-orders">New Orders</a></li>
         <li ><a data-toggle="tab" href="#writer-assigned-orders">Writer Assigned Orders</a></li>
         <li><a data-toggle="tab" href="#completed-orders">Completed Orders</a></li>
+        <li><a data-toggle="tab" href="#closed-orders">Closed Orders</a></li>
     </ul>
     <div class="tab-content"><!--start tab content div -->
     <div id="new-orders" class="tab-pane fade in active"><!--Start writer assigned orders div -->
@@ -62,8 +63,8 @@
 			}
     </div><!--End writer assigned orders div -->   
     <div id="writer-assigned-orders" class="tab-pane fade"><!--Start new orders div -->
-    @if(completedOrders!=null){
-    @if(completedOrders.getList().size()>0){
+    @if(writerAssignedOrders!=null){
+    @if(writerAssignedOrders.getList().size()>0){
 			<table class="table table-hover">
 				<thead>
 					<tr>
@@ -82,7 +83,7 @@
 					</tr>
 				</thead>
 				<tbody>
-						@for(order <- completedOrders.getList()){
+						@for(order <- writerAssignedOrders.getList()){
 						    <tr>
 							<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">#@order.order_code</a></td>
 							<td>@order.topic</td>
@@ -117,8 +118,8 @@
     }  
     </div><!--End new orders div --> 
     <div id="completed-orders" class="tab-pane fade"><!--Start completed orders div -->
-    @if(closedOrders!=null){
-    @if(closedOrders.getList().size()>0){
+    @if(completedOrders!=null){
+    @if(completedOrders.getList().size()>0){
    
 			<table class="table table-hover">
 				<thead>
@@ -158,6 +159,58 @@
 			</table>    
     }else{
 			<div class="alert alert-success">
+					No completed orders found.
+			</div>
+    }
+    }else{
+			<div class="alert alert-success">
+					No completed orders found.
+			</div>
+    }
+    </div><!--End completed orders div -->
+    
+    <div id="closed-orders" class="tab-pane fade"><!--Start completed orders div -->
+    @if(closedOrders!=null){
+    @if(closedOrders.getList().size()>0){
+   
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Topic</th>
+						<th>Qs/Pgs</th>
+						<th>Date</th>
+						<th>Deadline</th>
+						<th>Spacing</th>
+						<th>Refs</th>
+						<th>Style</th>
+						<th>Prefered writer</th>
+						<th>Status</th>
+						<th>Messages</th>
+						<th>Assigned Writer Id </th>
+					</tr>
+				</thead>
+				<tbody>
+						@for(order <- closedOrders.getList()){
+						    <tr>
+							<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order.order_code)">#@order.order_code</a></td>
+							<td>@order.topic</td>
+							<td>@order.number_of_units</td>
+							<td>@ManageOrdersActions.orderSupportLocalTime(order.order_date,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</td>
+							<td>@ManageOrdersActions.orderSupportLocalTime(order.order_deadline,session.get("admin_email")).format("dd-MM-YYYY HH:mm")</td>
+							<td>@if(order.orderDocumentType.orderCppMode.order_cpp_mode_name == OrderCppMode.CppModes.perpage){@order.spacing.spacing}</td>
+							<td>@order.no_of_references</td>
+							<td>@order.writing_style</td>
+							<td>@if(order.prefered_writer.equals("")){No prefered writer}else{<span class="alert-warning">@order.prefered_writer</span>}</td>
+							<td>@if(!order.is_paid){<span class="phone-number">NOT PAID</span>}else{PAID}</td>
+							<td>							<a href="@controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order.order_code)">@OrderMessages.getAdminOrderMessages(order.order_code).size() (<span class="phone-number"> @OrderMessages.getAdminUnreadMessages(order.order_code) Unread</span>)</a></td>
+							<td>@if(order.is_writer_assigned){@order.freelanceWriter.writer_id}else{Waiting for writer}</td>
+						    </tr>
+						}
+				</tbody>
+			</table>    
+    }else{
+			<div class="alert alert-success">
 					No closed orders found.
 			</div>
     }
@@ -167,6 +220,7 @@
 			</div>
     }
     </div><!--End completed orders div -->
+    
     </div><!--end tab content -->
 </div><!-- end of main body column -->
 }

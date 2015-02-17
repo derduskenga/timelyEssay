@@ -204,12 +204,17 @@ public class Orders extends Model{
 	
 	//Method overloading
 	public Page<Orders> getActiveOrders(int page, int page_list_size){
-	  return Orders.find().where().eq("is_complete",false).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	  return Orders.find().where().eq("is_complete",false).eq("is_writer_assigned",false).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	}
+	
+	public  Page<Orders> getWriterAssignedOrders(int page, int page_list_size){
+		return Orders.find().where().eq("is_complete",false).eq("is_writer_assigned",true).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
 	}
 	
 	public  Page<Orders> getCompletedOrders(int page, int page_list_size){
-	  return Orders.find().where().eq("is_complete",true).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	  return Orders.find().where().eq("is_complete",true).eq("is_closed",false).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
 	}
+	
 	public Page<Orders> getClosedOrders(int page, int page_list_size){
 	  return Orders.find().where().eq("is_closed",true).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
 	}
