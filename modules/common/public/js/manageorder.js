@@ -1,5 +1,6 @@
 $(document).ready(function(){
   setInterval(setFileLocalTime, 5000);
+  setInterval(setLocalTimeForOrderManagement, 5000);
   validateUploadFile();
   askDeadlineExtensionAdmin();
   askForExtraPages();
@@ -33,7 +34,7 @@ function adminProductFileDownload(){
 }
 
 function setFileLocalTime(){
-  $('#file_local_date').val(new Date().getTime());
+  $('#file_local_date').val(new Date().toString("yyyy-MM-dd HH:mm:ss"));
 }
 
 function submitAskForDeadlineExtension(){
@@ -56,9 +57,9 @@ function submitAskForDeadlineExtension(){
 }
 
 function submitAskForExtraPages(){
-  var date = new Date().getTime();
   $('#extra-pages-btn').click(function(event){
     event.preventDefault();
+    var date = $('#admin_local_time_for_order_management').val();
     var pages = $('#extra_pages').val();
     var order_code = $('#order-code-admin').text();
     $.post("/manageorder/askforextrapages/" + pages + "/" + order_code + "/" + date,{}, function(data){
@@ -71,6 +72,11 @@ function submitAskForExtraPages(){
       }
     },'json');
   });
+}
+
+function setLocalTimeForOrderManagement(){
+  
+  $('#admin_local_time_for_order_management').val(new Date().toString("yyyy-MM-dd HH:mm:ss"));
 }
 
 function askForExtraPages(){

@@ -74,7 +74,7 @@ public class ClientActions extends Controller{
 	  if(session().get("email") != null){
 	    Orders order = new Orders();
 	    Long client_id = Client.getClient(session().get("email")).id;
-	    //Post parameters from 2checkout start==========================================
+	    //Post parameters from 2checkout start=========================================
 	    Map<String, String[]> checkout_post_parameters = new HashMap<String,String[]>();
 	    checkout_post_parameters = request().body().asFormUrlEncoded();
 	    if(!checkout_post_parameters.isEmpty()){
@@ -97,6 +97,9 @@ public class ClientActions extends Controller{
 		  //credit_card_processed (Y/N)
 		  String credit_card_processed_array[] = checkout_post_parameters.get("credit_card_processed");
 		  String credit_card_processed = credit_card_processed_array[0];
+		  //custom parameter:payment_type
+		  String payment_type_array[] = checkout_post_parameters.get("payment_type");
+		  String payment_type = payment_type_array[0];
 		  
 		  if(credit_card_processed.equals("Y")){
 		    credit_card_approved = true;
@@ -106,21 +109,40 @@ public class ClientActions extends Controller{
 		  HashMap params = new HashMap();
 		  params.put("sid", Utilities.OUR_MERCHANT_ACCOUNT_NO);
 		  params.put("total", total);
-		  params.put("order_number","1");
+		  params.put("order_number","1");/*on real transactions, 1 shud be replaced by 'order_number' variable*/
 		  params.put("key",key);
 		  
 		  boolean result = TwocheckoutReturn.check(params, Utilities.OUR_CO_SECRET_WORD);		  
 		  //end checking returned key 
 		  
 		  if(credit_card_approved && result){
-			flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ". A writer will be assigned to your order shorlty. Thank you for choosing us.");
+			
 			Orders paidOrder = Orders.getOrderByCode(Long.valueOf(order_code));
-			paidOrder.invoice_id = invoice_id;
-			paidOrder.is_paid = true;
+			
+			if(payment_type.equals(Utilities.PAY_ORDER)){
+				flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ". A writer will be assigned to your order shorlty. Thank you for choosing us.");
+				paidOrder.invoice_id = invoice_id;
+				paidOrder.amount_paid = Double.parseDouble(total);
+				paidOrder.is_paid = true;
+				Logger.info("PAY_ORDER order_code:" + order_code);
+			}
+			
+			if(payment_type.equals(Utilities.PREFERED_WRITER_PAYMENT)){
+				flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ". This payment goes directly to your prefered writer. Thank you for choosing us.");
+				paidOrder.prefered_writer_value_paid = true;
+				 Logger.info("PREFERED_WRITER_PAYMENT order_code:" + order_code);
+			}
+		
+			if(payment_type.equals(Utilities.ADDITIONAL_PAGES_PAYMENT)){
+				flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ": additional pages. Our writer will deliver you order in a timely manner. Thank you for choosing us.");
+				paidOrder.is_additional_pages_paid = true;
+				Logger.info("ADDITIONAL_PAGES_PAYMENT order_code:" + order_code);
+			}			
+			Logger.info("order id:" + paidOrder.order_id);
 			paidOrder.saveOrder();
 			Logger.info("order code:" + order_code + " and invoice id is:" + invoice_id + "result:" + result + "credit_card_approved:" + credit_card_approved);
 			//if order qualifies for a discont, reward the coupon codes
-			if(paidOrder.qualifiesForDiscount(paidOrder)){
+			if(paidOrder.qualifiesForDiscount(paidOrder) && payment_type.equals(Utilities.PAY_ORDER)){
 				if(new ReferralCode().determineTypeOfCode(paidOrder).equals("CLIENT")){
 					//store a client earning
 					ClientReferalEarning clientReferalEarning = new ClientReferalEarning();
@@ -141,6 +163,7 @@ public class ClientActions extends Controller{
 					adminReferalEarning.saveAdminReferalEarning();
 				}
 			}
+			
 			return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
 
 		  }

@@ -7,6 +7,7 @@
  @if(clientOrders!=null){
  @if(clientOrders.order_id!=null){
 	 <h3>Client details</h3>
+	 <input type="hidden" name="admin_local_time_for_order_management" id="admin_local_time_for_order_management" value="">
      <div>
       <table>
 		<tr>
@@ -62,6 +63,15 @@
 			      }else{<a href="#" id="btn-assign-for-prefered-writer" title="Assign this order to writer @clientOrders.prefered_writer" class="btn btn-warning">Writer @clientOrders.prefered_writer is prefered. Assign <i class="fa fa-user-md fa-lg"></i></a> <input id="assigned-order-code-for-prefered" type="hidden" value="@clientOrders.order_code"> <input id="prefered-writer-id" type="hidden" value="@clientOrders.prefered_writer"> <span id="assign-writer-response-message-for-prefered-writer"></span>}}}else{
 				  <strong class="text-success">PAID</strong>  <span class="text-success">Order has been assigned to @clientOrders.freelanceWriter.writer_id</span>
 			      }
+			      <br>
+			      @if(clientOrders.additional_pages>0 && !clientOrders.is_additional_pages_paid){
+				    <p class="phone-number">Additional pages for order has not been paid for!</p>
+			      }
+			      
+			      @if(clientOrders.prefered_writer !="" && !clientOrders.prefered_writer_value_paid){
+				    <p class="phone-number">Additional pay for prefered writer has not been made!</p>
+			      }
+			      
 		      </p></td>
 		</tr>
 		<tr>
@@ -231,7 +241,6 @@
 	  @if(!clientOrders.is_complete && clientOrders.orderDocumentType.orderCppMode.order_cpp_mode_name == OrderCppMode.CppModes.perpage){
 	    <hr> <!--.........................................................................--> 
 	    <div id="deadline-form-admin"> 
-	      
 	      <form id="extra_pages_form" name="extra_pages_form" method="post" action="">		
 		<div class="">							
 		    <legend>Request for additional pages</legend> <br>	

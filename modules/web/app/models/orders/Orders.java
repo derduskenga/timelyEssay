@@ -39,21 +39,29 @@ public class Orders extends Model{
 	public Date order_date;
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date order_deadline;
+	
 	public double order_total;//This is given in USD
-	public double amount_paid = 0.0; //This is shown in USD
+	public double amount_paid = 0.0; /*This is shown in USD: value returned from the gateway*/
 	public boolean is_paid = false;
+	
 	public boolean is_writer_assigned = false;//is being worked on 
 	public boolean is_complete = false;
 	public boolean is_closed = false;
 	public boolean on_revision = false;
 	public int client_feedback;
 	public int additional_pages = 0;
+	
+	public double additional_pages_value = 0.0;
+	public boolean is_additional_pages_paid = false;
+	
 	public String source_domain;
 	public String invoice_id;
 	public boolean approved = false;
 	public String coupon_code;
-	public boolean prefered_writer_value_paid = false;
 	
+	public double prefered_writer_value = 0.0;
+	public boolean prefered_writer_value_paid = false;
+	int i = 0;
 	//Order Files and types of files (e.g for revision, additional files, reference materials, order product,draft)
 	//Order fines is an entity(id,date,amount,reason,removed)
 	//order revisions (id,revision instructions)
@@ -123,7 +131,7 @@ public class Orders extends Model{
 	  return Orders.find().byId(id);
 	} 
 	public static Orders getOrderByCode(Long order_code){
-	  return Orders.find().where().eq("order_code", order_code).findUnique();
+	  return Orders.find().where().eq("order_code",order_code).findUnique();
 	}
 
 	public List<Orders> getActiveOrders(Long client_id){
@@ -520,6 +528,9 @@ public class Orders extends Model{
 		FreelanceWriter fw = new FreelanceWriter().getWriterByWriterId(writer_id);
 		orders.freelanceWriter = fw;
 		orders.is_writer_assigned = true;
+		if(!orders.prefered_writer.equals("")){
+			orders.prefered_writer_value = orders.order_total*Utilities.ADDITIONAL_PAY_FOR_PREFERED_WRITER;
+		}
 		orders.saveOrder();
 	}
 } 

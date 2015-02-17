@@ -116,7 +116,7 @@ public class ManageOrdersActions extends Controller{
 				  orderFiles.file_name = file_name;
 				  orderFiles.content_type = contentType;
 				  //orderFiles.upload_date = new Date();
-				  orderFiles.upload_date = OrderMessages.computeMessageUtcTime(Utilities.WRITER_TIMEZONE_OFFSET,file_local_date);
+				  orderFiles.upload_date = Utilities.computeUtcTime(AdminUser.findByEmail(session().get("admin_email")).admin_user_offset,file_local_date);
 				  File destination = new File(uploadPath, order_file.getName());
 				  orderFiles.file_size = order_file.length();
 				  orderFiles.storage_path = destination.toPath().toString();
@@ -184,26 +184,13 @@ public class ManageOrdersActions extends Controller{
 		  //return ok(Json.parse(jsonobject.toString())); 
 		  return redirect(controllers.admincontrollers.routes.ManageOrdersActions.manageOrders());
 		}
-		Date message_date = new Date();
-		Calendar calender = Calendar.getInstance();
-		try{
-		  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		  message_date = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(date)))); 
-		  calender.setTimeInMillis(message_date.getTime());
-		  int offset = Integer.parseInt(user.admin_user_offset);
-		  calender.add(Calendar.MINUTE,offset);//get UTC time to be stored
-		}catch(ParseException pe){
-		  Logger.error("ParseException:" + pe.getMessage().toString());
-		  jsonobject.put("success",0);
-		  jsonobject.put("message","An error occured. Please try again");
-		  return ok(Json.parse(jsonobject.toString()));
-		}
+		Logger.info("date:" + date);
 		OrderMessages orderMessage = new OrderMessages();
 		orderMessage.msg_to = MessageParticipants.CLIENT;
 		orderMessage.msg_from = MessageParticipants.WRITERS;
 		orderMessage.status = false;
 		orderMessage.orders = order;
-		orderMessage.sent_on = calender.getTime();
+		orderMessage.sent_on = Utilities.computeUtcTime(user.admin_user_offset,date);
 		Long message_id = orderMessage.saveClientMessageReturningId();
 		OrderMessages saveMessage = OrderMessages.getMessageById(message_id);
 		
@@ -479,7 +466,8 @@ public class ManageOrdersActions extends Controller{
 			return ok(Json.parse(jo.toString()));
 		}
 		new Orders().assignOrder(order_code,writer_id);
-		OrderMessages.sendAssignmentMessageToClient(Orders.getOrderByCode(order_code),date,AdminUser.findByEmail(session().get("admin_email")).admin_user_offset);
+		
+		OrderMessages.sendAssignmentMessageToClient(order_code,date,AdminUser.findByEmail(session().get("admin_email")).admin_user_offset);
 		jo.put("success",1);
 		jo.put("message","Order has been assigned to " + writer_id);
 		return ok(Json.parse(jo.toString()));

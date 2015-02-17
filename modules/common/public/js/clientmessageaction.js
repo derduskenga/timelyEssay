@@ -14,7 +14,7 @@ function additionalPagesActions(){
     var order_code = eArray[3];
     var messages_id = eArray[4];
     var status = false;
-    var date = new Date().getTime();
+    var date = new Date().toString("yyyy-MM-dd HH:mm:ss");
     if(action == "accept"){
       status = true;
     }

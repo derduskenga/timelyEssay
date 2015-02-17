@@ -51,7 +51,7 @@ public class ClientMessageActions extends Controller{
 	//send a message to client asking him to pay for the added pages
 	//redirect client to orders
 	order.additional_pages = Integer.parseInt(message.message_promise_value.trim());
-	order.order_total = order.computeOrderTotalForAdditionalPages(order);
+	order.additional_pages_value = (order.computeOrderTotalForAdditionalPages(order)-order.order_total);
 	order.saveOrder();
 	
 	message.action_taken = true;
@@ -64,7 +64,7 @@ public class ClientMessageActions extends Controller{
 	newWriterMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
 	newWriterMessage.orders = order;
 	newWriterMessage.message = OrderMessages.getMessageTemplateForAcceptedAdditionalPagesToWriter(order,status);
-	newWriterMessage.sent_on = OrderMessages.computeMessageUtcTime(Utilities.WRITER_TIMEZONE_OFFSET,date);//this offset should be that of a writer or put a number at the Utilities
+	newWriterMessage.sent_on = Utilities.computeUtcTime(client.client_time_zone_offset,date);//this offset should be that of a writer or put a number at the Utilities
 	newWriterMessage.saveClientMessage();
 	//message for the client 
 	OrderMessages newclientMessage = new OrderMessages();
@@ -73,7 +73,7 @@ public class ClientMessageActions extends Controller{
 	newclientMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
 	newclientMessage.orders = order;
 	newclientMessage.message = OrderMessages.getMessageTemplateForClientPayForAdditionalPages(order);
-	newclientMessage.sent_on = OrderMessages.computeMessageUtcTime(client.client_time_zone_offset,date);
+	newclientMessage.sent_on = Utilities.computeUtcTime(client.client_time_zone_offset,date);
 	newclientMessage.saveClientMessage();
 	
 	jsonobject.put("success",1);
@@ -97,7 +97,7 @@ public class ClientMessageActions extends Controller{
       newWriterMessage.message_type = OrderMessages.ActionableMessageType.OTHER;
       newWriterMessage.orders = order;
       newWriterMessage.message = OrderMessages.getMessageTemplateForAcceptedAdditionalPagesToWriter(order,status);
-      newWriterMessage.sent_on = OrderMessages.computeMessageUtcTime(client.client_time_zone_offset,date);
+      newWriterMessage.sent_on = Utilities.computeUtcTime(client.client_time_zone_offset,date);
       newWriterMessage.saveClientMessage();
       jsonobject.put("success",1);
       jsonobject.put("message","Your reply has been sent");

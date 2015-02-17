@@ -160,8 +160,9 @@ public class OrderMessages extends Model{
 	}
 	
 	
-	public static void sendAssignmentMessageToClient(Orders order, String date, String client_time_zone_offset){
+	public static void sendAssignmentMessageToClient(Long order_code, String date, String client_time_zone_offset){
 		OrderMessages message = new OrderMessages();
+		Orders order = Orders.getOrderByCode(order_code);
 		message.orders = order;
 		message.sent_on = Utilities.computeUtcTime(client_time_zone_offset,date);
 		message.msg_from = MessageParticipants.SUPPORT; 
@@ -180,7 +181,7 @@ public class OrderMessages extends Model{
 	  }
 	  message_text = "<strong>Dear writer,</strong><br><br>" +
 			  "Unfortunately, your request for additinal pages from the client was declined<br>" +
-			  "We ask you to complete the order using the client's earlier instructions." +
+			  "We ask you to complete the order using the client's earlier instructions.<br>" +
 			    "If you have any questions, do not hesitate to talk to us";
 	  return message_text;	  
 	}
