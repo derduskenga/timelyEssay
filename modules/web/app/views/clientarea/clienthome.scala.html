@@ -40,7 +40,7 @@
 			  <td>@order_.order_deadline.format("YYYY-MM-dd HH:mm")</td>
 			  <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@OrderMessages.getClientOrderMessages(order_.order_code).size() (<span class="phone-number">@message Unread</span>)</a></td>
 			  <td>
-				  @if(!order_.is_paid){Not paid <a href="@controllers.web.client.routes.ClientActions.proceedToPay(order_.order_code)" class="phone-number">(Pay now)</a>}else{@if(order_.checkIfOrderIsFullyPaid(order_)){Order fully paid}else{Order Partially paid <a class="phone-number" href="@controllers.web.client.routes.ClientActions.proceedToPay(order_.order_code)">(Pay for Order)</a>}
+				      @if(!order_.is_paid){Not paid <a href="@controllers.web.client.routes.ClientActions.proceedToPay(order_.order_code)" class="phone-number">(Pay now)</a>}else{@if(order_.checkIfOrderIsFullyPaid(order_)){Order fully paid}else{Order Partially paid <a class="phone-number" href="@controllers.web.client.routes.ClientActions.proceedToPay(order_.order_code)">(Pay for Order)</a>}}
 			  </td>
 			</tr>
 		      }
