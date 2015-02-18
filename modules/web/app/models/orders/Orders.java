@@ -61,7 +61,6 @@ public class Orders extends Model{
 	
 	public double prefered_writer_value = 0.0;
 	public boolean prefered_writer_value_paid = false;
-	int i = 0;
 	//Order Files and types of files (e.g for revision, additional files, reference materials, order product,draft)
 	//Order fines is an entity(id,date,amount,reason,removed)
 	//order revisions (id,revision instructions)
@@ -537,6 +536,35 @@ public class Orders extends Model{
 			orders.prefered_writer_value = orders.order_total*Utilities.ADDITIONAL_PAY_FOR_PREFERED_WRITER;
 		}
 		orders.saveOrder();
+	}
+	
+	public boolean checkIfOrderIsFullyPaid(Orders order){
+		/*returns true, if order is fully paid for, false otherwise ()*/
+		boolean condition_1 = false;
+		boolean condition_2 = false;
+		boolean condition_3 = false;
+		boolean condition_4 = false;
+		
+		if(order.is_paid && order.prefered_writer.equals("") && order.additional_pages==0){
+			condition_1 = true;
+		}
+		
+		if(order.is_paid && (order.is_writer_assigned && !order.prefered_writer.equals("") && order.prefered_writer_value_paid) && (order.additional_pages>0 && order.is_additional_pages_paid)){
+			condition_2 = true;
+		}
+		
+		if(order.is_paid && order.prefered_writer.equals("") && (order.additional_pages>0 && order.is_additional_pages_paid)){
+			condition_3 = true;
+		}
+		
+		if(order.is_paid && (order.is_writer_assigned && !order.prefered_writer.equals("") && order.prefered_writer_value_paid) && order.additional_pages==0){
+			condition_4 = true;
+		}
+		
+		if(condition_1 || condition_2 || condition_3 || condition_4){
+			return true;
+		}
+		return false;
 	}
 } 
  

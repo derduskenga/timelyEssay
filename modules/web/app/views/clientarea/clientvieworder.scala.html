@@ -6,12 +6,29 @@
     <h3>Order details</h3>
     <div>
       <table>
-	@if(clientOrders.is_paid == false){
+	
+	
+	@if(!clientOrders.is_paid){
 	  <tr>
 	    <td><p class="phone-number">Order NOT PAID</p></td>
 	    <td><a class="btn btn-danger" href="@controllers.web.client.routes.ClientActions.proceedToPay(clientOrders.order_code)">Pay for Order</a></td>
 	  </tr>
+	}else{
+		@if(clientOrders.checkIfOrderIsFullyPaid(clientOrders)){
+		      <tr>
+			<td><p class="text-success">Order PAID</p></td>
+			<td>Order fully paid</td>
+		      </tr>		
+		}else{
+		      <tr>
+			<td><p class="phone-number">Order Partially paid</p></td>
+			<td><a class="btn btn-danger" href="@controllers.web.client.routes.ClientActions.proceedToPay(clientOrders.order_code)">Pay for Order</a></td>
+		      </tr>
+		}
+	
 	}
+	
+	
 	<tr>
 	  <td>Order code</td>
 	  <td>#@clientOrders.order_code</td>
@@ -291,7 +308,7 @@
 			  Send revision					
 			</button>
 			<span id="loading-gif-revision" class="hidden"><img src="@routes.Assets.at("images/loading.gif")"/>Submiting...</span>
-		    </div>						
+		    </div>
 		</div>
 	      </div>
 	    </div>

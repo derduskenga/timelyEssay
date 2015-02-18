@@ -180,7 +180,7 @@ public class OrderMessages extends Model{
 	      return message_text;
 	  }
 	  message_text = "<strong>Dear writer,</strong><br><br>" +
-			  "Unfortunately, your request for additinal pages from the client was declined<br>" +
+			  "Unfortunately, your request for additional pages from the client was declined<br>" +
 			  "We ask you to complete the order using the client's earlier instructions.<br>" +
 			    "If you have any questions, do not hesitate to talk to us";
 	  return message_text;	  
@@ -188,8 +188,8 @@ public class OrderMessages extends Model{
 	
 	public static String getMessageTemplateForClientPayForAdditionalPages(Orders order){
 	  String message_text = "<strong>Dear " + order.client.l_name + ",</strong><br><br>" +
-				"You raised the number pages of order <a href='/mydashboard/order/view/" + order.order_code + "'>#" + order.order_code + "</a> by " + order.additional_pages + " upon our writers request.<br>" +
-				"We kindly ask you to make the additinal payment. <a href='/mydashboard/order/proceedtopay/" + order.order_code + "'>PAY NOW</a>";
+				"You raised the number pages of order <a href='/mydashboard/order/view/" + order.order_code + "'>#" + order.order_code + "</a> by " + order.additional_pages + " upon our writer's request.<br>" +
+				"We kindly ask you to make the additional payment. <a href='/mydashboard/order/proceedtopay/" + order.order_code + "'>PAY NOW</a>";
 	  return message_text;
 	}
 	
@@ -215,6 +215,7 @@ public class OrderMessages extends Model{
 			  //no prefered writer so send a plain message
 			  message_text = "<strong>Dear " + order.client.l_name + ",</strong><br><br>" +
 					  "Your order has been assigned to writer " + order.freelanceWriter.writer_id + " <br>" +
+					  "We advise you not to share your contact information with writers <br>" +
 					  "Feel free to communicate with the writer directly";
 			  return message_text;
 					  
@@ -223,7 +224,8 @@ public class OrderMessages extends Model{
 		  message_text = "<strong>Dear " + order.client.l_name + ",</strong><br><br>" + 
 				  "Your order has been assigned your prefered writer-" + order.freelanceWriter.writer_id + " <br>" +
 				  "We are requesting you to pay a 10%(" + order.orderCurrence. currency_symbol_2 + " " + order.orderCurrence.convertion_rate*(order.order_total/10) + ") of your order value, which goes <br>" +
-				  "directly to your prefered writer. <a href='/mydashboard/order/proceedtopay/" + order.order_code + "'>PAY NOW</a>";
+				  "directly to your prefered writer. <a href='/mydashboard/order/proceedtopay/" + order.order_code + "'>PAY NOW</a><br>"+
+				  "We advise you not to share your contact information with writers";
 		  return message_text;
 	}
 	

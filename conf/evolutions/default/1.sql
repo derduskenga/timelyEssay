@@ -309,7 +309,6 @@ create table orders (
   coupon_code               varchar(255),
   prefered_writer_value     float,
   prefered_writer_value_paid boolean,
-  i                         integer,
   client_id                 bigint,
   order_level_of_writing_id bigint,
   order_document_type_id    bigint,
