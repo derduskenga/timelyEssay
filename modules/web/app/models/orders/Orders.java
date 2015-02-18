@@ -207,7 +207,11 @@ public class Orders extends Model{
 	}
 	
 	public  Page<Orders> getWriterAssignedOrders(int page, int page_list_size){
-		return Orders.find().where().eq("is_complete",false).eq("is_writer_assigned",true).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+		return Orders.find().where().eq("is_complete",false).eq("is_writer_assigned",true).eq("on_revision",false).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
+	}
+	
+	public  Page<Orders> getOnRevisionOrders(int page, int page_list_size){
+		return Orders.find().where().eq("on_revision",true).orderBy("order_deadline asc").findPagingList(page_list_size).setFetchAhead(true).getPage(page);
 	}
 	
 	public  Page<Orders> getCompletedOrders(int page, int page_list_size){
