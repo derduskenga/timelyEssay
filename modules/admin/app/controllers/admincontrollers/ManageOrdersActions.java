@@ -40,6 +40,7 @@ import models.utility.Utilities;
 import models.orders.FileOwner;
 import models.orders.OrderFiles;
 import models.orders.FileType;
+import models.client.*;
 import be.objectify.deadbolt.java.actions.SubjectNotPresent;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import be.objectify.deadbolt.java.actions.Group;
@@ -233,47 +234,24 @@ public class ManageOrdersActions extends Controller{
 		  jsonobject.put("message","Order was not found");
 		  return ok(Json.parse(jsonobject.toString())); 
 		}
-		Date message_date = new Date();
-		Date deadline = new Date();
-		Calendar calender = Calendar.getInstance();
-		Calendar deadline_calender = Calendar.getInstance();
-		String str_promise = "";
-		try{
-		  SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		  SimpleDateFormat isoDeadlineFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		  //For message date utc time
-		  message_date = isoFormat.parse(isoFormat.format(new Date(Long.valueOf(date)))); 
-		  calender.setTimeInMillis(message_date.getTime());
-		  int offset = Integer.parseInt(user.admin_user_offset);
-		  calender.add(Calendar.MINUTE,offset);//get UTC time to be stored
-		  message_date = calender.getTime();
-		  
-		  //for deadline utc time
-		  deadline =  isoDeadlineFormat.parse(deadline_); 
-		  deadline_calender.setTimeInMillis(deadline.getTime());
-		  int client_offset = Integer.parseInt(order.client.client_time_zone_offset);
-		  deadline_calender.add(Calendar.MINUTE,client_offset);
-		  deadline = deadline_calender.getTime();
-		  str_promise = isoDeadlineFormat.format(deadline);
-		}catch(ParseException pe){
-		  Logger.error("ParseException:" + pe.getMessage().toString());
-		  jsonobject.put("success",0);
-		  jsonobject.put("message","An error occured. Please try again");
-		  return ok(Json.parse(jsonobject.toString()));
-		}
+
 		orderMessage.msg_to = MessageParticipants.CLIENT;
 		orderMessage.msg_from = MessageParticipants.WRITERS;
 		orderMessage.status = false;
 		orderMessage.orders = order;
-		orderMessage.sent_on = message_date;
+		orderMessage.sent_on = Utilities.computeUtcTime(user.admin_user_offset,date);
 		Long message_id = orderMessage.saveClientMessageReturningId();
 		OrderMessages saveMessage = OrderMessages.getMessageById(message_id);
-		
+		Date deadline = Utilities.computeUtcTime(user.admin_user_offset,deadline_);
 		saveMessage.message = OrderMessages.getExtendDeadlineMessageTemplate(order,deadline,deadline_extension_reason);
 		saveMessage.message_type = OrderMessages.ActionableMessageType.DEADLINE_EXTENSION;
 		saveMessage.action_required = true;
-		saveMessage.message_promise_value = str_promise;
-		saveMessage.saveClientMessage();
+		SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar calender = Calendar.getInstance();
+		 calender.setTimeInMillis(deadline.getTime());
+		saveMessage.message_promise_value = isoFormat.format(calender.getTime());;
+		Logger.info("string date:" + saveMessage.message_promise_value);
+		saveMessage.saveClientMessage(); 
 		
 		jsonobject.put("success",1);
 		jsonobject.put("message","Your request has been sent to the client");

@@ -36,10 +36,12 @@ public class Utilities{
 	public static String PREFERED_WRITER_PAYMENT = "PREFERED_WRITER_PAYMENT";/*value paid for an order given to a client prefered writer*/
 	public static String BONUS_PAYMENT = "BONUS_PAYMENT"; /*bonus paid for good work*/
 	public static double ADDITIONAL_PAY_FOR_PREFERED_WRITER = 0.1;/* % extra if order is accepted by client's prefered writer*/
+	public static int ACCESS_PORT = 9000;
 	
       
 		      
 	public static Date computeUtcTime(String client_time_zone_offset, String date){
+	      
 	      SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	      Calendar calender = Calendar.getInstance();
 	      TimeZone tz = calender.getTimeZone();

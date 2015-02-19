@@ -45,8 +45,9 @@
 							<td>@order.no_of_references</td>
 							<td>@order.writing_style</td>
 							<td>@if(order.prefered_writer.equals("")){No prefered writer}else{<span class="alert-warning">@order.prefered_writer</span>}</td>
-							<td>@if(!order.is_paid){<span class="phone-number">NOT PAID</span>}else{PAID}</td>
-							<td>							<a href="@controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order.order_code)">@OrderMessages.getAdminOrderMessages(order.order_code).size() (<span class="phone-number"> @OrderMessages.getAdminUnreadMessages(order.order_code) Unread</span>)</a></td>
+							<td> @if(!order.is_paid){<p class="phone-number">Not paid}else{@if(order.checkIfOrderIsFullyPaid(order)){Order fully paid}else{<p class="phone-number">Order Partially paid</p> 
+							}}</td>
+							<td> <a href="@controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order.order_code)">@OrderMessages.getAdminOrderMessages(order.order_code).size() (<span class="phone-number"> @OrderMessages.getAdminUnreadMessages(order.order_code) Unread</span>)</a></td>
 							<td>@if(order.is_writer_assigned){@order.freelanceWriter.writer_id}else{Waiting for writer}</td>
 						    </tr>
 						}
@@ -95,7 +96,8 @@
 							<td>@order.no_of_references</td>
 							<td>@order.writing_style</td>
 							<td>@if(order.prefered_writer.equals("")){No prefered writer}else{<span class="alert-warning">@order.prefered_writer</span>}</td>
-							<td>@if(!order.is_paid){<span class="phone-number">NOT PAID</span>}else{PAID}</td>
+							<td>@if(!order.is_paid){<p class="phone-number">Not paid}else{@if(order.checkIfOrderIsFullyPaid(order)){Order fully paid}else{<p class="phone-number">Order Partially paid</p> 
+							}}</td>
 							
 							<td>
 							<a href="@controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order.order_code)">@OrderMessages.getAdminOrderMessages(order.order_code).size() (<span class="phone-number"> @OrderMessages.getAdminUnreadMessages(order.order_code) Unread</span>)</a>
@@ -151,7 +153,8 @@
 							<td>@order.no_of_references</td>
 							<td>@order.writing_style</td>
 							<td>@if(order.prefered_writer.equals("")){No prefered writer}else{<span class="alert-warning">@order.prefered_writer</span>}</td>
-							<td>@if(!order.is_paid){<span class="phone-number">NOT PAID</span>}else{PAID}</td>
+							<td>@if(!order.is_paid){<p class="phone-number">Not paid}else{@if(order.checkIfOrderIsFullyPaid(order)){Order fully paid}else{<p class="phone-number">Order Partially paid</p> 
+							}}</td>
 							
 							<td>
 							<a href="@controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order.order_code)">@OrderMessages.getAdminOrderMessages(order.order_code).size() (<span class="phone-number"> @OrderMessages.getAdminUnreadMessages(order.order_code) Unread</span>)</a>
@@ -208,7 +211,8 @@
 							<td>@order.no_of_references</td>
 							<td>@order.writing_style</td>
 							<td>@if(order.prefered_writer.equals("")){No prefered writer}else{<span class="alert-warning">@order.prefered_writer</span>}</td>
-							<td>@if(!order.is_paid){<span class="phone-number">NOT PAID</span>}else{PAID}</td>
+							<td>@if(!order.is_paid){<p class="phone-number">Not paid}else{@if(order.checkIfOrderIsFullyPaid(order)){Order fully paid}else{<p class="phone-number">Order Partially paid</p> 
+							}}</td>
 							<td>							<a href="@controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order.order_code)">@OrderMessages.getAdminOrderMessages(order.order_code).size() (<span class="phone-number"> @OrderMessages.getAdminUnreadMessages(order.order_code) Unread</span>)</a></td>
 							<td>@if(order.is_writer_assigned){@order.freelanceWriter.writer_id}else{Waiting for writer}</td>
 						    </tr>

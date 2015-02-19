@@ -40,17 +40,20 @@ function setFileLocalTime(){
 function submitAskForDeadlineExtension(){
    $('#btn-deadline-extension-admin').click(function(event){
       event.preventDefault();
-      var deadline = $('#order_deadline_admin').val();
+      var deadline = $('#order_deadline_admin').val() + ":00";
       var reason = $('#deadline_extension_reason').val();
       var order_code = $('#order-code-admin').text();
-      var date = new Date().getTime();
+      var date = new Date().toString("yyyy-MM-dd HH:mm:ss");
+      $("#loading-gif-extend-admin").removeClass("hidden");
       $.post("/manageorder/askfordeadlineextensionadmin/" + deadline + "/" + date + "/" + reason + "/" + order_code ,{}, function(data){
 	if(data['success'] == 1){
 	  $('#deadline-extension-request-response').html("<div id='de-response' class='alert alert-success'>" + data['message'] +  "</div>");
 	  $("#de-response").show().delay(5000).fadeOut("slow");
+	  $("#loading-gif-extend-admin").addClass("hidden");
 	}else{
 	  $('#deadline-extension-request-response').html("<div id='de-response' class='alert alert-danger'>" + data['message'] +  "</div>");
 	  $("#de-response").show().delay(5000).fadeOut("slow");
+	  $("#loading-gif-extend-admin").addClass("hidden");
 	}
       },'json');
    })
@@ -62,11 +65,14 @@ function submitAskForExtraPages(){
     var date = $('#admin_local_time_for_order_management').val();
     var pages = $('#extra_pages').val();
     var order_code = $('#order-code-admin').text();
+    $('#loading-gif-extra-pages').removeClass("hidden");
     $.post("/manageorder/askforextrapages/" + pages + "/" + order_code + "/" + date,{}, function(data){
       if(data['success'] == 1){
+	$('#loading-gif-extra-pages').addClass("hidden");
 	$('#additional-pages-request-response').html("<div id='p-response' class='alert alert-success'>" + data['message'] +  "</div>");
 	$("#p-response").show().delay(5000).fadeOut("slow");
       }else{
+	$('#loading-gif-extra-pages').addClass("hidden");
 	$('#additional-pages-request-response').html("<div id='p-response' class='alert alert-danger'>" + data['message'] +  "</div>");
 	$("#p-response").show().delay(5000).fadeOut("slow");
       }

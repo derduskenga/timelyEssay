@@ -548,6 +548,7 @@ public class Orders extends Model{
 		boolean condition_2 = false;
 		boolean condition_3 = false;
 		boolean condition_4 = false;
+		boolean condition_5 = false;
 		
 		if(order.is_paid && order.prefered_writer.equals("") && order.additional_pages==0){
 			condition_1 = true;
@@ -555,20 +556,25 @@ public class Orders extends Model{
 		
 		if(order.is_paid && (order.is_writer_assigned && !order.prefered_writer.equals("") && order.prefered_writer_value_paid) && (order.additional_pages>0 && order.is_additional_pages_paid)){
 			condition_2 = true;
-		}
-		
+		}		
 		if(order.is_paid && order.prefered_writer.equals("") && (order.additional_pages>0 && order.is_additional_pages_paid)){
 			condition_3 = true;
-		}
-		
+		}		
 		if(order.is_paid && (order.is_writer_assigned && !order.prefered_writer.equals("") && order.prefered_writer_value_paid) && order.additional_pages==0){
 			condition_4 = true;
 		}
 		
-		if(condition_1 || condition_2 || condition_3 || condition_4){
+		if(order.is_paid && (!order.is_writer_assigned && !order.prefered_writer.equals("") && !order.prefered_writer_value_paid) && (order.additional_pages==0 && !order.is_additional_pages_paid)){
+			condition_5 = true;
+		}
+		
+		if(condition_1 || condition_2 || condition_3 || condition_4 || condition_5){
 			return true;
 		}
 		return false;
 	}
+	
+	
+	
 } 
  

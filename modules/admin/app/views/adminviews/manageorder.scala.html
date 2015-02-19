@@ -49,7 +49,10 @@
 			<td><p class="phone-number">Payment Status</p></td>
 			<td><p>@if(!clientOrders.is_writer_assigned){
 			     <input type="hidden" value="" name="assign_order_local_time" id="assign_order_local_time">
-			     @if(clientOrders.is_paid == false){<strong class="text-danger">NOT PAID</strong>}else{<strong class="text-success">PAID</strong> @if(clientOrders.prefered_writer.equals("")){<a class="btn btn-warning" id="no-prefered-writer-assign-btn" title="Assign this order to writer" href="#">Assign to Writer <i class="fa fa-user-md fa-lg"></i>
+			    
+
+			    @if(!clientOrders.is_paid){<p class="phone-number">Not paid}else{ @if(clientOrders.checkIfOrderIsFullyPaid(clientOrders)){Order fully paid}else{<p class="phone-number">Order Partially paid</p>}			    
+			    @if(clientOrders.prefered_writer.equals("")){<a class="btn btn-warning" id="no-prefered-writer-assign-btn" title="Assign this order to writer" href="#">Assign to Writer <i class="fa fa-user-md fa-lg"></i>
 			      </a> <span id="assign-writer-response-message"></span> 
 
 			      <div id="assign-order-form" class="hidden">
@@ -61,14 +64,14 @@
 			      </div>
 
 			      }else{<a href="#" id="btn-assign-for-prefered-writer" title="Assign this order to writer @clientOrders.prefered_writer" class="btn btn-warning">Writer @clientOrders.prefered_writer is prefered. Assign <i class="fa fa-user-md fa-lg"></i></a> <input id="assigned-order-code-for-prefered" type="hidden" value="@clientOrders.order_code"> <input id="prefered-writer-id" type="hidden" value="@clientOrders.prefered_writer"> <span id="assign-writer-response-message-for-prefered-writer"></span>}}}else{
-				  <strong class="text-success">PAID</strong>  <span class="text-success">Order has been assigned to @clientOrders.freelanceWriter.writer_id</span>
+				   @if(!clientOrders.is_paid){<p class="phone-number">Not paid}else{@if(clientOrders.checkIfOrderIsFullyPaid(clientOrders)){<span class="text-success">Order fully paid</p>}else{<p class="phone-number">Order Partially paid</p>}}<span class="text-success">Order has been assigned to @clientOrders.freelanceWriter.writer_id</span>
 			      }
 			      <br>
 			      @if(clientOrders.additional_pages>0 && !clientOrders.is_additional_pages_paid){
 				    <p class="phone-number">Additional pages for order has not been paid for!</p>
 			      }
 			      
-			      @if(clientOrders.prefered_writer !="" && !clientOrders.prefered_writer_value_paid){
+			      @if(clientOrders.prefered_writer !="" && !clientOrders.prefered_writer_value_paid && clientOrders.is_writer_assigned){
 				    <p class="phone-number">Additional pay for prefered writer has not been made!</p>
 			      }
 			      
@@ -117,11 +120,11 @@
 		</tr>
 	    
 		<tr>
-			<td>Want order after</td>
-			<td> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_value</span> <span>@clientOrders.getDeadlineObject(clientOrders.document_deadline).deadline_unit</span> <span>@ManageOrdersActions.orderSupportLocalTime(clientOrders.order_deadline,session.get("admin_email")).format("dd-MM-YYYY HH:mm a")</span> </td>
+			<td>Order Deadline</td>
+			<td> <span>@ManageOrdersActions.orderSupportLocalTime(clientOrders.order_deadline,session.get("admin_email")).format("dd-MM-YYYY HH:mm a")</span> </td>
 		</tr>
 		<tr>
-			<td>Order deadline</td>
+			<td>Time remaining</td>
 			<td>@models.admin.adminutils.AdminUtils.getTimeRemaining(clientOrders.order_deadline)</td>
 		</tr>
 	
