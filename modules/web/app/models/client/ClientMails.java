@@ -195,6 +195,31 @@ public class ClientMails{
 					t.start();
 		
 		}
+
+		public void sendGeneralMail(String email, String msg, String subject){
+					MandrillApi mandrillApi = new MandrillApi("qB6SN2vnpORIxTIjmlIoFA");
+					MandrillMessage message = new MandrillMessage();
+					message.setSubject(subject);
+					message.setFromEmail("support@timelyessay.com");
+					message.setFromName("support@timelyessay.com");
+					try{
+					message.setHtml(msg);
+					message.setAutoText(true);
+					
+					ArrayList<MandrillMessage.Recipient> recipients = new ArrayList<MandrillMessage.Recipient>();
+					MandrillMessage.Recipient recipient = new MandrillMessage.Recipient();
+					recipient.setEmail(email);
+					recipients.add(recipient);
+					message.setTo(recipients);
+					message.setPreserveRecipients(false);
+					MandrillMessageStatus[] messageStatusReports = mandrillApi
+							.messages().send(message, false); 			
+					} catch (MandrillApiError mandrillApiError) {
+							mandrillApiError.printStackTrace();
+					} catch (IOException e) {
+							e.printStackTrace();
+					}
+		}
 		
 		public String getClientInvitationEmailString(String code, String name){
 			return "<p><span style='font-family: arial black,avant garde;'>Hello,</span></p>"+
