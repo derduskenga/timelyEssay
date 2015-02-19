@@ -4,6 +4,7 @@ import play.*;
 import play.mvc.*;
 import views.html.*;
 import views.html.securityview.adminlogin;
+import views.html.adminviews.robots;
 import models.admin.userpermissions.AuthorisedUser;
 import models.admin.adminmodels.AdminUser;
 import models.common.security.PasswordHash;
@@ -26,6 +27,10 @@ public class Application extends Controller{
 		session().clear();
 		flash("success","You are now logged out.");
 		return redirect(controllers.admincontrollers.routes.Application.login());	
+	}
+	
+	public static Result robots(){
+		return ok(robots.render());
 	}
 	
 	public static Result authenticate() {	
