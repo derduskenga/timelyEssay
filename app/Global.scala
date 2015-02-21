@@ -7,6 +7,10 @@ import com.avaje.ebean.Ebean;
 import java.util.ArrayList;
 import scala.collection.mutable.ArrayBuffer;
 
+
+import play.api.http.HeaderNames 
+import play.api.mvc.{Action, Handler, RequestHeader}
+
 import models.admin.adminmodels.AdminUser;
 import models.admin.adminmodels.AdminMails;
 import models.admin.userpermissions.SecurityRole;
@@ -20,7 +24,12 @@ object Global extends GlobalSettings {
 	
 	override def onRouteRequest (request: RequestHeader) = getSubdomain(request) match {
 		case "admin" => admin.Routes.routes.lift(request)
-		case _ => web.Routes.routes.lift(request)
+		case "www" => web.Routes.routes.lift(request)
+		case default => Some(redirectToWWW(request))		
+	}
+	
+	private def redirectToWWW(request: RequestHeader) = Action { 
+			MovedPermanently(s"http://www.${request.host}${request.path}").withHeaders(HeaderNames.CACHE_CONTROL -> "public, max-age=31556926" ) 
 	}
 
 	@throws(classOf[Exception])
