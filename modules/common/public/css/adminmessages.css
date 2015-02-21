@@ -2,7 +2,6 @@
 {
 position: relative;
 width: 730px;
-min-height: 40px;
 padding: 4px;
 background: #E5F1F4;
 -webkit-border-radius: 9px;
@@ -29,7 +28,6 @@ left: 91px;
 clear:right;
 position: relative;
 width: 730px;
-min-height: 40px;
 padding: 4px;
 background: #EBEAEB;
 -webkit-border-radius: 9px;
@@ -51,8 +49,8 @@ top: -20px;
 left: 624px;
 }
 
-.from-client-msg, .to-client-msg{
-	margin-bottom: 30px;
+.from-writer-msg, .from-client-msg, .to-client-msg{
+	margin-bottom: 25px;
 }
 
 .to-client-msg-details{

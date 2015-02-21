@@ -2,7 +2,6 @@
 {
 position: relative;
 width: 730px;
-min-height: 40px;
 padding: 4px;
 background: #E5F1F4;
 -webkit-border-radius: 9px;
@@ -29,7 +28,6 @@ left: 91px;
 clear:right;
 position: relative;
 width: 730px;
-min-height: 40px;
 padding: 4px;
 background: #EBEAEB;
 -webkit-border-radius: 9px;
