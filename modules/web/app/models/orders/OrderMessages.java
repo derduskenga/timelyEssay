@@ -92,7 +92,7 @@ public class OrderMessages extends Model{
 				return  orderMessagesFinder.where()
 						.eq("orders.order_code",order_code)
 						.or(Expr.eq("msg_to", MessageParticipants.CLIENT),Expr.eq("msg_from", MessageParticipants.CLIENT))
-						.orderBy("sent_on desc").findList();
+						.orderBy("sent_on asc").findList();
 	}
 	
 	
@@ -151,7 +151,7 @@ public class OrderMessages extends Model{
 	  calender.add(Calendar.MINUTE,offset*(-1));//get UTC time to be stored
 	  String date_label = isoFormat.format(calender.getTime());
 	  String message_text = "<strong>Dear " + order.client.l_name +   "</strong> <br><br>" +
-				"Because of " + reason_label + "our writer is asking you to allow a deadline<br>extension to " +
+				"Because of " + reason_label + " our writer is asking you to allow a deadline<br>extension to " +
 				"" + date_label + " <br>" +
 				"If you agree hit 'Accept'." + 
 				"If you do not accept, we recommend that you suggest your own deadline";
@@ -198,13 +198,13 @@ public class OrderMessages extends Model{
 	  if(status){
 	    message_text = "<strong>Dear writer,</strong><br><br>" +
 			    "The deadline of this order was extended upon your request.<br>" +
-			    "We ask you to complete this order in a timely manner." + 
+			    "We ask you to complete this order in a timely manner.<br>" + 
 			    "If you have any questions, do not hesitate to talk to us";
 	    return message_text;
 	  }
 	    message_text = "<strong>Dear writer,</strong><br><br>" +
 			    "Unfortunately, the client refused to extended the deadline as you had requested.<br>" +
-			    "We, therefore, ask you to complete this order based on its current deadline" + 
+			    "We, therefore, ask you to complete this order based on its current deadline<br>" + 
 			    "If you have any questions, do not hesitate to talk to us"; 
 	    return message_text;
 	}
@@ -223,32 +223,49 @@ public class OrderMessages extends Model{
 		  
 		  message_text = "<strong>Dear " + order.client.l_name + ",</strong><br><br>" + 
 				  "Your order has been assigned your prefered writer-" + order.freelanceWriter.writer_id + " <br>" +
-				  "We are requesting you to pay a 10%(" + order.orderCurrence. currency_symbol_2 + " " + order.orderCurrence.convertion_rate*(order.order_total/10) + ") of your order value, which goes <br>" +
+				  "We are requesting you to pay a 10%(" + order.orderCurrence. currency_symbol_2 + " " + Math.round(order.orderCurrence.convertion_rate*(order.order_total/10)*100)/100.00 + ") of your order value, which goes <br>" +
 				  "directly to your prefered writer. <a href='/mydashboard/order/proceedtopay/" + order.order_code + "'>PAY NOW</a><br>"+
 				  "We advise you not to share your contact information with writers";
 		  return message_text;
 	}
 	
+	public static String fileUploadClientMessage(Orders order, String upload_type){
+		String message_text = "<strong>Dear " + order.client.l_name + ",</strong><br><br>" + 
+				      "We have uploaded " + upload_type + ".<br>" +
+				      "<a href='/mydashboard/order/view/" + order.order_code + "'>View</a> file.";
+		return message_text;
+	}
+	
+	public static String revisionRequestFromClient(Orders order){
+		String message_text = "<p>The client has requested revision on order #" +order.order_code + ".</p>" +
+				      "<p>Please follow the revision instructions and complete the order in a timely manner.</p>";
+		return message_text;
+	}
+	
+	public static String clientUploadedFile(){
+	      String message_text = "<p>The client uploaded a file for this order.</p>";
+	      return message_text;
+	}
 	public static Date computeMessageUtcTime(String client_time_zone_offset, String date){
-	  SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	  Calendar calender = Calendar.getInstance();
-	  TimeZone tz = calender.getTimeZone();
-	  int host_offset = tz.getRawOffset();
-	  Logger.info("host:" + host_offset);		  
-	  try{
-	    Date message_date = formatter.parse(date);
-	    //Logger.info("before time::" + message_date.toString());
-	    calender.setTimeInMillis(message_date.getTime());
-	    //Logger.info("before time" + calender.getTime().toString());
-	    int offset = Integer.parseInt(client_time_zone_offset);
-	    calender.add(Calendar.MINUTE,offset);//get UTC time to be stored
-	    //Logger.info("after time::" + calender.getTime().toString());
-	    message_date = calender.getTime();
-	  }catch(ParseException pe){
-	    Logger.info(pe.getMessage().toString());
-	  }
-	  return calender.getTime();
-	  //return message_date;
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar calender = Calendar.getInstance();
+		TimeZone tz = calender.getTimeZone();
+		int host_offset = tz.getRawOffset();
+		Logger.info("host:" + host_offset);		  
+		try{
+		  Date message_date = formatter.parse(date);
+		  //Logger.info("before time::" + message_date.toString());
+		  calender.setTimeInMillis(message_date.getTime());
+		  //Logger.info("before time" + calender.getTime().toString());
+		  int offset = Integer.parseInt(client_time_zone_offset);
+		  calender.add(Calendar.MINUTE,offset);//get UTC time to be stored
+		  //Logger.info("after time::" + calender.getTime().toString());
+		  message_date = calender.getTime();
+		}catch(ParseException pe){
+		  Logger.info(pe.getMessage().toString());
+		}
+		return calender.getTime();
+		//return message_date;
 	}
 	
 	

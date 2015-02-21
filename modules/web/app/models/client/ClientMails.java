@@ -223,10 +223,9 @@ public class ClientMails{
 		
 		public String getClientInvitationEmailString(String code, String name){
 			return "<p><span style='font-family: arial black,avant garde;'>Hello,</span></p>"+
-													"<p><span style='font-family: arial black,avant garde;'>I recently came across TimelyEssay.com.</span></p>"+
+													"<p><span style='font-family: arial black,avant garde;'>I recently came across <a href='www.timelyessay.com/neworder'>TimelyEssay.com.</></span></p>"+
 													"<p><span style='font-family: arial black,avant garde;'> They provide excellent writing services in all academic fields, and have exceptional customer support. </span></p>"+
 													"<p><span style='font-family: arial black,avant garde;'>I am pretty sure you will enjoy their services. <strong>Use the promocode <b>"+code+"</b> and get a "+(Utilities.FIRST_ORDER_DISCOUNT*100)+"% discount</strong>. </span></p>"+
-													"<a href='timelyessay.com/neworder'>Checkout this service</a>" +
 													"<p>&nbsp;</p>"+
 													"<p><span style='font-family: arial black,avant garde;'>Cheers,</span></p>"+
 													"<p><span style='font-family: arial black,avant garde;'>"+name+".</span></p>";

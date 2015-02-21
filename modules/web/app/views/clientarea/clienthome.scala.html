@@ -8,18 +8,6 @@
 	<hr/>
 	<div class="order-row-listing">
 	      
-	@if(flash.containsKey("orderpaymentsuccessresponse")){
-	      <div class="alert alert-success">
-		      @flash.get("orderpaymentsuccessresponse")
-	      </div>
-	    }
-	    
-	@if(flash.containsKey("orderpaymentfailresponse")){
-	      <div class="alert alert-danger">
-		      @flash.get("orderpaymentfailresponse")
-	      </div>
-	    }
-	      
 	      <table class="table table-bordered">
 		<thead>
 		    <tr>
@@ -29,6 +17,7 @@
 		      <th>Deadline</th>
 		      <th>Messages</th>
 		      <th>Payment Status</th>
+		      <th>Writer</th>
 		    </tr>
 		</thead>
 		<tbody>
@@ -42,6 +31,7 @@
 			  <td>
 				      @if(!order_.is_paid){Not paid <a href="@controllers.web.client.routes.ClientActions.proceedToPay(order_.order_code)" class="phone-number">(Pay now)</a>}else{@if(order_.checkIfOrderIsFullyPaid(order_)){Order fully paid}else{Order Partially paid <a class="phone-number" href="@controllers.web.client.routes.ClientActions.proceedToPay(order_.order_code)">(Pay for Order)</a>}}
 			  </td>
+			  <td>@if(order_.is_writer_assigned){Writer Assigned (Writer ID @order_.freelanceWriter.writer_id)}</td>
 			</tr>
 		      }
 		</tbody>
@@ -70,7 +60,7 @@
 		  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">@order_.topic</a></td>
 		  <td>@order_.order_deadline</td>
 		  <td><a href="@controllers.web.client.routes.ClientActions.orderMessages(order_.order_code)">@order_.orderMessages.size() (<span class="phone-number">@message Unread</span>)</a></td>
-		  <td></td>
+		  <td><a href="@controllers.web.client.routes.ClientActions.clientViewOrder(order_.order_code)">View</a></td>
 		}
 		</tr>
 	    </tbody>

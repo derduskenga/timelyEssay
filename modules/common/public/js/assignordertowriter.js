@@ -3,7 +3,7 @@ $(document).ready(function(e){
 	fetchWriterId();
 	linkClick();
 	validateAssignOrderForm();
-	submitAssignedWriterIdForNoPreferedWriter();
+	submitAssignedWriterIdForNonPreferedWriter();
 	setInterval(setAdminLocalForOrderAssignment, 5000);
 	
 	if($('#btn-assign-for-prefered-writer').length !=0){
@@ -37,17 +37,20 @@ function assignForPreferedWriter(){
 		var writer_id = $('#prefered-writer-id').val();
 		var order_code = $('#assigned-order-code-for-prefered').val();
 		var admin_local_time = $('#assign_order_local_time').val();
+		$('#loading-gif-for-prefered-writer-assign').removeClass("hidden");
 	 $.ajax({
             type: "POST",
             url:"/manageorder/assign/" + admin_local_time + "/" + order_code + "/" + writer_id,
             success: function(data){
 			      if(data['success'] == 1){
+				     $('#loading-gif-for-prefered-writer-assign').addClass("hidden");
 				     $('#assign-writer-response-message-for-prefered-writer').html("<p class='text-success'>" + data['message'] +"</p>");
 				     $('#btn-assign-for-prefered-writer').addClass("hidden");
 			      }else if(data['success'] == 3){
 				      window.reload();
 			      }else{
-				     $('#assign-writer-response-message-for-prefered-writer').html("<p class='text-danger'>" + data['message'] +"</p>");  
+				     $('#loading-gif-for-prefered-writer-assign').addClass("hidden"); 
+				    $('#assign-writer-response-message-for-prefered-writer').html("<p class='text-danger'>" + data['message'] +"</p>");  
 			      } 
             }
         });
@@ -55,23 +58,26 @@ function assignForPreferedWriter(){
 	});
 }
 
-function submitAssignedWriterIdForNoPreferedWriter(){
+function submitAssignedWriterIdForNonPreferedWriter(){
 	  $('#order-assign-btn').click(function(event){
 	    event.preventDefault();
 	    var writer_id = $.trim($("#assigning-writer-id").val());
 	    var order_code = $('#assigned-order-code').val();
 	    var admin_local_time = $('#assign_order_local_time').val();
+	    $('#loading-gif-for-non-prefered-writer-assign').removeClass("hidden");
 	    $.ajax({
             type: "POST",
             url:"/manageorder/assign/" + admin_local_time + "/" + order_code + "/" + writer_id,
             success: function(data){
 			      if(data['success'] == 1){
+				     $('#loading-gif-for-non-prefered-writer-assign').addClass("hidden");
 				     $('#assign-writer-response-message').html("<p class='text-success'>" + data['message'] +"</p>");
 				     $('#assign-order-form').addClass("hidden");
 				     $('#no-prefered-writer-assign-btn').addClass("hidden");
 			      }else if(data['success'] == 3){
 				      window.reload();
 			      }else{
+				     $('#loading-gif-for-non-prefered-writer-assign').addClass("hidden");
 				     $('#assign-writer-response-message').html("<p class='text-danger'>" + data['message'] +"</p>");  
 			      } 
             }

@@ -11,6 +11,7 @@
 					<div class="no-order-messages">No order found.</div>
 			</div>
 		}else{
+			<a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(orders.order_code)">#@orders.order_code</a> Messages
 			<div id="order-messages" class="" style="margin-top:20px">
 				@if(orderMessages.isEmpty){
 					<div class="no-order-messages">No messages for this order.</div>

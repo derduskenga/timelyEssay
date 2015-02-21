@@ -47,10 +47,11 @@ POST		/submitadmincouponcodes					controllers.admincontrollers.AdminActions.gene
 DELETE		/deleteadmincouponcode/:code				controllers.admincontrollers.AdminActions.deleteCouponCode(code:String)
 GET		/newwriter						controllers.admincontrollers.AdminActions.newWriter()
 POST		/submitwriter						controllers.admincontrollers.AdminActions.saveWriter()
-GET		/writer						controllers.admincontrollers.AdminActions.allWriters()
-GET		/writer/edit/:writer_id				controllers.admincontrollers.AdminActions.editWriter(writer_id:Long)
-POST		/manageorder/fetchwriter/			controllers.admincontrollers.ManageOrdersActions.fetchAllWriters()
+GET		/writer							controllers.admincontrollers.AdminActions.allWriters()
+GET		/writer/edit/:writer_id					controllers.admincontrollers.AdminActions.editWriter(writer_id:Long)
+POST		/manageorder/fetchwriter/				controllers.admincontrollers.ManageOrdersActions.fetchAllWriters()
 POST		/manageorder/assign/:date/:order_code/:writer_id	controllers.admincontrollers.ManageOrdersActions.assignOrderToWriter(date:String,order_code:Long,writer_id:Long)
+GET		/manageorder/order/revisioninstruction/:order_code		controllers.admincontrollers.ManageOrdersActions.getRevisionInstructions(order_code:Long)
 
 
 

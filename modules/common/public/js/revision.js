@@ -14,6 +14,7 @@ function handleLinkClickAskRevision(){
   $('#ask-for-revision-link').click(function(event){
     event.preventDefault();
     if($('#revision-form').hasClass('hidden')){
+      $('#revision_instructions').focus();
       $('#revision-form').removeClass("hidden");
       $('#deadline-form').addClass('hidden');
       $('#feedback-form').addClass("hidden");
@@ -27,7 +28,7 @@ function handleLinkClickAskRevision(){
 function handleRevisionFormSubmit(){
   $("#btn-ask-for-revision").click(function(event) {
     event.preventDefault();
-    var revision_deadline = $('#revision_deadline').val();
+    var revision_deadline = $('#revision_deadline').val()+":00";
     var revision_instructions = $('#revision_instructions').val();
     var order_code = $('#order-code').text();
     $('#loading-gif-revision').removeClass("hidden");

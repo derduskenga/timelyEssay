@@ -70,13 +70,21 @@ public class ClientActions extends Controller{
 	  return(ok(clienthome.render(null,null,null)));
 	}
 	
+// 	public static Result postFrom2Checkout(){
+// 		Map<String, String[]> queryStringMap = request().queryString();
+// 		String order_code = queryStringMap.get("li_0_product_id")[0];
+// 		Logger.info("order_code:" + order_code);
+// 		return TODO;
+// 	}
+// 	
+	
 	public static Result postFrom2Checkout(){    
 	  if(session().get("email") != null){
 	    Orders order = new Orders();
 	    Long client_id = Client.getClient(session().get("email")).id;
 	    //Post parameters from 2checkout start=========================================
 	    Map<String, String[]> checkout_post_parameters = new HashMap<String,String[]>();
-	    checkout_post_parameters = request().body().asFormUrlEncoded();
+	    checkout_post_parameters = request().queryString();
 	    if(!checkout_post_parameters.isEmpty()){
 		  boolean credit_card_approved = false;
 		  //order_code
@@ -120,7 +128,7 @@ public class ClientActions extends Controller{
 			Orders paidOrder = Orders.getOrderByCode(Long.valueOf(order_code));
 			
 			if(payment_type.equals(Utilities.PAY_ORDER)){
-				flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ". A writer will be assigned to your order shorlty. Thank you for choosing us.");
+				flash("orderpaymentsuccessresponse","We have received your payment for order #" + order_code + ". A writer will be assigned to your order shortly. Thank you for choosing us.");
 				paidOrder.invoice_id = invoice_id;
 				paidOrder.amount_paid = Double.parseDouble(total);
 				paidOrder.is_paid = true;
@@ -164,19 +172,19 @@ public class ClientActions extends Controller{
 				}
 			}
 			
-			return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
+			return ok(payorderresponse.render(order));
 
 		  }
 		  Logger.info("order code:" + order_code + " and invoice id is:" + invoice_id + " result:" + result + " credit_card_approved:" + credit_card_approved + " key:" + key);
 		  flash("orderpaymentfailresponse","There was a problem and your payment may have not been received");
-		  return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
+		  return ok(payorderresponse.render(order));
 		  
 	    }
 	    //End of 2checkout post parameters===============================================
 	    flash("orderpaymentfailresponse","Unfortunately, your payment was has not been processsed");
-	    return ok(clienthome.render(order.activeOrdersUnreadMessages(order.getActiveOrders(client_id)),order.completeOrdersUnreadMessages(order.getCompletedOrders(client_id)),order.closedOrdersUnreadMessages(order.getClosedOrders(client_id))));
+	    return ok(payorderresponse.render(order));
 	  } 
-	  return(ok(clienthome.render(null,null,null)));
+	  return ok(payorderresponse.render(null));
 	  
 	}
 		
@@ -360,7 +368,7 @@ public class ClientActions extends Controller{
 		//order_file.renameTo(new File(uploadPath + file_name));
 		orderFiles.file_name = file_name;
 		orderFiles.content_type = contentType;
-		orderFiles.upload_date = OrderMessages.computeMessageUtcTime(orders.client.client_time_zone_offset,file_local_time);
+		orderFiles.upload_date = Utilities.computeUtcTime(orders.client.client_time_zone_offset,file_local_time);
 		File destination = new File(uploadPath, order_file.getName());
 		orderFiles.file_size = order_file.length();
 		orderFiles.storage_path = destination.toPath().toString();
@@ -371,6 +379,19 @@ public class ClientActions extends Controller{
 		Logger.info("File path:" + destination.toPath().toString());
 		flash("fileuploadresponsesuccess","Your file has been uploaded");
 		orderFiles.saveOrderFile();
+		//send a message to writer
+		OrderMessages message = new OrderMessages();
+		
+		message.orders = orders;
+		message.msg_to = MessageParticipants.WRITERS;
+		message.msg_from = MessageParticipants.SUPPORT;
+		message.status = false;
+		message.sent_on = Utilities.computeUtcTime(orders.client.client_time_zone_offset,file_local_time);
+		message.message = OrderMessages.clientUploadedFile();
+		message.action_required = false;
+		message.message_promise_value = "none";
+		message.message_type = OrderMessages.ActionableMessageType.OTHER;
+		message.saveClientMessage();
 		return redirect(controllers.web.client.routes.ClientActions.clientViewOrder(order_code));
 	      }catch (IOException ioe){
 		Logger.error("Server error on file upload:");
@@ -404,7 +425,7 @@ public class ClientActions extends Controller{
 	  }
 	}
 	
-	public static Result downloadProductFile(Long file_id){
+	public static Result downloadProductFile(Long file_id, String date){
 	  //orderproductfilespath
 	  OrderProductFiles orderProductFiles = OrderProductFiles.getOrderProductFiles(file_id);
 	  if(orderProductFiles == null){
@@ -416,7 +437,7 @@ public class ClientActions extends Controller{
 	  response().setHeader("Content-Length",String.valueOf(new File(orderProductFiles.storage_path).length()));
 	  try{
 	    orderProductFiles.has_been_downloaded = true;
-	    orderProductFiles.download_date = new Date();
+	    orderProductFiles.download_date = Utilities.computeUtcTime(orderProductFiles.orders.client.client_time_zone_offset,date);
 	    orderProductFiles.saveProductFile();
 	    return ok(new File(orderProductFiles.storage_path));
 	  }catch(Exception ex){
@@ -457,7 +478,6 @@ public class ClientActions extends Controller{
 	  Map<String, String[]> revisionValues = new HashMap<String,String[]>();
 	  revisionValues = request().body().asFormUrlEncoded();
 	  JSONObject jobject = new JSONObject();
-	  String new_date = revision_deadline;
 	  String revision_intructions = "";
 	 
 	 if(revisionValues.isEmpty()){
@@ -474,35 +494,42 @@ public class ClientActions extends Controller{
 	  if(orders == null){
 	    return redirect(controllers.web.client.routes.ClientActions.clientViewOrder(order_code));
 	  }
-	  OrderRevision orderRevision = new OrderRevision();
-	  Date newDeadline = new Date(); 
+	  OrderRevision orderRevision = new OrderRevision(); 
 	  orders.on_revision = true;
 	  orders.is_complete = false;
-	  try{
-	    SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	    isoFormat.setTimeZone(TimeZone.getDefault());
-	    newDeadline = isoFormat.parse(new_date);
-	    orders.order_deadline = newDeadline;   
-	    orderRevision.revision_instruction = revision_intructions;
-	    orderRevision.orders = orders;
-	    orderRevision.saveOrderRevision();
-	    orders.saveOrder();
-	    Logger.info("working");
-	    jobject.put("success",1);
-	    jobject.put("message","Revision has been placed");
-	    return ok(Json.parse(jobject.toString()));
-	  }catch(ParseException pe){
-	    Logger.error("ParseException:" + pe.getMessage().toString());
-	    jobject.put("success",0);
-	    jobject.put("message","An error occured. Please try again");
-	    return ok(Json.parse(jobject.toString()));
-	  }catch(Exception ex){
-	    Logger.error("blanket Exception:" + ex.getMessage().toString());
-	    jobject.put("success",0);
-	    jobject.put("message","An error occured. Please try again");
-	    return ok(Json.parse(jobject.toString()));
-	  } 
-	}
+
+	  orders.order_deadline = Utilities.computeUtcTime(orders.client.client_time_zone_offset,revision_deadline);  
+	  orderRevision.revision_instruction = revision_intructions;
+	  orderRevision.orders = orders;
+	  orderRevision.saveOrderRevision();
+	  orders.saveOrder();
+
+	  //send message to writer
+	  OrderMessages orderMessageSupport = new OrderMessages();
+	  orderMessageSupport.msg_from = MessageParticipants.SUPPORT;
+	  orderMessageSupport.msg_to = MessageParticipants.WRITERS;
+	  orderMessageSupport.orders = orders;
+	  orderMessageSupport.message = OrderMessages.revisionRequestFromClient(orders);
+	  orderMessageSupport.message_promise_value = "none";
+	  orderMessageSupport.sent_on = Utilities.computeUtcTime(orders.client.client_time_zone_offset,revision_deadline);
+	  orderMessageSupport.message_type = OrderMessages.ActionableMessageType.OTHER;
+	  orderMessageSupport.saveClientMessage();
+	  
+	  //send message to support
+	  OrderMessages orderMessageWriter = new OrderMessages();
+	  orderMessageWriter.msg_from = MessageParticipants.CLIENT;
+	  orderMessageWriter.msg_to = MessageParticipants.SUPPORT;
+	  orderMessageWriter.orders = orders;
+	  orderMessageWriter.message = OrderMessages.revisionRequestFromClient(orders);
+	  orderMessageWriter.message_promise_value = "none";
+	  orderMessageWriter.sent_on = Utilities.computeUtcTime(orders.client.client_time_zone_offset,revision_deadline);
+	  orderMessageWriter.message_type = OrderMessages.ActionableMessageType.OTHER;
+	  orderMessageWriter.saveClientMessage();
+	  jobject.put("success",1);
+	  jobject.put("message","Revision has been placed");
+	  return ok(Json.parse(jobject.toString()));
+} 
+	
 	public static Result surveyFeedback(Long order_code, int rating){
 	  Orders orders = Orders.getOrderByCode(order_code);
 	  JSONObject jobject = new JSONObject();

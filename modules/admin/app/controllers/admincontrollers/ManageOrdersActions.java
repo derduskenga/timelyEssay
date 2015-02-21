@@ -9,6 +9,7 @@ import views.html.adminviews.adminroles;
 import views.html.adminviews.manageorders;
 import views.html.adminviews.manageorder;
 import views.html.adminviews.addrole;
+import views.html.adminviews.revisioninstructions;
 
 import play.*;
 import play.mvc.*;
@@ -75,10 +76,10 @@ public class ManageOrdersActions extends Controller{
 	}
 		
 	public static Result uploadProductFile(Long order_code){
-				//get the order by order_code
+			//get the order by order_code
 			Orders orders = Orders.getOrderByCode(order_code);
 			Form<OrderProductFiles> orderProductFileBoundForm = Form.form(OrderProductFiles.class);
-
+			String type_of_upload = "";
 			if(orders==null)
 				return badRequest(manageorder.render(null,orderProductFileBoundForm,new OrderMessages().getAdminUnreadMessages(order_code)));
 			orderProductFileBoundForm =orderProductFileBoundForm.bindFromRequest();
@@ -133,23 +134,45 @@ public class ManageOrdersActions extends Controller{
 				  if(product_file_type.equals("PRODUCT")){
 					  orderFiles.product_file_type=FileType.ProductFileType.PRODUCT;
 					  orders.is_complete = true;
-				  }else if(product_file_type.equals("DRAFT"))
+					  type_of_upload = "order PRODUCT";
+				  }else if(product_file_type.equals("DRAFT")){
 					  orderFiles.product_file_type=FileType.ProductFileType.DRAFT;
-				  else if(product_file_type.equals("REVISION")){
+					  type_of_upload = "order DRAFT";
+				  }else if(product_file_type.equals("REVISION")){
 					  orders.is_complete = true;
+					  orders.on_revision = false;
 					  orderFiles.product_file_type=FileType.ProductFileType.REVISION;
-				  }else if(product_file_type.equals("REFERENCE_MATERIAL"))
+					  type_of_upload = "order REVISION";
+				  }else if(product_file_type.equals("REFERENCE_MATERIAL")){
 					  orderFiles.product_file_type=FileType.ProductFileType.REFERENCE_MATERIAL;
-				  else if(product_file_type.equals("ADDITIONAL_FILE"))
+					  type_of_upload ="order REFERENCE MATERIAL";
+				  }else if(product_file_type.equals("ADDITIONAL_FILE")){
 					  orderFiles.product_file_type=FileType.ProductFileType.ADDITIONAL_FILE;
-				  else if(product_file_type.equals("OTHER"))
+					  type_of_upload = "a FILE";
+				  }else if(product_file_type.equals("OTHER")){
 					  orderFiles.product_file_type=FileType.ProductFileType.OTHER;
+					  type_of_upload = "a FILE";
+				  }
 				  //FileUtils.moveFile(order_file, destination);
 				  Files.move(order_file,destination);
 				  Logger.info("File path:" + destination.toPath().toString());
 				  flash("fileuploadresponsesuccess","Your file has been uploaded");
 				  orderFiles.saveProductFile();
 				  orders.saveOrder();
+				  //send email to user
+				  new ClientMails().sendGeneralMail(orders.client.email,ClientEmailTemplates.informClientOfUploadedFile(orders,type_of_upload),"Order #" + order_code + ": File has been uploaded");
+				  //send message
+				  OrderMessages message = new OrderMessages();
+				  message.orders = orders;
+				  message.msg_to = MessageParticipants.CLIENT;
+				  message.msg_from = MessageParticipants.SUPPORT;
+				  message.status = false;
+				  message.sent_on = Utilities.computeUtcTime(AdminUser.findByEmail(session().get("admin_email")).admin_user_offset,file_local_date);
+				  message.message = OrderMessages.fileUploadClientMessage(orders,type_of_upload);
+				  message.action_required = false;
+				  message.message_promise_value = "none";
+				  message.message_type = OrderMessages.ActionableMessageType.OTHER;
+				  message.saveClientMessage();
 				  return redirect(controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(orders.order_code));
 				}catch (IOException ioe) {
 				  Logger.error("Server error on file upload: " + ioe.getMessage().toString());
@@ -202,7 +225,8 @@ public class ManageOrdersActions extends Controller{
 		saveMessage.action_required = true;
 		saveMessage.message_promise_value = pages + "";
 		saveMessage.saveClientMessage();
-		
+		//send email to client
+		new ClientMails().sendGeneralMail(order.client.email,ClientEmailTemplates.writerAsksForExtraPagesMessage(order,pages),"Message from Writer: #" + order_code);
 		jsonobject.put("success",1);
 		jsonobject.put("message","Your request has been sent to the client");
 		return ok(Json.parse(jsonobject.toString()));
@@ -252,7 +276,7 @@ public class ManageOrdersActions extends Controller{
 		saveMessage.message_promise_value = isoFormat.format(calender.getTime());;
 		Logger.info("string date:" + saveMessage.message_promise_value);
 		saveMessage.saveClientMessage(); 
-		
+		new ClientMails().sendGeneralMail(order.client.email,ClientEmailTemplates.writerAsksForDeadlineExtension(order,deadline,deadline_extension_reason),"Message from Writer Order #" + order_code);
 		jsonobject.put("success",1);
 		jsonobject.put("message","Your request has been sent to the client");
 		return ok(Json.parse(jsonobject.toString()));
@@ -448,9 +472,20 @@ public class ManageOrdersActions extends Controller{
 		new Orders().assignOrder(order_code,writer_id);
 		
 		OrderMessages.sendAssignmentMessageToClient(order_code,date,AdminUser.findByEmail(session().get("admin_email")).admin_user_offset);
+		//send email
+		Orders order = Orders.getOrderByCode(order_code);
+		new ClientMails().sendGeneralMail(order.client.email,ClientEmailTemplates.informClientOrderHasBeenAssigned(order),"Message from Suport: Order #" + order_code + " has been assigned");
 		jo.put("success",1);
 		jo.put("message","Order has been assigned to " + writer_id);
 		return ok(Json.parse(jo.toString()));
 		
+	}
+	
+	public static Result getRevisionInstructions(Long order_code){
+		Orders orders = Orders.getOrderByCode(order_code);
+		if(orders == null){
+			return ok(revisioninstructions.render(null));
+		}
+		return ok(revisioninstructions.render(orders));
 	}
 }

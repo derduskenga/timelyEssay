@@ -28,6 +28,16 @@
 	
 	}
 	
+	<tr>
+		<td>Order status</td>
+		@if(clientOrders.is_complete){
+		    <td>Order Completed (Writer ID @clientOrders.freelanceWriter.writer_id)</td>
+		}else{
+		     @if(clientOrders.is_writer_assigned){<td>Assigned to @clientOrders.freelanceWriter.writer_id @if(clientOrders.on_revision){(On Revision)}</td>}else{<td>Waiting Writer Assignment</td>}
+		}
+		
+		@if(clientOrders.is_closed){<td>Order Closed</td>}
+	</tr>
 	
 	<tr>
 	  <td>Order code</td>
@@ -142,7 +152,7 @@
     <hr>  
     <h3>Order description and files</h3>
     <div id="order-description-files" class="order-files-bg">
-      <div>
+      <div class="fix-order-instruction-height">
 
 	  <pre>@clientOrders.order_instruction</pre>
 	
@@ -281,9 +291,7 @@
 		    <div class="form-group">					
 			<div class='input-group' id='ask-revision-textarea-area'>
 			    <span class="input-group-addon" id="sizing-addon1">Revision instructions</span>
-			    <textarea rows="3" cols="70" name="revision_instructions" class="form-control" id="revision_instructions">
-			   
-			   </textarea>
+			    <textarea rows="3" cols="70" name="revision_instructions" class="form-control" id="revision_instructions"></textarea>
 			</div>								
 		    </div>								
 		</div>									    

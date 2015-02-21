@@ -33,7 +33,7 @@ GET							/aboutus			controllers.web.Application.aboutUs()
 
 #client pages
 GET	   		/mydashboard				controllers.web.client.ClientActions.index()
-POST			/mydashboard				controllers.web.client.ClientActions.postFrom2Checkout()
+GET			/mydashboard/payfororder		controllers.web.client.ClientActions.postFrom2Checkout()
 POST			/mydashboard/savemessage/:order_code	controllers.web.client.ClientActions.saveClientMessage(order_code:Long)
 GET			/mydashboard/order/messages/:order_code	controllers.web.client.ClientActions.orderMessages(order_code:Long)
 GET			/mydashboard/affiliateprogram		controllers.web.client.ClientActions.affiliateProgram()
@@ -42,8 +42,8 @@ GET			/mydashboard/preferredwriters		controllers.web.client.ClientActions.prefer
 POST			/mydashboard/savepreferredwriter	controllers.web.client.ClientActions.savePreferredWriter()
 
 #client reset password
-GET 			/reset-password									controllers.web.Application.resetPassword(token:String?="")					
-POST 			/reset-password									controllers.web.Application.saveResetPassword()
+GET 			/reset-password				controllers.web.Application.resetPassword(token:String?="")					
+POST 			/reset-password				controllers.web.Application.saveResetPassword()
 
 #generate unique referral code 
 GET			/mydashboard/generatecode				controllers.web.client.ClientActions.generateUniqueCode()
@@ -71,7 +71,7 @@ GET			/user/sessuser/:order_code			   controllers.web.Application.setUserSession
 GET			/mydashboard/order/view/:order_code		   controllers.web.client.ClientActions.clientViewOrder(order_code:Long)
 POST			/mydashboard/order/file/upload/:order_code	   controllers.web.client.ClientActions.saveOrderFile(order_code:Long)
 GET			/mydashboard/order/file/downloadorderfile/:file_id controllers.web.client.ClientActions.downloadOrderFile(file_id:Long)		
-GET			/mydashboard/order/file/downloadproductfile/:file_id	controllers.web.client.ClientActions.downloadProductFile(file_id:Long)
+GET			/mydashboard/order/file/downloadproductfile/:file_id/:date	controllers.web.client.ClientActions.downloadProductFile(file_id:Long,date:String)
 POST 			/mydashboard/order/volunteerdeadlineextension/:new_date/:order_code	controllers.web.client.ClientActions.VoluntaryDeadlineExtension(new_date:String,order_code:Long)
 POST			/mydashboard/order/fetchdeadline/:order_code			controllers.web.client.ClientActions.fetchDeadline(order_code:Long)
 POST			/mydashboard/order/askforrevision/:order_code/:revision_deadline			controllers.web.client.ClientActions.askForRevision(order_code:Long,revision_deadline:String)

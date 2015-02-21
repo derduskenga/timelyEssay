@@ -14,15 +14,16 @@ function handleDownloadClick(){
 }
 
 function handleProductFileDownload(){
-  $('.product-file-shared-class').click(function(e){
-    e.preventDefault();
-    var file_id = this.id.split("-")[2];
-    window.location.href = "/mydashboard/order/file/downloadproductfile/" + file_id;
-  });
+      $('.product-file-shared-class').click(function(e){
+	e.preventDefault();
+	var file_id = this.id.split("-")[2];
+	var date = new Date().toString("yyyy-MM-dd HH:mm:ss");
+	window.location.href = "/mydashboard/order/file/downloadproductfile/" + file_id + "/" + date;
+      });
 }
 
 function setClientLocalTime(){
-  $('#file_upload_local_time').val(new Date().getTime());
+	$('#file_upload_local_time').val(new Date().toString("yyyy-MM-dd HH:mm:ss"));
 }
 
 

@@ -197,6 +197,7 @@
 						<th>Status</th>
 						<th>Messages</th>
 						<th>Assigned Writer Id </th>
+						<th>Approved</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -215,6 +216,7 @@
 							}}</td>
 							<td>							<a href="@controllers.admincontrollers.routes.ManageOrdersActions.orderMessages(order.order_code)">@OrderMessages.getAdminOrderMessages(order.order_code).size() (<span class="phone-number"> @OrderMessages.getAdminUnreadMessages(order.order_code) Unread</span>)</a></td>
 							<td>@if(order.is_writer_assigned){@order.freelanceWriter.writer_id}else{Waiting for writer}</td>
+							<td>@if(order.approved){Approved}else{Not Approved}</td>
 						    </tr>
 						}
 				</tbody>

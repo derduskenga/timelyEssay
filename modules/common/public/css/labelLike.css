@@ -84,3 +84,8 @@ ul li span {
   
   margin-left:10px;
 }
+
+.fix-order-instruction-height{
+  overflow: scroll;
+  height:200px;
+}

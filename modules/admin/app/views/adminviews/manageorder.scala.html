@@ -52,8 +52,11 @@
 			    
 
 			    @if(!clientOrders.is_paid){<p class="phone-number">Not paid}else{ @if(clientOrders.checkIfOrderIsFullyPaid(clientOrders)){Order fully paid}else{<p class="phone-number">Order Partially paid</p>}			    
-			    @if(clientOrders.prefered_writer.equals("")){<a class="btn btn-warning" id="no-prefered-writer-assign-btn" title="Assign this order to writer" href="#">Assign to Writer <i class="fa fa-user-md fa-lg"></i>
-			      </a> <span id="assign-writer-response-message"></span> 
+			    @if(clientOrders.prefered_writer.equals("")){<a class="btn btn-warning" id="no-prefered-writer-assign-btn" title="Assign this order to writer" href="#">Assign to Writer <i class="fa fa-user-md fa-lg"></i></a>
+			      <span id="loading-gif-for-non-prefered-writer-assign" class="hidden">
+				<img src="@routes.Assets.at("images/loading.gif")"/>Assigning...
+			      </span>
+			       <span id="assign-writer-response-message"></span> 
 
 			      <div id="assign-order-form" class="hidden">
 				   <form id="assign_order_form" name="assign_order_form" class="form-horizontal">
@@ -63,7 +66,11 @@
 				    </form>
 			      </div>
 
-			      }else{<a href="#" id="btn-assign-for-prefered-writer" title="Assign this order to writer @clientOrders.prefered_writer" class="btn btn-warning">Writer @clientOrders.prefered_writer is prefered. Assign <i class="fa fa-user-md fa-lg"></i></a> <input id="assigned-order-code-for-prefered" type="hidden" value="@clientOrders.order_code"> <input id="prefered-writer-id" type="hidden" value="@clientOrders.prefered_writer"> <span id="assign-writer-response-message-for-prefered-writer"></span>}}}else{
+			      }else{<a href="#" id="btn-assign-for-prefered-writer" title="Assign this order to writer @clientOrders.prefered_writer" class="btn btn-warning">Writer @clientOrders.prefered_writer is prefered. Assign <i class="fa fa-user-md fa-lg"></i></a> 
+			      <span id="loading-gif-for-prefered-writer-assign" class="hidden">
+				<img src="@routes.Assets.at("images/loading.gif")"/>Assigning...
+			      </span>
+			      <input id="assigned-order-code-for-prefered" type="hidden" value="@clientOrders.order_code"> <input id="prefered-writer-id" type="hidden" value="@clientOrders.prefered_writer"> <span id="assign-writer-response-message-for-prefered-writer"></span>}}}else{
 				   @if(!clientOrders.is_paid){<p class="phone-number">Not paid}else{@if(clientOrders.checkIfOrderIsFullyPaid(clientOrders)){<span class="text-success">Order fully paid</p>}else{<p class="phone-number">Order Partially paid</p>}}<span class="text-success">Order has been assigned to @clientOrders.freelanceWriter.writer_id</span>
 			      }
 			      <br>
@@ -85,10 +92,19 @@
 		<tr>
 		  <td>Order Total</td>	  <td><strong>@clientOrders.orderCurrence.currency_symbol_2@(Math.round(clientOrders.order_total*clientOrders.orderCurrence.convertion_rate*100)/100.00)</strong></td>
 		</tr>
+
 		
 		<tr>
 		  <td>Amount paid</td>  <td><strong>@clientOrders.orderCurrence.currency_symbol_2@(Math.round(clientOrders.amount_paid*clientOrders.orderCurrence.convertion_rate*100)/100.00)</strong></td>
 		</tr>
+		
+				
+		@if(clientOrders.orderRevision.size()>0){
+			<tr>
+				<td>Revision Instructions</td>
+				<td><a href="@controllers.admincontrollers.routes.ManageOrdersActions.getRevisionInstructions(clientOrders.order_code)">View Revision Instructions</a></td>
+			</tr>
+		}
 		
 		<tr>
 			<td>Order status</td>
@@ -282,7 +298,7 @@
     <h3><legend>Order instructions and files</legend></h3>
     <div id="order-description-files" class="order-files-bg">
       <div>
-	<div>
+	<div class="fix-order-instruction-height">
 	  <p><pre>@clientOrders.order_instruction</pre></p>
 	</div>
     </div>
@@ -360,6 +376,7 @@
 	    <td><strong> Name </strong></td>
 	    <td><strong> Size </strong></td>
 	    <td><strong> Upload date </strong></td>
+	    <td><strong> Download time </strong></td>
 	  </tr>
 	  @for(productFiles <- clientOrders.orderProductFiles){
 	  <tr>
@@ -369,6 +386,7 @@
 	    <td> @productFiles.file_name  <a href="#" title="download" class="admin-product-file-shared-class" id="product-file-@productFiles.id"><span class="fa fa-download file-download-icon"> </span></a></td>
 	    <td> @(Math.round((productFiles.file_size).doubleValue()/(1024*1024)*1000)/1000.000) MB</td>
 	    <td>@ManageOrdersActions.orderSupportLocalTime(productFiles.upload_date,session.get("admin_email")).format("dd-MM-YYYY HH:mm a")</td>
+	    <td>@if(productFiles.has_been_downloaded){Downloaded <small>@@</small> @ManageOrdersActions.orderSupportLocalTime(productFiles.download_date,session.get("admin_email")).format("dd-MM-YYYY HH:mm a")}else{Not Downloaded}</td>
 	  </tr>
 	  }	  
 	 </table>
