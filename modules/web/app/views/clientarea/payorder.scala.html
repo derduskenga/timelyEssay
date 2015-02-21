@@ -15,7 +15,7 @@
       </div>
     }
 	  
-    <h5>Pay for Order #@clientOrders.order_code</h5>
+    <h5>Pay for Order <a href="@controllers.web.client.routes.ClientActions.clientViewOrder(clientOrders.order_code)">#@clientOrders.order_code</a></h5>
     <div id="order-summary">
       <table>
 	<tr>
