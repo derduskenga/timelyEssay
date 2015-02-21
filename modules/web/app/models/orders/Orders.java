@@ -368,7 +368,18 @@ public class Orders extends Model{
 	      }
 	    }
 	    
-	    double subject_additinal_price = newOrder.orderSubject.orderSubjectCategory.additional_price;
+	    if(newOrder.orderDocumentType.id == 7){
+		      deadline_additional_price = deadline_additional_price/6;
+	    }
+	    
+	    double subject_additinal_price = 0.0;
+	    
+	    if(newOrder.orderDocumentType.id == 7 && newOrder.orderSubject.orderSubjectCategory.additional_price !=0.0){
+		    subject_additinal_price = newOrder.orderSubject.orderSubjectCategory.additional_price/20;
+	    }else{
+		    subject_additinal_price = newOrder.orderSubject.orderSubjectCategory.additional_price; 
+	    }
+	    
 	    Logger.info("subject_additinal_price:" + subject_additinal_price);
 	    double level_of_writing_additional_price = newOrder.orderLevelOfWriting.additional_price;
 	    int number_of_units = newOrder.number_of_units;//number of questions  

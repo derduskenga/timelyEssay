@@ -264,8 +264,8 @@ insert into additions values
 (2,'One of top 5 writers to writer my work',4);
 ----spacing
 insert into spacing values
-(1,'Double spaced page','double-spacing',1),
-(2,'Single spaced page','single-spacing',2);
+(1,'Double spaced','double-spacing',1),
+(2,'Single spaced','single-spacing',2);
 ---order currence
 insert into order_currence values
 (1,'US Dollar', 'USD','$',1.0),
@@ -302,7 +302,7 @@ insert into deadline_deadline_category_association (id,order_deadlines_id,order_
 
 ----order_subject_category table 
 INSERT INTO order_subject_category(id, subject_category_name, additional_price, description) VALUES 
-(1, 'technical',10.9,'nn'),
+(1, 'technical',8.50,'nn'),
 (2, 'academic',0.00,'nn');
 
 ----order_document_type
