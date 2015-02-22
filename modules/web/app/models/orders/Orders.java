@@ -368,13 +368,13 @@ public class Orders extends Model{
 	      }
 	    }
 	    
-	    if(newOrder.orderDocumentType.id == 7){
+	    if(newOrder.orderDocumentType.id == 7 || newOrder.orderDocumentType.id == 8){
 		      deadline_additional_price = deadline_additional_price/6;
 	    }
 	    
 	    double subject_additinal_price = 0.0;
 	    
-	    if(newOrder.orderDocumentType.id == 7 && newOrder.orderSubject.orderSubjectCategory.additional_price !=0.0){
+	    if((newOrder.orderDocumentType.id == 7 || newOrder.orderDocumentType.id == 7) && newOrder.orderSubject.orderSubjectCategory.additional_price !=0.0){
 		    subject_additinal_price = newOrder.orderSubject.orderSubjectCategory.additional_price/20;
 	    }else{
 		    subject_additinal_price = newOrder.orderSubject.orderSubjectCategory.additional_price; 

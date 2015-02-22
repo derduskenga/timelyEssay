@@ -53,6 +53,22 @@ public class Application extends Controller{
 	static Map<String,List<ValidationError>> error = new LinkedHashMap<String,List<ValidationError>>();
 	
 	public static Result index(){
+		//subjects 1-84
+		//document types 1-43 except 3,4,5
+		String sql = "";
+		for(int i=1;i<=84;i++){
+		    
+			  for(int j=1; j<=43;j++){
+				if(j!=3 && j!=4 && j!=5 && j!=21){
+					
+					sql = sql + "(" + i + "," + j + "),";
+				}
+			  }
+	
+		}
+		
+		Logger.info(sql);
+		
 		return ok(home.render(loginForm));
 	}
 	

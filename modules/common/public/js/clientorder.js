@@ -474,7 +474,7 @@ function getSubjectAdditionalPrice(){
 	subject_additional_price = $.order_global_vars.document_subjects[i]['additional_price'];
       }
     }
-    if($('#document_type').val() == "7" && subject_additional_price !=0){
+    if(($('#document_type').val() == "7"  || $('#document_type').val() == "8") && subject_additional_price !=0){
 	      return subject_additional_price/20;
     }
     return subject_additional_price;
@@ -497,7 +497,7 @@ function getDeadlineAdditionalPrice(){
     }
   }
   
-    if($('#document_type').val() == "7"){
+    if($('#document_type').val() == "7" || $('#document_type').val() == "8"){
 	      return deadline_additional_price/6;
     }
   
