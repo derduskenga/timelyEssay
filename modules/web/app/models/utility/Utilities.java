@@ -36,10 +36,10 @@ public class Utilities{
 	public static String PREFERED_WRITER_PAYMENT = "PREFERED_WRITER_PAYMENT";/*value paid for an order given to a client prefered writer*/
 	public static String BONUS_PAYMENT = "BONUS_PAYMENT"; /*bonus paid for good work*/
 	public static double ADDITIONAL_PAY_FOR_PREFERED_WRITER = 0.1;/* % extra if order is accepted by client's prefered writer*/
-	public static int ACCESS_PORT = 9000;
-	public static String domain = "myweb";
-	//public static int ACCESS_PORT = 80;
-	//public static String domain = "timelyessay";
+	//public static int ACCESS_PORT = 9000;
+	//public static String domain = "myweb";
+	public static int ACCESS_PORT = 80;
+	public static String domain = "timelyessay";
 	
 	
       
