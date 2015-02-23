@@ -22,7 +22,6 @@ public class AdminReferalCode extends Model{
     @Column(nullable=false)
     public String code;
     public Long admin_id;
-    
     //Relationships
     @OneToMany(mappedBy="adminReferalCode")
     public List<AdminReferalEarning> adminReferalEarning;
