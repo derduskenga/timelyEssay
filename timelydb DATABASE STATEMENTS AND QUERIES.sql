@@ -337,8 +337,8 @@ insert into order_deadline_category
 ----order_deadlines_order_deadline_c
 insert into deadline_deadline_category_association (id,order_deadlines_id,order_deadline_category_id,additional_price) values
 (1,4,1,0.0),(2,5,1,2.00),(3,6,1,6.70),(4,7,1,11.50),(5,8,1,18.00),(6,9,1,19.50),(7,10,1,21.00),(8,11,1,24.00),
-(9,1,2,0.0),(10,2,2,2.00),(11,3,2,4.00),(12,4,2,6.00),(13,5,2,8.00),(14,6,2,11.00)(15,8,2,17),
-(16,3,3,0.00),(17,4,3,5.00),(18,5,3,9.00),(19,6,3,19.00)(20,7,3,46);
+(9,1,2,0.0),(10,2,2,2.00),(11,3,2,4.00),(12,4,2,6.00),(13,5,2,8.00),(14,6,2,11.00),(15,8,2,17),
+(16,3,3,0.00),(17,4,3,5.00),(18,5,3,9.00),(19,6,3,19.00),(20,7,3,46);
 
 ----order_subject_category table 
 INSERT INTO order_subject_category(id, subject_category_name, additional_price, 
