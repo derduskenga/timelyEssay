@@ -71,6 +71,7 @@ create table client (
   client_time_zone          varchar(255),
   client_time_zone_offset   varchar(255),
   client_time_zone_real     varchar(20),
+  t                         integer,
   created_on                timestamp,
   country_id                bigint,
   constraint pk_client primary key (id))

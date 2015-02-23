@@ -314,25 +314,31 @@ values
 insert into 
 order_deadlines(id,deadline_value,deadline_unit,seconds_elapsing_to_deadline) 
 values
-(1,10,'days',864000),(2,20,'days',1728000),(3,7,'days',604800),(4,1,'day',86400)
-,(5,12,'hours',43200),(6,6,'hours',21600),(7,3,'hours',10800),(8,2,'months',
-5184000);
+(1,2,'months',5184000),
+(2,1,'month',2592000),
+(3,20,'days',1728000),
+(4,10,'days',864000),
+(5,7,'days',604800),
+(6,4,'days',345600),
+(7,2,'days',172800),
+(8,1,'day',86400),
+(9,12,'hours',43200),
+(10,6,'hours',21600),
+(11,3,'hours',10800);
 
 ---deadline categories
 insert into order_deadline_category 
 (id,order_deadline_category_name,order_deadline_category_description) values
 (1,'normal','deadline range for most common document types'),
-(2,'dissertation','deadline range for long documents ranging from 12 hrs to 2 
-month'),
+(2,'dissertation','deadline range for long documents ranging from 12 hrs to 2 month'),
 (3,'programming','deadline ranges for programming assignments');
 
 
 ----order_deadlines_order_deadline_c
-insert into deadline_deadline_category_association 
-(id,order_deadlines_id,order_deadline_category_id,additional_price) values
-(1,1,1,0.0),(2,3,1,3.40),(3,4,1,4.00),(4,5,1,6.50),(5,6,1,10.50),(6,7,1,20.00),(
-7,1,2,15.00),(8,3,2,7.00),(9,4,2,21.00),(10,5,2,25.00),(11,8,2,0.0),(12,1,3,5.50
-),(13,2,3,0.00),(14,4,3,15.00);
+insert into deadline_deadline_category_association (id,order_deadlines_id,order_deadline_category_id,additional_price) values
+(1,4,1,0.0),(2,5,1,2.00),(3,6,1,6.70),(4,7,1,11.50),(5,8,1,18.00),(6,9,1,19.50),(7,10,1,21.00),(8,11,1,24.00),
+(9,1,2,0.0),(10,2,2,2.00),(11,3,2,4.00),(12,4,2,6.00),(13,5,2,8.00),(14,6,2,11.00)(15,8,2,17),
+(16,3,3,0.00),(17,4,3,5.00),(18,5,3,9.00),(19,6,3,19.00)(20,7,3,46);
 
 ----order_subject_category table 
 INSERT INTO order_subject_category(id, subject_category_name, additional_price, 
@@ -343,8 +349,7 @@ description) VALUES
 
 ----order_document_type
 insert into 
-order_document_type(id,document_type_name,base_price,additions_factor,
-order_deadline_category_id,order_cpp_mode_id) values
+order_document_type(id,document_type_name,base_price,additions_factor,order_deadline_category_id,order_cpp_mode_id) values
 (1,'Essay/Essay Application',19.50,1,1,1),
 (2,'Research Paper',19.50,1.0,1,1),
 (6,'Math/Physics/Economics/Statistics Problems',19.70,1.0,1,3),
