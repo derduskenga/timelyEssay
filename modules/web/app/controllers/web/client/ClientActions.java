@@ -117,7 +117,7 @@ public class ClientActions extends Controller{
 		  HashMap params = new HashMap();
 		  params.put("sid", Utilities.OUR_MERCHANT_ACCOUNT_NO);
 		  params.put("total", total);
-		  params.put("order_number",order_number);/*on real transactions, 1 shud be replaced by 'order_number' variable*/
+		  params.put("order_number","1");/*on real transactions, 1 shud be replaced by 'order_number' variable*/
 		  params.put("key",key);
 		  
 		  boolean result = TwocheckoutReturn.check(params, Utilities.OUR_CO_SECRET_WORD);		  

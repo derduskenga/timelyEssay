@@ -22,10 +22,10 @@ public class OrderDeadlineCategory extends Model{
 	
 	//relationship fields
 	@OneToMany(mappedBy="orderDeadlineCategory")
-	List<OrderDocumentType> OrderDocumentType;
+	public List<OrderDocumentType> OrderDocumentType;
 	
 	@OneToMany(mappedBy="orderDeadlineCategory")
-	List<DeadlineDeadlineCategoryAssociation> deadlineDeadlineCategoryAssociation;
+	public List<DeadlineDeadlineCategoryAssociation> deadlineDeadlineCategoryAssociation;
 	
 	
 	

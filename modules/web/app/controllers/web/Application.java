@@ -19,6 +19,7 @@ import models.client.ReferralCode;
 import play.data.validation.Constraints;
 import models.orders.Orders;
 import models.orders.OrderDocumentType;
+import models.orders.DeadlineDeadlineCategoryAssociation;
 import models.orders.TempStore;
 import models.client.Countries;
 import models.client.ClientMails;
@@ -142,7 +143,9 @@ public class Application extends Controller{
 	  return ok(presentation.render(loginForm));
 	}
 	public static Result prices(){
-	  return ok(prices.render(loginForm));
+		Long id = 1L;
+		List<DeadlineDeadlineCategoryAssociation> deadline_association_list = OrderDocumentType.getDocumentObject(id).orderDeadlineCategory.deadlineDeadlineCategoryAssociation;	  
+		return ok(prices.render(loginForm,deadline_association_list));
 	}
 	public static Result howItWorks(){
 	  return ok(howitworks.render(loginForm));

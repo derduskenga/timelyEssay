@@ -1,4 +1,5 @@
-@(loginForm: Form[web.Application.Login])
+@import models.orders.OrderLevelOfWriting
+@(loginForm: Form[web.Application.Login])(deadline_list:List[models.orders.DeadlineDeadlineCategoryAssociation])
 @main("Timely Essay | For Quality Service")(loginForm){
   <strong>Our Prices</strong>
   
@@ -14,25 +15,24 @@
       <table class="table table-bordered">
 	<thead>
 	  <tr>
-	  <th>Deadline</th>
-	    <th>Undergraduate/<br>College</th>
-	    <th>Master</th>
-	    <th>Ph. D</th>
+	    <th><p align="center">Deadline</p></th>
+	    <th><p align="center">Undergraduate/<br>College</p></th>
+	    <th> <p align="center">Master</p> </th>
+	    <th><p align="center"> Ph. D </p></th>
 	  </tr>
 	</thead>
 	<tbody>
-	    <tr>
-	      <td>$x</td>
-	      <td>$x </td>
-	      <td> $x</td>
-	      <td> $x</td>
-	    </tr>
-	    <tr>
-	      <td>$x</td>
-	      <td>$x </td>
-	      <td> $x</td>
-	      <td> $x</td>
-	    </tr>
+		@for(deadline<-deadline_list){
+		      <tr>
+				<td><p align="center">@deadline.orderDeadlines.deadline_value @deadline.orderDeadlines.deadline_unit</p></td>
+				
+				<td><p align="center">$@(deadline.additional_price + deadline.orderDeadlineCategory.OrderDocumentType.get(0).base_price + OrderLevelOfWriting.getLevelObject(1).additional_price)</p></td>
+				
+				<td><p align="center">$@(deadline.additional_price + deadline.orderDeadlineCategory.OrderDocumentType.get(0).base_price + OrderLevelOfWriting.getLevelObject(2).additional_price)</p></td>
+				
+				<td><p align="center">$@(deadline.additional_price + deadline.orderDeadlineCategory.OrderDocumentType.get(0).base_price + OrderLevelOfWriting.getLevelObject(3).additional_price)</p></td>
+		      </tr>
+		}
 	</tbody>
       </table>
   </div>
