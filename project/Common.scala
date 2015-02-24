@@ -45,7 +45,8 @@ object Common {
 		javaJdbc,
 		javaEbean,
 		"be.objectify" %% "deadbolt-java" % "2.3.2",
-		"commons-io" % "commons-io" % "2.3"
+		"commons-io" % "commons-io" % "2.3",
+		"commons-codec" % "commons-codec" % "1.6"
 		// Add here more common dependencies:
 		// jdbc,
 		// anorm,
