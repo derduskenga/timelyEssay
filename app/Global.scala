@@ -29,7 +29,7 @@ object Global extends GlobalSettings {
 	}
 	
 	private def redirectToWWW(request: RequestHeader) = Action { 
-			MovedPermanently(s"http://www.$timelyessay.com}${request.path}").withHeaders(HeaderNames.CACHE_CONTROL -> "public, max-age=31556926" ) 
+			MovedPermanently(s"http://www.timelyessay.com${request.path}").withHeaders(HeaderNames.CACHE_CONTROL -> "public, max-age=31556926" ) 
 	}
 
 	@throws(classOf[Exception])
