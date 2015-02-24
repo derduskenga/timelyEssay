@@ -101,7 +101,7 @@ public class ClientActions extends Controller{
 		  String total = total_array[0];
 		  //order_number
 		  String order_number_array[] = checkout_post_parameters.get("order_number");
-		  String order_number = key_array[0];
+		  String order_number = order_number_array[0];
 		  //credit_card_processed (Y/N)
 		  String credit_card_processed_array[] = checkout_post_parameters.get("credit_card_processed");
 		  String credit_card_processed = credit_card_processed_array[0];
@@ -114,7 +114,7 @@ public class ClientActions extends Controller{
 		  }
 		  
 		  //start checking returned key
-		  HashMap params = new HashMap();
+		  HashMap<String, String> params= new HashMap<String, String>();
 		  params.put("sid", Utilities.OUR_MERCHANT_ACCOUNT_NO);
 		  params.put("total", total);
 		  params.put("order_number",order_number);/*on real transactions, 1 shud be replaced by 'order_number' variable*/
@@ -132,7 +132,6 @@ public class ClientActions extends Controller{
 				paidOrder.invoice_id = invoice_id;
 				paidOrder.amount_paid = Double.parseDouble(total);
 				paidOrder.is_paid = true;
-				Logger.info("PAY_ORDER order_code:" + order_code);
 			}
 			
 			if(payment_type.equals(Utilities.PREFERED_WRITER_PAYMENT)){
@@ -146,9 +145,8 @@ public class ClientActions extends Controller{
 				paidOrder.is_additional_pages_paid = true;
 				Logger.info("ADDITIONAL_PAGES_PAYMENT order_code:" + order_code);
 			}			
-			Logger.info("order id:" + paidOrder.order_id);
 			paidOrder.saveOrder();
-			Logger.info("order code:" + order_code + " and invoice id is:" + invoice_id + "result:" + result + "credit_card_approved:" + credit_card_approved);
+
 			//if order qualifies for a discont, reward the coupon codes
 			if(paidOrder.qualifiesForDiscount(paidOrder) && payment_type.equals(Utilities.PAY_ORDER)){
 				if(new ReferralCode().determineTypeOfCode(paidOrder).equals("CLIENT")){
