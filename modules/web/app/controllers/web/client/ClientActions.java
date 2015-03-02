@@ -663,6 +663,7 @@ public class ClientActions extends Controller{
 	      return ok(Json.parse(jobject.toString()));
 	    }
 	    orders.approved = true;
+	    orders.is_closed = true;
 	    orders.saveOrder();  
 	    jobject.put("success",1);
 	    jobject.put("message","Thank you for approving this order");
