@@ -4,8 +4,15 @@
 
 @import controllers.admincontrollers._
 @adminmain("Manage Orders"){
+
 <div class="col-md-10" id="mainbody"><!-- start of main body -->
-    <ul class="nav nav-tabs">
+    
+    <form name="admin_search_order_form" id="admin_search_order_form" method="post" action="@controllers.admincontrollers.routes.AdminActions.searchOrder()">
+	    Order Code #<input type="text" name="sought_order_code" id="sought_order_code" value="">
+	    <input type="submit" name="submit-sought-order-code" id="submit-sought-order-code" value="Search Order">
+    </form>
+    <br>
+   <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#new-orders">New Orders</a></li>
         <li ><a data-toggle="tab" href="#writer-assigned-orders">Writer Assigned Orders</a></li>
         <li ><a data-toggle="tab" href="#on-revision-orders">On Revision</a></li>

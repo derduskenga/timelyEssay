@@ -43,6 +43,7 @@ public class Client extends Model{
 	public String client_time_zone;
 	public String client_time_zone_offset;
 	public TimeZone client_time_zone_real;
+
 	
 	@Column(name="created_on")
 	@Temporal(TemporalType.TIMESTAMP)

@@ -34,6 +34,7 @@ import models.common.security.PasswordHash;
 import models.common.security.RandomString;
 import models.admin.adminmodels.AdminMails;
 import controllers.admincontrollers.AdminSecured;
+import controllers.admincontrollers.ManageOrdersActions;
 import models.admin.userpermissions.SecurityRole;
 import be.objectify.deadbolt.java.actions.SubjectNotPresent;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
@@ -376,7 +377,16 @@ public class AdminActions extends Controller{
 			asm.saveAdminSentMail();
 	}
 
-	
+	public static Result searchOrder(){
+		Map<String, String[]> search_order_code = new HashMap<String,String[]>();
+		search_order_code = request().body().asFormUrlEncoded();
+		if(!search_order_code.isEmpty()){
+			String order_code_array[] =  search_order_code.get("sought_order_code");
+			Long order_code = Long.valueOf(order_code_array[0]);
+			return redirect(controllers.admincontrollers.routes.ManageOrdersActions.manageOrder(order_code));
+		}
+		return redirect(controllers.admincontrollers.routes.ManageOrdersActions.manageOrders());
+	} 
 	public static class NewEmail{
 		@Constraints.Required(message="Please enter email.")
 		@Constraints.Email(message="The email you entered does not look valid.")

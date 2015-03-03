@@ -4,6 +4,7 @@
 @import fieldtemplates._
 @adminmain("Title"){
 <div class="col-md-10" id="mainbody">
+ <a href="@controllers.admincontrollers.routes.ManageOrdersActions.manageOrders()">&lt;&lt;Back to all orders</a>
  @if(clientOrders!=null){
  @if(clientOrders.order_id!=null){
 	 <h3>Client details</h3>
