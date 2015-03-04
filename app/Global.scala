@@ -18,18 +18,23 @@ import models.admin.userpermissions.UserPermission;
 import models.common.security.PasswordHash;
 import models.common.security.RandomString;
 
+import play.api.Play.current;
+
 object Global extends GlobalSettings {
 	
 	private def getSubdomain (request: RequestHeader) = request.domain.replaceFirst("[\\.]?[^\\.]+[\\.][^\\.]+$", "")
 	
 	override def onRouteRequest (request: RequestHeader) = getSubdomain(request) match {
-		case "admin" => admin.Routes.routes.lift(request)
-		case "www" => web.Routes.routes.lift(request)
-		case default => Some(redirectToWWW(request))		
+			case "admin" => admin.Routes.routes.lift(request)
+			case "www" => web.Routes.routes.lift(request)
+			case default => if(play.api.Play.isProd(play.api.Play.current)) 
+											Some(redirectToWWW(request))		
+									else
+											web.Routes.routes.lift(request)
 	}
 	
 	private def redirectToWWW(request: RequestHeader) = Action { 
-			MovedPermanently(s"http://www.timelyessay.com${request.path}").withHeaders(HeaderNames.CACHE_CONTROL -> "public, max-age=31556926" ) 
+				MovedPermanently(s"http://www.timelyessay.com${request.path}").withHeaders(HeaderNames.CACHE_CONTROL -> "public, max-age=31556926" ) 
 	}
 
 	@throws(classOf[Exception])

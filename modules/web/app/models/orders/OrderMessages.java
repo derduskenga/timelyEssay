@@ -137,7 +137,7 @@ public class OrderMessages extends Model{
 	
 	public static String getAdditinalPagesMessageTemplate(Orders order, int pages){
 	  String message_text = "<strong>Dear " + order.client.l_name + ",</strong> <br><br>" +
-				"Our writer is asking you give " + pages + " additinal page(s) to your work so as to fulfill your requirements<br>" +
+				"Our writer is asking you give " + pages + " additional page(s) to your work so as to fulfill your requirements<br>" +
 				"If you agree hit 'Accept' otherwise hit 'Decline'";
 	  return message_text;
 	}
