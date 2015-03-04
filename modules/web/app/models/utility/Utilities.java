@@ -24,7 +24,7 @@ public class Utilities{
 	//public static String OUR_MERCHANT_ACCOUNT_NO = "901264062";//sandbox seller ID
 	public static String OUR_CO_SECRET_WORD = "samkenga2015$s";
 	
-	public static double FIRST_ORDER_DISCOUNT = 0.12;// % discount on first order worth $60 and above
+	public static double FIRST_ORDER_DISCOUNT = 0.16;// % discount on first order worth $60 and above
 	public static double MINIMUN_ORDER_VALUE_FOR_DISCOUNT = 60; //value in US Dollars
 	
 	public static double MARKETER_EARNING_PER_CLIENT_FIRST_ORDER = 10; //value in US Dollars
