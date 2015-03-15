@@ -53,6 +53,7 @@ POST		/manageorder/fetchwriter/				controllers.admincontrollers.ManageOrdersActi
 POST		/manageorder/assign/:date/:order_code/:writer_id	controllers.admincontrollers.ManageOrdersActions.assignOrderToWriter(date:String,order_code:Long,writer_id:Long)
 GET		/manageorder/order/revisioninstruction/:order_code		controllers.admincontrollers.ManageOrdersActions.getRevisionInstructions(order_code:Long)
 POST		/searchorder						controllers.admincontrollers.AdminActions.searchOrder()
+GET		/cancelorder/:order_code						controllers.admincontrollers.ManageOrdersActions.cancelOrder(order_code:Long)
 
 
 #robots.txt file

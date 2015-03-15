@@ -488,4 +488,14 @@ public class ManageOrdersActions extends Controller{
 		}
 		return ok(revisioninstructions.render(orders));
 	}
+	
+	public static Result cancelOrder(Long order_code){
+		Orders orders = Orders.getOrderByCode(order_code);
+		if(orders == null){
+			return ok(revisioninstructions.render(null));
+		}
+		orders.is_closed = true;
+		orders.saveOrder();
+		return redirect(controllers.admincontrollers.routes.ManageOrdersActions.manageOrders());
+	}
 }

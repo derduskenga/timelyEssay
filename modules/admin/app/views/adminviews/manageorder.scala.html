@@ -48,11 +48,11 @@
       <table>
 		<tr>
 			<td><p class="phone-number">Payment Status</p></td>
-			<td><p>@if(!clientOrders.is_writer_assigned){
+			<td><p>@if(!(clientOrders.is_writer_assigned && clientOrders.is_closed)){
 			     <input type="hidden" value="" name="assign_order_local_time" id="assign_order_local_time">
 			    
 
-			    @if(!clientOrders.is_paid){<p class="phone-number">Not paid}else{ @if(clientOrders.checkIfOrderIsFullyPaid(clientOrders)){Order fully paid}else{<p class="phone-number">Order Partially paid</p>}			    
+			    @if(!clientOrders.is_paid){<p class="phone-number">Not paid <a href="@controllers.admincontrollers.routes.ManageOrdersActions.cancelOrder(clientOrders.order_code)" class="btn btn-danger">Cancel Order </a>}else{ @if(clientOrders.checkIfOrderIsFullyPaid(clientOrders)){Order fully paid}else{<p class="phone-number">Order Partially paid</p>}			    
 			    @if(clientOrders.prefered_writer.equals("")){<a class="btn btn-warning" id="no-prefered-writer-assign-btn" title="Assign this order to writer" href="#">Assign to Writer <i class="fa fa-user-md fa-lg"></i></a>
 			      <span id="loading-gif-for-non-prefered-writer-assign" class="hidden">
 				<img src="@routes.Assets.at("images/loading.gif")"/>Assigning...
