@@ -3,10 +3,8 @@ $(document).ready(function(){
   setInterval(setLocalTimeForOrderManagement, 5000);
   validateUploadFile();
   askDeadlineExtensionAdmin();
+    
   askForExtraPages();
-  
-  submitAskForExtraPages();
-  submitAskForDeadlineExtension();
   adminProductFileDownload();
   adminOrderFileDownload(); 
   
@@ -37,31 +35,42 @@ function setFileLocalTime(){
   $('#file_local_date').val(new Date().toString("yyyy-MM-dd HH:mm:ss"));
 }
 
-function submitAskForDeadlineExtension(){
-   $('#btn-deadline-extension-admin').click(function(event){
-      event.preventDefault();
-      var deadline = $('#order_deadline_admin').val() + ":00";
-      var reason = $('#deadline_extension_reason').val();
-      var order_code = $('#order-code-admin').text();
-      var date = new Date().toString("yyyy-MM-dd HH:mm:ss");
-      $("#loading-gif-extend-admin").removeClass("hidden");
-      $.post("/manageorder/askfordeadlineextensionadmin/" + deadline + "/" + date + "/" + reason + "/" + order_code ,{}, function(data){
-	if(data['success'] == 1){
-	  $('#deadline-extension-request-response').html("<div id='de-response' class='alert alert-success'>" + data['message'] +  "</div>");
-	  $("#de-response").show().delay(5000).fadeOut("slow");
-	  $("#loading-gif-extend-admin").addClass("hidden");
-	}else{
-	  $('#deadline-extension-request-response').html("<div id='de-response' class='alert alert-danger'>" + data['message'] +  "</div>");
-	  $("#de-response").show().delay(5000).fadeOut("slow");
-	  $("#loading-gif-extend-admin").addClass("hidden");
-	}
-      },'json');
-   })
+
+function setLocalTimeForOrderManagement(){
+  
+  $('#admin_local_time_for_order_management').val(new Date().toString("yyyy-MM-dd HH:mm:ss"));
 }
 
-function submitAskForExtraPages(){
-  $('#extra-pages-btn').click(function(event){
-    event.preventDefault();
+function askForExtraPages(){
+	$('#extra_pages_form').bootstrapValidator({
+        // Removing submitHandler option
+	    icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+	    
+	      fields: {
+		  extra_pages: {
+	      validators: {
+		notEmpty: {
+		      message: 'Extra pages required. Please enter a number'
+		  },
+		  integer:{
+		    message:'An integer required'
+		  }
+	      }
+	    }	    
+	  }
+   	
+    }).on('success.form.bv', function(e) {
+        // Prevent form submission
+        e.preventDefault();
+
+        var $form        = $(e.target),
+            validator    = $form.data('bootstrapValidator'),
+            submitButton = validator.getSubmitButton();
+	    
     var date = $('#admin_local_time_for_order_management').val();
     var pages = $('#extra_pages').val();
     var order_code = $('#order-code-admin').text();
@@ -77,53 +86,26 @@ function submitAskForExtraPages(){
 	$("#p-response").show().delay(5000).fadeOut("slow");
       }
     },'json');
-  });
-}
 
-function setLocalTimeForOrderManagement(){
-  
-  $('#admin_local_time_for_order_management').val(new Date().toString("yyyy-MM-dd HH:mm:ss"));
-}
-
-function askForExtraPages(){
-      $('#extra_pages_form').bootstrapValidator({
-	      message: 'This value is not valid',
-      live: 'disabled',
-	      feedbackIcons: {
-	  valid: '',
-	  invalid: 'fa fa-times',
-	  validating: ''
-	      },
-	      fields: {
-		  extra_pages: {
-	      validators: {
-		notEmpty: {
-		      message: 'Extra pages required. Please enter a number'
-		  },
-		  integer:{
-		    message:'An integer required'
-		  }
-	      }
-	    }
-	    
-	  }
-      });
+        
+    }); 
 } 
 
-function askDeadlineExtensionAdmin(){
-  
-          $('#extend_deadline_form_admin').bootstrapValidator({
-	      message: 'This value is not valid',
-	      live: 'disabled',
-	      feedbackIcons: {
-	  valid: '',
-	  invalid: 'fa fa-times',
-	  validating: ''
-	      },
+
+
+function askDeadlineExtensionAdmin(){  
+	$('#extend_deadline_form_admin').bootstrapValidator({
+        // Removing submitHandler option
+	    icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+	    
 	      fields: {
 		  order_deadline_admin: {
 	      validators: {
-				      notEmpty: {
+		  notEmpty: {
 		      message: 'New date and time required.'
 		  },
 		  date:{
@@ -140,14 +122,43 @@ function askDeadlineExtensionAdmin(){
 	    }
 	  }
 	      }
-      }); 
+   	
+    }).on('success.form.bv', function(e) {
+        // Prevent form submission
+        e.preventDefault();
+
+        var $form        = $(e.target),
+            validator    = $form.data('bootstrapValidator'),
+            submitButton = validator.getSubmitButton();
+	    
+      var deadline = $('#order_deadline_admin').val() + ":00";
+      var reason = $('#deadline_extension_reason').val();
+      var order_code = $('#order-code-admin').text();
+      var date = new Date().toString("yyyy-MM-dd HH:mm:ss");
+      $("#loading-gif-extend-admin").removeClass("hidden");
+      $.post("/manageorder/askfordeadlineextensionadmin/" + deadline + "/" + date + "/" + reason + "/" + order_code ,{}, function(data){
+	if(data['success'] == 1){
+	  $('#deadline-extension-request-response').html("<div id='de-response' class='alert alert-success'>" + data['message'] +  "</div>");
+	  $("#de-response").show().delay(5000).fadeOut("slow");
+	  $("#loading-gif-extend-admin").addClass("hidden");
+	}else{
+	  $('#deadline-extension-request-response').html("<div id='de-response' class='alert alert-danger'>" + data['message'] +  "</div>");
+	  $("#de-response").show().delay(5000).fadeOut("slow");
+	  $("#loading-gif-extend-admin").addClass("hidden");
+	}
+      },'json');
+
+        
+    }); 
   
 }
+
+
 
 function validateUploadFile(){
       $('#orderFileForm').bootstrapValidator({
 	      message: 'This value is not valid',
-      live: 'disabled',
+	      live: 'disabled',
 	      feedbackIcons: {
 	  valid: '',
 	  invalid: 'fa fa-times',

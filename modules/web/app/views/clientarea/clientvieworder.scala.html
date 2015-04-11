@@ -246,10 +246,11 @@
       </div>
       
      <br>
+     
      <div class="row" id="extended_deadline_response"></div>
      <!--Extend deadline -->
      <div id="deadline-form"> 
-      <form id="extend_deadline_form" name="extend_deadline_form" method="post" action="">		
+      <form id="extend_deadline_form" name="extend_deadline_form">		
 	<div id="order-code" class="hidden">@clientOrders.order_code</div>
 	<div class="">							
 	    <legend>Extend deadline</legend> <br>	
@@ -312,9 +313,7 @@
 	      <div class="col-sm-9">
 		<div class="form-group">						
 		    <div id='ask-for-revision-btn'>				
-			<button type="submit" id="btn-ask-for-revision" class="btn btn-primary">
-			  Send revision					
-			</button>
+			<input type="submit" id="btn-ask-for-revision" class="btn btn-primary" value="Send revision">
 			<span id="loading-gif-revision" class="hidden"><img src="@routes.Assets.at("images/loading.gif")"/>Submiting...</span>
 		    </div>
 		</div>
