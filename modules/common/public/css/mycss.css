@@ -162,9 +162,10 @@ footer .footer-below {
 	 border-color:#B28000;
 }
 
-.order-text{
+.promotion-text, .order-text{
 	color:#B28000;
 }
+
 li.active a span.order-text{
 	color:#fff;
 }
@@ -226,4 +227,9 @@ payment-options span{
 .container{
   max-width: none !important;
   width:1170px;
+}
+
+.offer-panel{
+	padding-top:5px;
+	padding-bottom:20px;
 }

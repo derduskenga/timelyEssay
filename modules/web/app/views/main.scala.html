@@ -175,31 +175,42 @@
 			<div class="col-xs-3 right-section">
 			  @if(session.get("email")==null){
 				  @if(loginForm!=null){
-				  <div id="myform" class="r-section"><!-- start of sidebar column -->
-				  @if(flash.containsKey("success")){
-					  <div class="alert alert-success">
-						  @flash.get("success")
-					  </div>
-				  }
 				  
-				  @if(flash.containsKey("error")){
-					  <div class="alert alert-danger">
-						  @flash.get("error")
-					  </div>
-				  }
-						@helper.form(action=controllers.web.routes.Application.authenticate(),'id->"loginform"){
-							  @text2(loginForm("email"),
-								  label = "Email",
-								  placeholder="Email"
-								  )
-							  @password2(loginForm("password"),
-								  label= "Password",
-								  placeholder="Password")
-							  <div class="form-group">
-								  <input type="submit" class="btn btn-primary" value="LOGIN"> 
-								  <a href="@controllers.web.routes.Application.forgotPassword()">Forgot password?</a>
-							  </div>
-					}
+				  	<div id="offer-section" class="r-section"><!-- start of sidebar column -->
+							<div class="panel panel-empty offer-panel promotion-text">
+									<div class="text-center">
+											<div><u><b><h4>SPECIAL OFFER!</h4></b></u></div>
+											<div>Get <b>16%</b> off on your first order. Use the promocode <b>tmlyxbzge</b> when filling your order details.</div>
+									</div>
+							</div>
+				  </div>
+				  
+				  <div id="myform" class="r-section"><!-- start of sidebar column -->
+							
+							@if(flash.containsKey("success")){
+								<div class="alert alert-success">
+									@flash.get("success")
+								</div>
+							}
+							
+							@if(flash.containsKey("error")){
+								<div class="alert alert-danger">
+									@flash.get("error")
+								</div>
+							}
+							@helper.form(action=controllers.web.routes.Application.authenticate(),'id->"loginform"){
+								@text2(loginForm("email"),
+									label = "Email",
+									placeholder="Email"
+									)
+								@password2(loginForm("password"),
+									label= "Password",
+									placeholder="Password")
+								<div class="form-group">
+									<input type="submit" class="btn btn-primary" value="LOGIN"> 
+									<a href="@controllers.web.routes.Application.forgotPassword()">Forgot password?</a>
+								</div>
+							}
 				  </div>
 				 }
 			  }else{
