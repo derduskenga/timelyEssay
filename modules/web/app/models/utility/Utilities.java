@@ -41,6 +41,9 @@ public class Utilities{
 	public static int ACCESS_PORT = 80;
 	public static String domain = "timelyessay";
 	
+	//Mail notifications 
+	public static String PAYMENT_NOTIFICATION_MAILS [] = {"derduskenga@gmail.com","wambua.sam@gmail.com"};
+	
 	
       
 		      

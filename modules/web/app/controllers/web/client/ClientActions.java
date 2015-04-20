@@ -169,6 +169,14 @@ public class ClientActions extends Controller{
 					adminReferalEarning.saveAdminReferalEarning();
 				}
 			}
+//==============================Send notification email to notification mails===============================================================
+			ClientMails clientMails = new ClientMails();
+			String payment_notification_subject = "Payment for order #" + order_code + "amount $" + total;
+			String payment_notification_message = "Payment for order #" + order_code + "amount $" + total + "for " + payment_type;
+			for(int i = 0; i<Utilities.PAYMENT_NOTIFICATION_MAILS.length; i++){
+				clientMails.sendGeneralMail(Utilities.PAYMENT_NOTIFICATION_MAILS[i],payment_notification_message,payment_notification_subject);
+			}
+//==============================End of sending notification email to notification mails=====================================================
 			
 			return ok(payorderresponse.render(order));
 
