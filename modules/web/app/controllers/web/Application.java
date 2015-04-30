@@ -80,7 +80,9 @@ public class Application extends Controller{
 	public static Result privacyPolicy(){
 	      return ok(privacypolicy.render(loginForm));
 	}
-	
+	public static Result googlever(){
+	      return ok(googlec0c451c51b0dbd83.render());
+	}
 	public static Result termsAndConditions(){
 	      return ok(termsandconditions.render(loginForm));
 	}
