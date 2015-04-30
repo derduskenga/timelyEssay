@@ -29,7 +29,7 @@ GET							/presentation			controllers.web.Application.presentation()
 GET							/prices				controllers.web.Application.prices()
 GET							/howitworks			controllers.web.Application.howItWorks()
 GET							/aboutus			controllers.web.Application.aboutUs()
-GET							/googlever			controllers.web.Application.googlever();
+GET							/googlever			controllers.web.Application.googlever()
 
 
 #client pages
